@@ -15,7 +15,7 @@ type argumentList struct {
 }
 
 const (
-	integrationName    = "com.New Relic.postgresql"
+	integrationName    = "com.newrelic.postgresql"
 	integrationVersion = "0.1.0"
 )
 
