@@ -6,7 +6,7 @@
 # refer to the Integrations SDK documentation:
 # https://docs.newrelic.com/docs/integrations/integrations-sdk/file-specifications
 
-integration_name: com.New Relic.postgresql
+integration_name: com.newrelic.postgresql
 
 instances:
   - name: postgresql
