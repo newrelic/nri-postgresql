@@ -15,20 +15,5 @@ commands:
   all_data:
     command:
       - ./bin/nr-postgresql
-    interval: 15
-  metrics:
-    command:
-      - ./bin/nr-postgresql
-      - --metrics
-    interval: 15
-  inventory:
-    command:
-      - ./bin/nr-postgresql
-      - --inventory
-    prefix: config/nr-postgresql
-    interval: 15
-  events:
-    command:
-    - ./bin/nr-postgresql
-    - --events
+    prefix: config/postgresql
     interval: 15

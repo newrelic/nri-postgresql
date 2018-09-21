@@ -1,24 +1,25 @@
-# Configuration file template, provided in case you want to provide extra
-# configuration over the nr-postgresql-config.yml
-# file.
-#
-# For a complete description of the Configuration File Specification, please
-# refer to the Integrations SDK documentation:
-# https://docs.newrelic.com/docs/integrations/integrations-sdk/file-specifications
-
 integration_name: com.newrelic.postgresql
 
 instances:
   - name: <INSTANCE IDENTIFIER>
-    command: metrics
+    command: all_data
     arguments:
-      arg1: <ARG_VALUE>
-    labels:
-      key1: <LABEL_VALUE>
+      username: <The username for the PostgreSQL database>
+      password: <The password for the specified user>
+      hostname: <(Optional) The PostgreSQL hostname, default is localhost>
+      port: <(Optional) The port where PostgreSQL database is listening, default is 5432>
+      databases: <(Optional) Whitelist of databases to collect. Valid values are all, none, or a JSON Array of database names, deafult is all>
+      enable_ssl: <(Optional) true or false. Indicates if SSL encryption should be used, default is false>
+      trust_server_certificate: <(Optional) true or false. If true server certificate is not verified for SSL. If false certificate will be verified against supplied certificate>
+      ssl_root_cert_location: <(Optional) Absolute path to PEM encoded root certificate file. Required if enable_ssl is true and trust_server_certificate is false>
 
-  - name: <OTHER INSTANCE IDENTIFIER>
-    command: inventory
-    arguments:
-      arg1: <ARG_VALUE>
+      # Location of client SSL certificate. Will be used instead of the default ~/.postgresql/postgresql.crt
+      ssl_cert_location: <(Optional) Absolute path to PEM encoded cert file.>
+
+      # Location of client secret key for the client certification. Will be used instead of the default ~/.postgresql/postgresql.key
+      ssl_key_location: <(Optional) Absolute path to PEM encoded key file.>
+      timeout: <(Optional) Maximum wait for connection, in seconds. Set 0 for no timeout>
     labels:
-      key1: <LABEL_VALUE>
+      env: production
+      role: postgresql
+

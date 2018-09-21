@@ -21,7 +21,7 @@ INNER JOIN pg_database D ON D.datname = SD.datname
 INNER JOIN pg_stat_database_conflicts DBC ON DBC.datname = D.datname 
 LEFT JOIN pg_tablespace TS ON TS.oid = D.dattablespace 
 WHERE D.datistemplate = FALSE AND D.datname IS NOT NULL;
--- may need to change 'IS NOT NULL' to 'IN (comma separated DB list)'
+-- need to append a 'AND D.datname IN (comma separated DB list)'
 
 -- min version 9.2.0
 SELECT 
@@ -35,7 +35,7 @@ INNER JOIN pg_database D ON D.datname = SD.datname
 INNER JOIN pg_stat_database_conflicts DBC ON DBC.datname = D.datname 
 LEFT JOIN pg_tablespace TS ON TS.oid = D.dattablespace 
 WHERE D.datistemplate = FALSE AND D.datname IS NOT NULL;
--- may need to change 'IS NOT NULL' to 'IN (comma separated DB list)'
+-- need to append a 'AND D.datname IN (comma separated DB list)'
 
 
 -- max version 9.0.999
@@ -54,4 +54,4 @@ FROM pg_stat_database SD
 INNER JOIN pg_database D ON D.datname = SD.datname 
 LEFT JOIN pg_tablespace TS ON TS.oid = D.dattablespace 
 WHERE D.datistemplate = FALSE AND D.datname IS NOT NULL;
--- may need to change 'IS NOT NULL' to 'IN (comma separated DB list)'
+-- need to append a 'AND D.datname IN (comma separated DB list)'

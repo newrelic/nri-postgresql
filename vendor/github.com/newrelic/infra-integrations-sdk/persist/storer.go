@@ -9,6 +9,7 @@ import (
 	"path"
 	"path/filepath"
 	"reflect"
+	"sync"
 	"time"
 
 	"github.com/newrelic/infra-integrations-sdk/log"
@@ -50,6 +51,7 @@ type Storer interface {
 type inMemoryStore struct {
 	cachedData map[string]jsonEntry
 	Data       map[string][]byte
+	locker     sync.Locker
 }
 
 // Holder for any entry in the JSON storage
@@ -90,6 +92,7 @@ func NewInMemoryStore() Storer {
 	return &inMemoryStore{
 		cachedData: make(map[string]jsonEntry),
 		Data:       make(map[string][]byte),
+		locker:     &sync.Mutex{},
 	}
 }
 
@@ -133,6 +136,9 @@ func (j *fileStore) Save() error {
 		return err
 	}
 
+	j.locker.Lock()
+	defer j.locker.Unlock()
+
 	bytes, err := json.Marshal(j)
 	if err != nil {
 		return err
@@ -148,6 +154,9 @@ func (j *inMemoryStore) Save() error {
 // Set stores a value for a given key. Implementors must save also the time when it was stored.
 // This implementation adds a restriction to the key name: it must be a valid file name (without extension).
 func (j inMemoryStore) Set(key string, value interface{}) int64 {
+	j.locker.Lock()
+	defer j.locker.Unlock()
+
 	ts := now().Unix()
 	j.cachedData[key] = jsonEntry{
 		Timestamp: ts,
@@ -160,6 +169,9 @@ func (j inMemoryStore) Set(key string, value interface{}) int64 {
 // second argument
 // This implementation adds a restriction to the key name: it must be a valid file name (without extension).
 func (j inMemoryStore) Get(key string, valuePtr interface{}) (int64, error) {
+	j.locker.Lock()
+	defer j.locker.Unlock()
+
 	rv := reflect.ValueOf(valuePtr)
 	if rv.Kind() != reflect.Ptr || rv.IsNil() {
 		return 0, errors.New("destination argument must be a pointer")
@@ -191,6 +203,9 @@ func (j inMemoryStore) Get(key string, valuePtr interface{}) (int64, error) {
 
 // flushCache marshalls all the cached data into JSON, ready to be stored into disk
 func (j *inMemoryStore) flushCache() error {
+	j.locker.Lock()
+	defer j.locker.Unlock()
+
 	for k, v := range j.cachedData {
 		bytes, err := json.Marshal(v)
 		if err != nil {
@@ -203,6 +218,9 @@ func (j *inMemoryStore) flushCache() error {
 }
 
 func (j *fileStore) loadFromDisk() error {
+	j.locker.Lock()
+	defer j.locker.Unlock()
+
 	bytes, err := ioutil.ReadFile(j.path)
 	if err != nil {
 		return fmt.Errorf("can't read %q: %s. Ignoring", j.path, err.Error())
@@ -217,6 +235,9 @@ func (j *fileStore) loadFromDisk() error {
 // Delete removes the cached data for the given key. If the data does not exist, the system does not return
 // any error.
 func (j inMemoryStore) Delete(key string) error {
+	j.locker.Lock()
+	defer j.locker.Unlock()
+
 	delete(j.cachedData, key)
 	delete(j.Data, key)
 	return nil
