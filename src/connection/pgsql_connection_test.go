@@ -8,7 +8,7 @@ import (
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
-func Test_PGSQLConnection_Close(t *testing.T) {
+func Test_PGConnection_Close(t *testing.T) {
 	conn, mock := CreateMockSQL(t)
 
 	mock.ExpectClose().WillReturnError(errors.New("error"))
@@ -75,8 +75,8 @@ func Test_createConnectionURL(t *testing.T) {
 				Hostname:               "localhost",
 				EnableSSL:              true,
 				TrustServerCertificate: true,
-				Port:    "5432",
-				Timeout: "30",
+				Port:                   "5432",
+				Timeout:                "30",
 			},
 			"postgres://user:pass@localhost:5432/postgres?connect_timeout=30&sslmode=require",
 		},

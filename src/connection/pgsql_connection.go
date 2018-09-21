@@ -12,33 +12,38 @@ import (
 	"github.com/newrelic/nri-postgresql/src/args"
 )
 
-// PGQLConnection represents a wrapper around a PostgreSQL connection
-type PGQLConnection struct {
+type PGConnection interface {
+	Close()
+	Query(interface{}, string) error
+}
+
+// dbConnectionWrapper represents a wrapper around a PostgreSQL connection
+type dbConnectionWrapper struct {
 	connection *sqlx.DB
 }
 
 // NewConnection creates a new PGQLConnection from args
-func NewConnection(args *args.ArgumentList) (*PGQLConnection, error) {
+func NewConnection(args *args.ArgumentList) (PGConnection, error) {
 	db, err := sqlx.Connect("postgres", createConnectionURL(args))
 	if err != nil {
 		return nil, err
 	}
 
-	return &PGQLConnection{
+	return &dbConnectionWrapper{
 		connection: db,
 	}, nil
 }
 
 // Close closes the PosgreSQL connection. If an error occurs
 // it is logged as a warning.
-func (p PGQLConnection) Close() {
+func (p *dbConnectionWrapper) Close() {
 	if err := p.connection.Close(); err != nil {
 		log.Warn("Unable to close PostgreSQL Connection: %s", err.Error())
 	}
 }
 
 // Query runs a query and loads results into v
-func (p PGQLConnection) Query(v interface{}, query string) error {
+func (p *dbConnectionWrapper) Query(v interface{}, query string) error {
 	return p.connection.Select(v, query)
 }
 
