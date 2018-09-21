@@ -28,8 +28,12 @@ func (al ArgumentList) Validate() error {
 		return errors.New("invalid configuration: must specify a username and password")
 	}
 
-	if al.EnableSSL && (!al.TrustServerCertificate && al.SSLRootCertLocation == "") {
-		return errors.New("invalid configuration: must specify a certificate file when using SSL and not trusting server certificate")
+	if al.EnableSSL {
+		if !al.TrustServerCertificate && al.SSLRootCertLocation == "" {
+			return errors.New("invalid configuration: must specify a certificate file when using SSL and not trusting server certificate")
+		} else if (al.SSLCertLocation != "" && al.SSLKeyLocation == "") || (al.SSLKeyLocation != "" && al.SSLCertLocation == "") {
+			return errors.New("invalid configuration: must specify both a cert and key file")
+		}
 	}
 
 	return nil

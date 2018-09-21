@@ -52,6 +52,34 @@ func TestValidate(t *testing.T) {
 			},
 			true,
 		},
+		{
+			"Missing Key file with Cert file",
+			&ArgumentList{
+				Username:               "user",
+				Password:               "password",
+				Hostname:               "localhost",
+				Port:                   "90",
+				EnableSSL:              true,
+				TrustServerCertificate: true,
+				SSLKeyLocation:         "",
+				SSLCertLocation:        "my.crt",
+			},
+			true,
+		},
+		{
+			"Missing Cert file with Key file",
+			&ArgumentList{
+				Username:               "user",
+				Password:               "password",
+				Hostname:               "localhost",
+				Port:                   "90",
+				EnableSSL:              true,
+				TrustServerCertificate: true,
+				SSLKeyLocation:         "my.key",
+				SSLCertLocation:        "",
+			},
+			true,
+		},
 	}
 
 	for _, tc := range testCases {
