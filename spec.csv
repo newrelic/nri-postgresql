@@ -1,0 +1,31 @@
+integration,metric_name,metric_type,metric_enabled,metric_description
+PostgreSQL,bgwriter.checkpointsScheduled,Rate,true,Number of scheduled checkpoints that have been performed
+PostgreSQL,bgwriter.checkpointsRequested,Rate,true,Number of requested checkpoints that have been performed
+PostgreSQL,bgwriter.checkpointWriteTimeInMilliseconds,Rate,true,"Total amount of time that has been spent in the portion of checkpoint processing where files are written to disk, in milliseconds"
+PostgreSQL,bgwriter.checkpointSyncTimeInMilliseconds,Rate,true,"Total amount of time that has been spent in the portion of checkpoint processing where files are synchronized to disk, in milliseconds"
+PostgreSQL,bgwriter.buffersWrittenForCheckpoints,Rate,true,Number of buffers written during checkpoints
+PostgreSQL,bgwriter.buffersWrittenByBackgroundWriter,Rate,true,Number of buffers written by the background writer
+PostgreSQL,bgwriter.backgroundWriterStops,Rate,true,Number of times the background writer stopped a cleaning scan because it had written too many buffers
+PostgreSQL,bgwriter.buffersWrittenByBackend,Rate,true,Number of buffers written directly by a backend
+PostgreSQL,bgwriter.backendFsyncCalls,Rate,true,Number of times a backend had to execute its own fsync call (normally the background writer handles those even when the backend does its own write)
+PostgreSQL,bgwriter.buffersAllocated,Gauge,true,Number of buffers allocated
+PostgreSQL,db.connections,Gauge,true,Number of backends currently connected to this database. 
+PostgreSQL,db.commits,Rate,true,Number of transactions in this database that have been committed
+PostgreSQL,db.rollbacks,Rate,true,Number of transactions in this database that have been rolled back
+PostgreSQL,db.reads,Rate,true,Number of disk blocks read in this database
+PostgreSQL,db.bufferHits,Rate,true,"Number of times disk blocks were found already in the buffer cache, so that a read was not necessary (this only includes hits in the PostgreSQL buffer cache, not the operating system's file system cache)"
+PostgreSQL,db.rowsReturned,Rate,true,Number of rows returned by queries in this database
+PostgreSQL,db.rowsFetched,Rate,true,Number of rows fetched by queries in this database
+PostgreSQL,db.rowsInserted,Rate,true,Number of rows inserted by queries in this database
+PostgreSQL,db.rowsUpdated,Rate,true,Number of rows updated by queries in this database
+PostgreSQL,db.rowsDeleted,Rate,true,Number of rows deleted by queries in this database
+PostgreSQL,db.tempFiles,Rate,true,"Number of temporary files created by queries in this database. All temporary files are counted, regardless of why the temporary file was created (e.g., sorting or hashing), and regardless of the log_temp_files setting."
+PostgreSQL,db.tempBytesWritten,Rate,true,"Total amount of data written to temporary files by queries in this database. All temporary files are counted, regardless of why the temporary file was created, and regardless of the log_temp_files setting."
+PostgreSQL,db.deadlocks,Rate,true,Number of deadlocks detected in this database
+PostgreSQL,db.readTimeInMilliseconds,Rate,true,"Time spent reading data file blocks by backends in this database, in milliseconds"
+PostgreSQL,db.writeTimeInMilliseconds,Rate,true,"Time spent writing data file blocks by backends in this database, in milliseconds"
+PostgreSQL,db.conflicts.tablespace,Rate,true,Number of queries in this database that have been canceled due to dropped tablespaces
+PostgreSQL,db.conflicts.locks,Rate,true,Number of queries in this database that have been canceled due to lock timeouts
+PostgreSQL,db.conflicts.snapshot,Rate,true,Number of queries in this database that have been canceled due to old snapshots
+PostgreSQL,db.conflicts.bufferpin,Rate,true,Number of queries in this database that have been canceled due to pinned buffers
+PostgreSQL,db.conflicts.deadlock,Rate,true,Number of queries in this database that have been canceled due to deadlocks
