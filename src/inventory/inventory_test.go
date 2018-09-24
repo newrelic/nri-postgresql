@@ -1,7 +1,6 @@
 package inventory
 
 import (
-	"errors"
 	"github.com/newrelic/infra-integrations-sdk/data/inventory"
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/newrelic/nri-postgresql/src/connection"
@@ -25,7 +24,7 @@ func Test_populateConfigItems(t *testing.T) {
 
 	mock.ExpectQuery(configQuery).WillReturnRows(configRows)
 
-	err := populateConfigItems(testEntity, testConnection)
+	populateConfigItems(testEntity, testConnection)
 
 	expected := inventory.Items{
 		"allow_system_table_mods": {
@@ -40,36 +39,14 @@ func Test_populateConfigItems(t *testing.T) {
 		},
 	}
 
-	assert.Nil(t, err)
 	assert.Equal(t, expected, testEntity.Inventory.Items())
-}
-
-func Test_populateConfigItems_Err(t *testing.T) {
-	testIntegration, _ := integration.New("test", "0.1.0")
-	testEntity, _ := testIntegration.Entity("test", "instance")
-
-	testConnection, mock := connection.CreateMockSQL(t)
-
-	mock.ExpectQuery(configQuery).WillReturnError(errors.New("test failure"))
-
-	err := populateConfigItems(testEntity, testConnection)
-
-	assert.Equal(t, "test failure", err.Error())
-
 }
 
 func Test_populateVersion(t *testing.T) {
 	testIntegration, _ := integration.New("test", "0.1.0")
 	testEntity, _ := testIntegration.Entity("test", "instance")
 
-	testConnection, mock := connection.CreateMockSQL(t)
-
-	versionRows := sqlmock.NewRows([]string{"server_version"}).
-		AddRow("10.3")
-
-	mock.ExpectQuery(versionQuery).WillReturnRows(versionRows)
-
-	err := populateVersion(testEntity, testConnection)
+	populateVersion(testEntity, "10.3")
 
 	expected := inventory.Items{
 		"version": {
@@ -77,20 +54,5 @@ func Test_populateVersion(t *testing.T) {
 		},
 	}
 
-	assert.Nil(t, err)
 	assert.Equal(t, expected, testEntity.Inventory.Items())
-}
-
-func Test_populateVersion_Err(t *testing.T) {
-	testIntegration, _ := integration.New("test", "0.1.0")
-	testEntity, _ := testIntegration.Entity("test", "instance")
-
-	testConnection, mock := connection.CreateMockSQL(t)
-
-	mock.ExpectQuery(versionQuery).WillReturnError(errors.New("test failure"))
-
-	err := populateVersion(testEntity, testConnection)
-
-	assert.Equal(t, "test failure", err.Error())
-
 }
