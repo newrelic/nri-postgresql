@@ -1,5 +1,6 @@
 -- min version 9.1.0
 SELECT 
+D.datname,
 SD.numbackends AS active_connections,
 SD.xact_commit AS transactions_committed,
 SD.xact_rollback AS transactions_rolled_back,
