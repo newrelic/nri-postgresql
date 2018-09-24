@@ -29,3 +29,16 @@ func Test_generateDatabaseDefinitions_LengthV925(t *testing.T) {
 
 	assert.Equal(t, 2, len(queryDefinitions))
 }
+
+func Test_insertDatabaseNames(t *testing.T) {
+	var testDefinition = &QueryDefinition{
+		query:      `SELECT * FROM test WHERE database IN (%DATABASES%);`,
+		dataModels: &[]struct{}{},
+	}
+
+	testDefinition.insertDatabaseNames([]string{"test1", "test2"})
+
+	expected := `SELECT * FROM test WHERE database IN ('test1','test2');`
+
+	assert.Equal(t, expected, testDefinition.query)
+}
