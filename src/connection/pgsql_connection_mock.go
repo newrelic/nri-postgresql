@@ -8,14 +8,14 @@ import (
 )
 
 // CreateMockSQL creates a Test SQLConnection. Must Close con when done
-func CreateMockSQL(t *testing.T) (con *PGQLConnection, mock sqlmock.Sqlmock) {
+func CreateMockSQL(t *testing.T) (con *PGSQLConnection, mock sqlmock.Sqlmock) {
 	mockDB, mock, err := sqlmock.New()
 	if err != nil {
 		t.Errorf("Unexpected error while mocking: %s", err.Error())
 		t.FailNow()
 	}
 
-	con = &PGQLConnection{
+	con = &PGSQLConnection{
 		connection: sqlx.NewDb(mockDB, "sqlmock"),
 	}
 
