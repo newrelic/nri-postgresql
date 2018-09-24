@@ -75,6 +75,10 @@
 			"revisionTime": "2018-08-28T16:16:20Z"
 		},
 		{
+			"path": "github.com/newrelic/infra-integrations-sdk/metric",
+			"revision": ""
+		},
+		{
 			"checksumSHA1": "BsHp62Etporko0d+4GpVxrP2qtw=",
 			"path": "github.com/newrelic/infra-integrations-sdk/persist",
 			"revision": "a9213176e7c44f5780696483f45c80a156433559",
