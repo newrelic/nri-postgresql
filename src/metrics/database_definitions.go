@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"github.com/blang/semver"
+	"strings"
 )
 
 func generateDatabaseDefinitions(databases []string, version semver.Version) []*QueryDefinition {
@@ -11,20 +12,34 @@ func generateDatabaseDefinitions(databases []string, version semver.Version) []*
 	v92 := semver.MustParse("9.2.0")
 
 	if version.LT(v91) {
-		queryDefinitions = append(queryDefinitions, databaseDefinitionUnder91)
+		queryDefinitions = append(queryDefinitions, databaseDefinitionUnder91.insertDatabaseNames(databases))
 	} else {
-		queryDefinitions = append(queryDefinitions, databaseDefinitionOver91)
+		queryDefinitions = append(queryDefinitions, databaseDefinitionOver91.insertDatabaseNames(databases))
 	}
 
 	if version.GE(v92) {
-		queryDefinitions = append(queryDefinitions, databaseDefinitionOver92)
+		queryDefinitions = append(queryDefinitions, databaseDefinitionOver92.insertDatabaseNames(databases))
 	}
 
 	return queryDefinitions
 }
 
+func (q *QueryDefinition) insertDatabaseNames(databases []string) *QueryDefinition {
+	// TODO ensure len(databases) != 0
+	databaseList := ""
+	for _, database := range databases {
+		databaseList += `'` + database + `',`
+	}
+	databaseList = databaseList[0 : len(databaseList)-1]
+
+	q.query = strings.Replace(q.query, `%DATABASES%`, databaseList, 1)
+
+	return q
+}
+
 var databaseDefinitionUnder91 = &QueryDefinition{
 	query: `SELECT 
+		D.datname AS database_name,
 		SD.numbackends AS active_connections,
 		SD.xact_commit AS transactions_committed,
 		SD.xact_rollback AS transactions_rolled_back,
@@ -38,7 +53,9 @@ var databaseDefinitionUnder91 = &QueryDefinition{
 		FROM pg_stat_database SD 
 		INNER JOIN pg_database D ON D.datname = SD.datname 
 		LEFT JOIN pg_tablespace TS ON TS.oid = D.dattablespace 
-		WHERE D.datistemplate = FALSE AND D.datname IS NOT NULL;`,
+		WHERE D.datistemplate = FALSE 
+			AND D.datname IS NOT NULL
+			AND D.datname IN (%DATABASES%);`,
 
 	dataModels: &[]struct {
 		ActiveConnections      *int `db:"active_connections"       metric_name:"db.connections"  source_type:"gauge"`
@@ -56,7 +73,7 @@ var databaseDefinitionUnder91 = &QueryDefinition{
 
 var databaseDefinitionOver91 = &QueryDefinition{
 	query: `SELECT 
-		D.datname,
+		D.datname AS database_name,
 		SD.numbackends AS active_connections,
 		SD.xact_commit AS transactions_committed,
 		SD.xact_rollback AS transactions_rolled_back,
@@ -76,7 +93,9 @@ var databaseDefinitionOver91 = &QueryDefinition{
 		INNER JOIN pg_database D ON D.datname = SD.datname 
 		INNER JOIN pg_stat_database_conflicts DBC ON DBC.datname = D.datname 
 		LEFT JOIN pg_tablespace TS ON TS.oid = D.dattablespace 
-		WHERE D.datistemplate = FALSE AND D.datname IS NOT NULL;`,
+		WHERE D.datistemplate = FALSE 
+			AND D.datname IS NOT NULL
+			AND D.datname IN (%DATABASES%);`,
 
 	dataModels: &[]struct {
 		ActiveConnections                 *int `db:"active_connections"                          metric_name:"db.connections"          source_type:"gauge"`
@@ -99,6 +118,7 @@ var databaseDefinitionOver91 = &QueryDefinition{
 
 var databaseDefinitionOver92 = &QueryDefinition{
 	query: `SELECT 
+		D.datname AS database_name,
 		SD.temp_files AS temporary_files_created,
 		SD.temp_bytes AS temporary_bytes_written,
 		SD.deadlocks AS deadlocks,
@@ -108,7 +128,9 @@ var databaseDefinitionOver92 = &QueryDefinition{
 		INNER JOIN pg_database D ON D.datname = SD.datname 
 		INNER JOIN pg_stat_database_conflicts DBC ON DBC.datname = D.datname 
 		LEFT JOIN pg_tablespace TS ON TS.oid = D.dattablespace 
-		WHERE D.datistemplate = FALSE AND D.datname IS NOT NULL;`,
+		WHERE D.datistemplate = FALSE 
+			AND D.datname IS NOT NULL
+			AND D.datname IN (%DATABASES%);`,
 
 	dataModels: &[]struct {
 		TempFilesCreated *int `db:"temporary_files_created" metric_name:"db.tempFiles"               source_type:"rate"`
