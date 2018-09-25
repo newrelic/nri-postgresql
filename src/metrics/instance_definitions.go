@@ -28,7 +28,7 @@ var instanceDefinitionBase = &QueryDefinition{
 		BG.checkpoints_req AS requested_checkpoints_performed,
 		BG.buffers_checkpoint AS buffers_written_during_checkpoint,
 		BG.buffers_clean AS buffers_written_by_background_writer,
-		BG.maxwritten_clean AS times_background_writer_stopped_due_to_too_many_buffers,
+		BG.maxwritten_clean AS background_writer_stops,
 		BG.buffers_backend AS buffers_written_by_backend,
 		BG.buffers_alloc AS buffers_allocated
 		FROM pg_stat_bgwriter BG;`,
