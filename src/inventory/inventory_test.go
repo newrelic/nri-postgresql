@@ -11,7 +11,7 @@ import (
 	"testing"
 )
 
-func Test_populateConfigItems(t *testing.T) {
+func TestPopulateInventory(t *testing.T) {
 
 	testIntegration, _ := integration.New("test", "0.1.0")
 	testEntity, _ := testIntegration.Entity("test", "instance")
@@ -24,7 +24,7 @@ func Test_populateConfigItems(t *testing.T) {
 
 	mock.ExpectQuery(configQuery).WillReturnRows(configRows)
 
-	populateConfigItems(testEntity, testConnection)
+	PopulateInventory(testEntity, testConnection)
 
 	expected := inventory.Items{
 		"allow_system_table_mods": {
@@ -36,21 +36,6 @@ func Test_populateConfigItems(t *testing.T) {
 			"setting":   1,
 			"boot_val":  2,
 			"reset_val": 3,
-		},
-	}
-
-	assert.Equal(t, expected, testEntity.Inventory.Items())
-}
-
-func Test_populateVersion(t *testing.T) {
-	testIntegration, _ := integration.New("test", "0.1.0")
-	testEntity, _ := testIntegration.Entity("test", "instance")
-
-	populateVersion(testEntity, "10.3")
-
-	expected := inventory.Items{
-		"version": {
-			"value": "10.3",
 		},
 	}
 

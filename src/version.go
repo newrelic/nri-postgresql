@@ -10,12 +10,12 @@ const (
 	versionQuery = `SHOW server_version`
 )
 
-type ServerVersionRow struct {
+type serverVersionRow struct {
 	Version string `db:"server_version"`
 }
 
 func collectVersion(connection *connection.PGSQLConnection) (semver.Version, error) {
-	var versionRows []*ServerVersionRow
+	var versionRows []*serverVersionRow
 	if err := connection.Query(&versionRows, versionQuery); err != nil {
 		log.Error("Failed to execute version query: %v", err)
 	}

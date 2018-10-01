@@ -7,6 +7,7 @@ import (
 	"github.com/newrelic/infra-integrations-sdk/log"
 	"github.com/newrelic/nri-postgresql/src/args"
 	"github.com/newrelic/nri-postgresql/src/connection"
+	"github.com/newrelic/nri-postgresql/src/inventory"
 	"github.com/newrelic/nri-postgresql/src/metrics"
 )
 
@@ -33,8 +34,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	databaseList := args.GetCollectionList()
+
 	// Create a new connection
-	con, err := connection.NewConnection(&args)
+	ci := connection.DefaultConnectionInfo(&args)
+	con, err := ci.NewConnection()
 	if err != nil {
 		log.Error("Error creating connection to SQL Server: %s", err.Error())
 		os.Exit(1)
@@ -42,7 +46,26 @@ func main() {
 
 	instance, err := i.Entity("testInstance", "instance")
 	version, err := collectVersion(con)
-	metrics.PopulateInstanceMetrics(instance, version, con)
+
+	if args.HasInventory() {
+		inventory.PopulateInventory(instance, con)
+	}
+
+	if args.HasMetrics() {
+		metrics.PopulateInstanceMetrics(instance, version, con)
+		metrics.PopulateDatabaseMetrics(databaseList, version, i, con)
+		metrics.PopulateTableMetrics(databaseList, i, ci)
+		metrics.PopulateIndexMetrics(databaseList, i, ci)
+		if args.Pgbouncer {
+			ci.Database = "pgbouncer"
+			con, err = ci.NewConnection()
+			if err != nil {
+				log.Error("Error creating connection to pgbouncer database: %s", err)
+			} else {
+				metrics.PopulatePgBouncerMetrics(i, con)
+			}
+		}
+	}
 
 	if err = i.Publish(); err != nil {
 		log.Error(err.Error())

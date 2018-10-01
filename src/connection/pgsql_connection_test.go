@@ -128,7 +128,7 @@ func Test_createConnectionURL(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		if out := createConnectionURL(tc.arg); out != tc.want {
+		if out := createConnectionURL(DefaultConnectionInfo(tc.arg)); out != tc.want {
 			t.Errorf("Test Case %s Failed: Expected '%s' got '%s'", tc.name, tc.want, out)
 		}
 	}

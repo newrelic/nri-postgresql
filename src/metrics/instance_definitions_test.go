@@ -1,9 +1,10 @@
 package metrics
 
 import (
+	"testing"
+
 	"github.com/blang/semver"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func Test_generateInstanceDefinitions90(t *testing.T) {

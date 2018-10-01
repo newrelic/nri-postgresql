@@ -1,11 +1,12 @@
 package main
 
 import (
+	"testing"
+
 	"github.com/blang/semver"
 	"github.com/newrelic/nri-postgresql/src/connection"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
-	"testing"
 )
 
 func Test_collectVersion(t *testing.T) {

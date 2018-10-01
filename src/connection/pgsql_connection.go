@@ -17,9 +17,41 @@ type PGSQLConnection struct {
 	connection *sqlx.DB
 }
 
+// Info holds all the information needed from the user to create a new connection
+type Info struct {
+	Database               string
+	Username               string
+	Password               string
+	Host                   string
+	Port                   string
+	Timeout                string
+	EnableSSL              bool
+	SSLCertLocation        string
+	SSLRootCertLocation    string
+	SSLKeyLocation         string
+	TrustServerCertificate bool
+}
+
+// DefaultConnectionInfo takes an argument list and constructs a default connection out of it
+func DefaultConnectionInfo(al *args.ArgumentList) *Info {
+	return &Info{
+		Database:               "postgres",
+		Username:               al.Username,
+		Password:               al.Password,
+		Host:                   al.Hostname,
+		Port:                   al.Port,
+		Timeout:                al.Timeout,
+		EnableSSL:              al.EnableSSL,
+		SSLCertLocation:        al.SSLCertLocation,
+		SSLRootCertLocation:    al.SSLRootCertLocation,
+		SSLKeyLocation:         al.SSLKeyLocation,
+		TrustServerCertificate: al.TrustServerCertificate,
+	}
+}
+
 // NewConnection creates a new PGSQLConnection from args
-func NewConnection(args *args.ArgumentList) (*PGSQLConnection, error) {
-	db, err := sqlx.Connect("postgres", createConnectionURL(args))
+func (connectionInfo *Info) NewConnection() (*PGSQLConnection, error) {
+	db, err := sqlx.Connect("postgres", createConnectionURL(connectionInfo))
 	if err != nil {
 		return nil, err
 	}
@@ -44,20 +76,20 @@ func (p PGSQLConnection) Query(v interface{}, query string) error {
 
 // createConnectionURL creates the connection string. A list of paramters
 // can be found here https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters
-func createConnectionURL(args *args.ArgumentList) string {
+func createConnectionURL(ci *Info) string {
 	connectionURL := &url.URL{
 		Scheme: "postgres",
-		User:   url.UserPassword(args.Username, args.Password),
-		Host:   fmt.Sprintf("%s:%s", args.Hostname, args.Port),
-		Path:   "postgres",
+		User:   url.UserPassword(ci.Username, ci.Password),
+		Host:   fmt.Sprintf("%s:%s", ci.Host, ci.Port),
+		Path:   ci.Database,
 	}
 
 	query := url.Values{}
-	query.Add("connect_timeout", args.Timeout)
+	query.Add("connect_timeout", ci.Timeout)
 
 	// SSL settings
-	if args.EnableSSL {
-		addSSLQueries(query, args)
+	if ci.EnableSSL {
+		addSSLQueries(query, ci)
 	} else {
 		query.Add("sslmode", "disable")
 	}
@@ -68,16 +100,16 @@ func createConnectionURL(args *args.ArgumentList) string {
 }
 
 // addSSLQueries add SSL query parameters
-func addSSLQueries(query url.Values, args *args.ArgumentList) {
-	if args.TrustServerCertificate {
+func addSSLQueries(query url.Values, ci *Info) {
+	if ci.TrustServerCertificate {
 		query.Add("sslmode", "require")
 	} else {
 		query.Add("sslmode", "verify-full")
-		query.Add("sslrootcert", args.SSLRootCertLocation)
+		query.Add("sslrootcert", ci.SSLRootCertLocation)
 	}
 
-	if args.SSLCertLocation != "" && args.SSLKeyLocation != "" {
-		query.Add("sslcert", args.SSLCertLocation)
-		query.Add("sslkey", args.SSLKeyLocation)
+	if ci.SSLCertLocation != "" && ci.SSLKeyLocation != "" {
+		query.Add("sslcert", ci.SSLCertLocation)
+		query.Add("sslkey", ci.SSLKeyLocation)
 	}
 }
