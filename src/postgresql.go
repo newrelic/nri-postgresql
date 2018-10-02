@@ -44,7 +44,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	instance, err := i.Entity("testInstance", "instance")
+	instance, err := i.Entity(args.Hostname, "instance")
 	version, err := collectVersion(con)
 
 	if args.HasInventory() {
