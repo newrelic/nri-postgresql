@@ -11,6 +11,57 @@ import (
 	"github.com/newrelic/nri-postgresql/src/connection"
 )
 
+const (
+	versionQuery = `SHOW server_version`
+)
+
+func PopulateMetrics(ci *connection.Info, databaseList args.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer bool) {
+
+	con, err := ci.NewConnection()
+	if err != nil {
+		log.Error("Metrics collection failed: error creating connection to SQL Server: %s", err.Error())
+		return
+	}
+
+	version, err := collectVersion(con)
+	if err != nil {
+		log.Error("Metrics collection failed: error collecting version number: %s", err.Error())
+		return
+	}
+
+	PopulateInstanceMetrics(instance, version, con)
+	PopulateDatabaseMetrics(databaseList, version, i, con)
+	PopulateTableMetrics(databaseList, i, ci)
+	PopulateIndexMetrics(databaseList, i, ci)
+	if collectPgBouncer {
+		ci.Database = "pgbouncer"
+		con, err = ci.NewConnection()
+		if err != nil {
+			log.Error("Error creating connection to pgbouncer database: %s", err)
+		} else {
+			PopulatePgBouncerMetrics(i, con)
+		}
+	}
+}
+
+type serverVersionRow struct {
+	Version string `db:"server_version"`
+}
+
+func collectVersion(connection *connection.PGSQLConnection) (semver.Version, error) {
+	var versionRows []*serverVersionRow
+	if err := connection.Query(&versionRows, versionQuery); err != nil {
+		log.Error("Failed to execute version query: %v", err)
+	}
+
+	v, err := semver.ParseTolerant(versionRows[0].Version)
+	if err != nil {
+		return semver.Version{}, err
+	}
+
+	return v, nil
+}
+
 // PopulateInstanceMetrics populates the metrics for an instance
 func PopulateInstanceMetrics(instanceEntity *integration.Entity, version semver.Version, connection *connection.PGSQLConnection) {
 	metricSet := instanceEntity.NewMetricSet("PostgreSQLInstanceSample",
