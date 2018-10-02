@@ -25,9 +25,9 @@ func PopulateInventory(entity *integration.Entity, connection *connection.PGSQLC
 	}
 
 	for _, row := range configRows {
-		logInventoryFailure(entity.SetInventoryItem(row.Name, "setting", row.Setting))
-		logInventoryFailure(entity.SetInventoryItem(row.Name, "boot_val", row.BootVal))
-		logInventoryFailure(entity.SetInventoryItem(row.Name, "reset_val", row.ResetVal))
+		logInventoryFailure(entity.SetInventoryItem(row.Name+"/setting", "value", row.Setting))
+		logInventoryFailure(entity.SetInventoryItem(row.Name+"/boot_val", "value", row.BootVal))
+		logInventoryFailure(entity.SetInventoryItem(row.Name+"/reset_val", "value", row.ResetVal))
 	}
 }
 

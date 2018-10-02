@@ -27,15 +27,23 @@ func TestPopulateInventory(t *testing.T) {
 	PopulateInventory(testEntity, testConnection)
 
 	expected := inventory.Items{
-		"allow_system_table_mods": {
-			"setting":   "off",
-			"boot_val":  "on",
-			"reset_val": "test",
+		"allow_system_table_mods/setting": {
+			"value": "off",
 		},
-		"authentication_timeout": {
-			"setting":   1,
-			"boot_val":  2,
-			"reset_val": 3,
+		"allow_system_table_mods/boot_val": {
+			"value": "on",
+		},
+		"allow_system_table_mods/reset_val": {
+			"value": "test",
+		},
+		"authentication_timeout/setting": {
+			"value": 1,
+		},
+		"authentication_timeout/boot_val": {
+			"value": 2,
+		},
+		"authentication_timeout/reset_val": {
+			"value": 3,
 		},
 	}
 
