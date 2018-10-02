@@ -8,7 +8,7 @@ instances:
       password: <The password for the specified user>
       hostname: <(Optional) The PostgreSQL hostname, default is localhost>
       port: <(Optional) The port where PostgreSQL database is listening, default is 5432>
-      databases: <(Optional) Whitelist of databases to collect. Valid values are all, none, or a JSON Array of database names, deafult is all>
+      collection_list: <The list of entities to collect metrics on, of the form '{"database_name":{"schema_name":{"table_name":["index_name"]}'>
       enable_ssl: <(Optional) true or false. Indicates if SSL encryption should be used, default is false>
       trust_server_certificate: <(Optional) true or false. If true server certificate is not verified for SSL. If false certificate will be verified against supplied certificate>
       ssl_root_cert_location: <(Optional) Absolute path to PEM encoded root certificate file. Required if enable_ssl is true and trust_server_certificate is false>
