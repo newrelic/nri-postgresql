@@ -45,7 +45,15 @@ func main() {
 	}
 
 	instance, err := i.Entity(args.Hostname, "instance")
+	if err != nil {
+		log.Error("Error creating instance entity: %s", err.Error())
+		os.Exit(1)
+	}
 	version, err := collectVersion(con)
+	if err != nil {
+		log.Error("Error collecting version number: %s", err.Error())
+		os.Exit(1)
+	}
 
 	if args.HasInventory() {
 		inventory.PopulateInventory(instance, con)
