@@ -49,6 +49,7 @@ func main() {
 
 	if args.HasInventory() {
 		con, err := connectionInfo.NewConnection()
+		defer con.Close()
 		if err != nil {
 			log.Error("Inventory collection failed: error creating connection to SQL Server: %s", err.Error())
 			return

@@ -18,6 +18,7 @@ const (
 func PopulateMetrics(ci *connection.Info, databaseList args.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer bool) {
 
 	con, err := ci.NewConnection()
+	defer con.Close()
 	if err != nil {
 		log.Error("Metrics collection failed: error creating connection to SQL Server: %s", err.Error())
 		return
@@ -36,6 +37,7 @@ func PopulateMetrics(ci *connection.Info, databaseList args.DatabaseList, instan
 	if collectPgBouncer {
 		ci.Database = "pgbouncer"
 		con, err = ci.NewConnection()
+		defer con.Close()
 		if err != nil {
 			log.Error("Error creating connection to pgbouncer database: %s", err)
 		} else {
@@ -129,6 +131,7 @@ func PopulateTableMetrics(databases args.DatabaseList, integration *integration.
 		// Create a new connection to the database
 		ci.Database = database
 		con, err := ci.NewConnection()
+		defer con.Close()
 		if err != nil {
 			log.Error("Failed to connect to database %s: %s", database, err.Error())
 			continue
@@ -191,6 +194,7 @@ func PopulateIndexMetrics(databases args.DatabaseList, integration *integration.
 	for database, schemaList := range databases {
 		ci.Database = database
 		con, err := ci.NewConnection()
+		defer con.Close()
 		if err != nil {
 			log.Error("Failed to create new connection to database %s: %s", database, err.Error())
 			continue
