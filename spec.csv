@@ -1,80 +1,80 @@
-integration,metric_name,metric_type,metric_enabled,metric_description
-PostgreSQL,bgwriter.checkpointsScheduled,Rate,,Number of scheduled checkpoints that have been performed
-PostgreSQL,bgwriter.checkpointsRequested,Rate,,Number of requested checkpoints that have been performed
-PostgreSQL,bgwriter.checkpointWriteTimeInMilliseconds,Rate,,"Total amount of time that has been spent in the portion of checkpoint processing where files are written to disk, in milliseconds"
-PostgreSQL,bgwriter.checkpointSyncTimeInMilliseconds,Rate,,"Total amount of time that has been spent in the portion of checkpoint processing where files are synchronized to disk, in milliseconds"
-PostgreSQL,bgwriter.buffersWrittenForCheckpoints,Rate,,Number of buffers written during checkpoints
-PostgreSQL,bgwriter.buffersWrittenByBackgroundWriter,Rate,,Number of buffers written by the background writer
-PostgreSQL,bgwriter.backgroundWriterStops,Rate,,Number of times the background writer stopped a cleaning scan because it had written too many buffers
-PostgreSQL,bgwriter.buffersWrittenByBackend,Rate,,Number of buffers written directly by a backend
-PostgreSQL,bgwriter.backendFsyncCalls,Rate,,Number of times a backend had to execute its own fsync call (normally the background writer handles those even when the backend does its own write)
-PostgreSQL,bgwriter.buffersAllocated,Gauge,,Number of buffers allocated
-PostgreSQL,db.connections,Gauge,,Number of backends currently connected to this database. 
-PostgreSQL,db.commits,Rate,,Number of transactions in this database that have been committed
-PostgreSQL,db.rollbacks,Rate,,Number of transactions in this database that have been rolled back
-PostgreSQL,db.reads,Rate,,Number of disk blocks read in this database
-PostgreSQL,db.bufferHits,Rate,,"Number of times disk blocks were found already in the buffer cache, so that a read was not necessary (this only includes hits in the PostgreSQL buffer cache, not the operating system's file system cache)"
-PostgreSQL,db.rowsReturned,Rate,,Number of rows returned by queries in this database
-PostgreSQL,db.rowsFetched,Rate,,Number of rows fetched by queries in this database
-PostgreSQL,db.rowsInserted,Rate,,Number of rows inserted by queries in this database
-PostgreSQL,db.rowsUpdated,Rate,,Number of rows updated by queries in this database
-PostgreSQL,db.rowsDeleted,Rate,,Number of rows deleted by queries in this database
-PostgreSQL,db.tempFiles,Rate,,"Number of temporary files created by queries in this database. All temporary files are counted, regardless of why the temporary file was created (e.g., sorting or hashing), and regardless of the log_temp_files setting."
-PostgreSQL,db.tempWrittenInBytes,Rate,,"Total amount of data written to temporary files by queries in this database. All temporary files are counted, regardless of why the temporary file was created, and regardless of the log_temp_files setting."
-PostgreSQL,db.deadlocks,Rate,,Number of deadlocks detected in this database
-PostgreSQL,db.readTimeInMilliseconds,Rate,,"Time spent reading data file blocks by backends in this database, in milliseconds"
-PostgreSQL,db.writeTimeInMilliseconds,Rate,,"Time spent writing data file blocks by backends in this database, in milliseconds"
-PostgreSQL,db.conflicts.tablespace,Rate,,Number of queries in this database that have been canceled due to dropped tablespaces
-PostgreSQL,db.conflicts.locks,Rate,,Number of queries in this database that have been canceled due to lock timeouts
-PostgreSQL,db.conflicts.snapshot,Rate,,Number of queries in this database that have been canceled due to old snapshots
-PostgreSQL,db.conflicts.bufferpin,Rate,,Number of queries in this database that have been canceled due to pinned buffers
-PostgreSQL,db.conflicts.deadlock,Rate,,Number of queries in this database that have been canceled due to deadlocks
-PostgreSQL,db.newRows,Gauge,,Number of rows added to a specific db
-PostgreSQL,db.newRowsInBytes,Gauge,,Number of rows added to a specific db in bytes
-PostgreSQL,db.obsoleteRows,Gauge,,Number of obsolete rows in a specific db
-PostgreSQL,db.obsoleteRowsInBytes,Gauge,,Number of obsolete rows in a specific db in bytes
-PostgreSQL,db.bloat,Gauge,,Difference of new rows and obsolete rows
-PostgreSQL,db.bloatInBytes,Gauge,,Difference of new rows and obsolete rows in bytes
-PostgreSQL,table.newRows,Gauge,,Number of rows added to a specific table
-PostgreSQL,table.newRowsInBytes,Gauge,,Number of rows added to a specific table in bytes
-PostgreSQL,table.obsoleteRows,Gauge,,Number of obsolete rows in a specific table
-PostgreSQL,table.obsoleteRowsInBytes,Gauge,,Number of obsolete rows in a specific table in bytes
-PostgreSQL,table.bloat,Gauge,,Difference of new rows and obsolete rows
-PostgreSQL,table.bloatInBytes,Gauge,,Difference of new rows and obsolete rows in bytes
-PostgreSQL,table.requestsPerSecond,Rate,,The request rate
-PostgreSQL,table.queriesPerSecond,Rate,,The query rate
-PostgreSQL,table.transactionsPerSecond,Rate,,The transaction rate
-PostgreSQL,table.indexSizeInBytes,Gauge,,The total disk space used by indexes attached to the specified table.
-PostgreSQL,table.lastVacuum,Timestamp,,Time of last vacuum on table
-PostgreSQL,table.lastAutoVacuum,Timestamp,,Time of last auto vacuum on table 
-PostgreSQL,table.lastAnalyze,Timestamp,,Time of last analyze on table
-PostgreSQL,table.lastAutoAnalyze,Timestamp,,Time of last auto analyze on table
-PostgreSQL,index.blocksRead,Gauge,,The number of disk blocks read from all indexes on this table.
-PostgreSQL,index.blocksHit,Gauge,,The number of buffer hits in all indexes on this table.
-PostgreSQL,index.toastBlocksRead,Gauge,,The number of disk blocks read from this table's TOAST table index.
-PostgreSQL,index.toastBlocksHit,Gauge,,The number of buffer hits in this table's TOAST table index.
-PostgreSQL,table.totalSizeInBytes,Gauge,,"The total disk space used by the table, including indexes and TOAST data"
-PostgreSQL,index.rowsRead,Gauge,,The number of index entries returned by scans on this index.
-PostgreSQL,index.sizeInBytes,Gauge,,The size of an index
-PostgreSQL,pgbouncer.stats.requestsPerSecond,Rate,,The request rate
-PostgreSQL,pgbouncer.stats.queriesPerSecond,Rate,,The query rate
-PostgreSQL,pgbouncer.stats.transactionsPerSecond,Rate,,The transaction rate
-PostgreSQL,pgbouncer.stats.bytesInPerSecond,Rate,,The total network traffic received
-PostgreSQL,pgbouncer.stats.bytesOutPerSecond,Rate,,The total network traffic sent
-PostgreSQL,pgbouncer.stats.totalQueryInMilliseconds,Rate,,Time spent by pgbouncer actively querying PostgreSQL
-PostgreSQL,pgbouncer.stats.totalTransactionInMilliseconds,Rate,,Time spent by pgbouncer in transactions
-PostgreSQL,pgbouncer.stats.avgRequests,Gauge,,The average number of requests per second in last stat period
-PostgreSQL,pgbouncer.stats.avgQueryCount,Gauge,,The average number of queries per second in last stat period
-PostgreSQL,pgbouncer.stats.avgTransactionCount,Gauge,,The average number of transactions per second in last stat period
-PostgreSQL,pgbouncer.stats.avgBytesIn,Gauge,,The client network traffic received
-PostgreSQL,pgbouncer.stats.avgBytesOut,Gauge,,The client network traffic sent
-PostgreSQL,pgbouncer.stats.avgQueryDurationInMilliseconds,Gauge,,The average query duration
-PostgreSQL,pgbouncer.stats.avgTransactionDurationInMilliseconds,Gauge,,The average transaction duration
-PostgreSQL,pgbouncer.pools.clientConnectionsActive,Gauge,,Client connections linked to server connection and able to process queries
-PostgreSQL,pgbouncer.pools.clientConnectionsWaiting,Gauge,,Client connections waiting on a server connection
-PostgreSQL,pgbouncer.pools.serverConnectionsLinked,Gauge,,Server connections linked to a client connection
-PostgreSQL,pgbouncer.pools.serverConnectionsIdle,Gauge,,Server connections idle and ready for a client query
-PostgreSQL,pgbouncer.pools.serverConnectionsUser,Gauge,,"Server connections idle more than server_check_delay, needing server_check_query"
-PostgreSQL,pgbouncer.pools.serverConnectionsTested,Gauge,,Server connections currently running either server_reset_query or server_check_query
-PostgreSQL,pgbouncer.pools.serverConnectionsLogin,Gauge,,Server connections currently in the process of logging in
-PostgreSQL,pgbouncer.pools.maxwaitInMilliseconds,Gauge,,Age of oldest unserved client connection
+integration,metric_name,metric_type,metric_enabled,metric_enabled,metric_description
+PostgreSQL,bgwriter.checkpointsScheduled,Rate,true,,Number of scheduled checkpoints that have been performed
+PostgreSQL,bgwriter.checkpointsRequested,Rate,true,,Number of requested checkpoints that have been performed
+PostgreSQL,bgwriter.checkpointWriteTimeInMilliseconds,Rate,true,,"Total amount of time that has been spent in the portion of checkpoint processing where files are written to disk, in milliseconds"
+PostgreSQL,bgwriter.checkpointSyncTimeInMilliseconds,Rate,true,,"Total amount of time that has been spent in the portion of checkpoint processing where files are synchronized to disk, in milliseconds"
+PostgreSQL,bgwriter.buffersWrittenForCheckpoints,Rate,true,,Number of buffers written during checkpoints
+PostgreSQL,bgwriter.buffersWrittenByBackgroundWriter,Rate,true,,Number of buffers written by the background writer
+PostgreSQL,bgwriter.backgroundWriterStops,Rate,true,,Number of times the background writer stopped a cleaning scan because it had written too many buffers
+PostgreSQL,bgwriter.buffersWrittenByBackend,Rate,true,,Number of buffers written directly by a backend
+PostgreSQL,bgwriter.backendFsyncCalls,Rate,true,,Number of times a backend had to execute its own fsync call (normally the background writer handles those even when the backend does its own write)
+PostgreSQL,bgwriter.buffersAllocated,Gauge,true,,Number of buffers allocated
+PostgreSQL,db.connections,Gauge,true,,Number of backends currently connected to this database. 
+PostgreSQL,db.commits,Rate,true,,Number of transactions in this database that have been committed
+PostgreSQL,db.rollbacks,Rate,true,,Number of transactions in this database that have been rolled back
+PostgreSQL,db.reads,Rate,true,,Number of disk blocks read in this database
+PostgreSQL,db.bufferHits,Rate,true,,"Number of times disk blocks were found already in the buffer cache, so that a read was not necessary (this only includes hits in the PostgreSQL buffer cache, not the operating system's file system cache)"
+PostgreSQL,db.rowsReturned,Rate,true,,Number of rows returned by queries in this database
+PostgreSQL,db.rowsFetched,Rate,true,,Number of rows fetched by queries in this database
+PostgreSQL,db.rowsInserted,Rate,true,,Number of rows inserted by queries in this database
+PostgreSQL,db.rowsUpdated,Rate,true,,Number of rows updated by queries in this database
+PostgreSQL,db.rowsDeleted,Rate,true,,Number of rows deleted by queries in this database
+PostgreSQL,db.tempFiles,Rate,true,,"Number of temporary files created by queries in this database. All temporary files are counted, regardless of why the temporary file was created (e.g., sorting or hashing), and regardless of the log_temp_files setting."
+PostgreSQL,db.tempWrittenInBytes,Rate,true,,"Total amount of data written to temporary files by queries in this database. All temporary files are counted, regardless of why the temporary file was created, and regardless of the log_temp_files setting."
+PostgreSQL,db.deadlocks,Rate,true,,Number of deadlocks detected in this database
+PostgreSQL,db.readTimeInMilliseconds,Rate,true,,"Time spent reading data file blocks by backends in this database, in milliseconds"
+PostgreSQL,db.writeTimeInMilliseconds,Rate,true,,"Time spent writing data file blocks by backends in this database, in milliseconds"
+PostgreSQL,db.conflicts.tablespace,Rate,true,,Number of queries in this database that have been canceled due to dropped tablespaces
+PostgreSQL,db.conflicts.locks,Rate,true,,Number of queries in this database that have been canceled due to lock timeouts
+PostgreSQL,db.conflicts.snapshot,Rate,true,,Number of queries in this database that have been canceled due to old snapshots
+PostgreSQL,db.conflicts.bufferpin,Rate,true,,Number of queries in this database that have been canceled due to pinned buffers
+PostgreSQL,db.conflicts.deadlock,Rate,true,,Number of queries in this database that have been canceled due to deadlocks
+PostgreSQL,db.newRows,Gauge,true,,Number of rows added to a specific db
+PostgreSQL,db.newRowsInBytes,Gauge,true,,Number of rows added to a specific db in bytes
+PostgreSQL,db.obsoleteRows,Gauge,true,,Number of obsolete rows in a specific db
+PostgreSQL,db.obsoleteRowsInBytes,Gauge,true,,Number of obsolete rows in a specific db in bytes
+PostgreSQL,db.bloat,Gauge,true,,Difference of new rows and obsolete rows
+PostgreSQL,db.bloatInBytes,Gauge,true,,Difference of new rows and obsolete rows in bytes
+PostgreSQL,table.newRows,Gauge,true,,Number of rows added to a specific table
+PostgreSQL,table.newRowsInBytes,Gauge,true,,Number of rows added to a specific table in bytes
+PostgreSQL,table.obsoleteRows,Gauge,true,,Number of obsolete rows in a specific table
+PostgreSQL,table.obsoleteRowsInBytes,Gauge,true,,Number of obsolete rows in a specific table in bytes
+PostgreSQL,table.bloat,Gauge,true,,Difference of new rows and obsolete rows
+PostgreSQL,table.bloatInBytes,Gauge,true,,Difference of new rows and obsolete rows in bytes
+PostgreSQL,table.requestsPerSecond,Rate,true,,The request rate
+PostgreSQL,table.queriesPerSecond,Rate,true,,The query rate
+PostgreSQL,table.transactionsPerSecond,Rate,true,,The transaction rate
+PostgreSQL,table.indexSizeInBytes,Gauge,true,,The total disk space used by indexes attached to the specified table.
+PostgreSQL,table.lastVacuum,Timestamp,true,,Time of last vacuum on table
+PostgreSQL,table.lastAutoVacuum,Timestamp,true,,Time of last auto vacuum on table 
+PostgreSQL,table.lastAnalyze,Timestamp,true,,Time of last analyze on table
+PostgreSQL,table.lastAutoAnalyze,Timestamp,true,,Time of last auto analyze on table
+PostgreSQL,index.blocksRead,Gauge,true,,The number of disk blocks read from all indexes on this table.
+PostgreSQL,index.blocksHit,Gauge,true,,The number of buffer hits in all indexes on this table.
+PostgreSQL,index.toastBlocksRead,Gauge,true,,The number of disk blocks read from this table's TOAST table index.
+PostgreSQL,index.toastBlocksHit,Gauge,true,,The number of buffer hits in this table's TOAST table index.
+PostgreSQL,table.totalSizeInBytes,Gauge,true,,"The total disk space used by the table, including indexes and TOAST data"
+PostgreSQL,index.rowsRead,Gauge,true,,The number of index entries returned by scans on this index.
+PostgreSQL,index.sizeInBytes,Gauge,true,,The size of an index
+PostgreSQL,pgbouncer.stats.requestsPerSecond,Rate,true,,The request rate
+PostgreSQL,pgbouncer.stats.queriesPerSecond,Rate,true,,The query rate
+PostgreSQL,pgbouncer.stats.transactionsPerSecond,Rate,true,,The transaction rate
+PostgreSQL,pgbouncer.stats.bytesInPerSecond,Rate,true,,The total network traffic received
+PostgreSQL,pgbouncer.stats.bytesOutPerSecond,Rate,true,,The total network traffic sent
+PostgreSQL,pgbouncer.stats.totalQueryInMilliseconds,Rate,true,,Time spent by pgbouncer actively querying PostgreSQL
+PostgreSQL,pgbouncer.stats.totalTransactionInMilliseconds,Rate,true,,Time spent by pgbouncer in transactions
+PostgreSQL,pgbouncer.stats.avgRequests,Gauge,true,,The average number of requests per second in last stat period
+PostgreSQL,pgbouncer.stats.avgQueryCount,Gauge,true,,The average number of queries per second in last stat period
+PostgreSQL,pgbouncer.stats.avgTransactionCount,Gauge,true,,The average number of transactions per second in last stat period
+PostgreSQL,pgbouncer.stats.avgBytesIn,Gauge,true,,The client network traffic received
+PostgreSQL,pgbouncer.stats.avgBytesOut,Gauge,true,,The client network traffic sent
+PostgreSQL,pgbouncer.stats.avgQueryDurationInMilliseconds,Gauge,true,,The average query duration
+PostgreSQL,pgbouncer.stats.avgTransactionDurationInMilliseconds,Gauge,true,,The average transaction duration
+PostgreSQL,pgbouncer.pools.clientConnectionsActive,Gauge,true,,Client connections linked to server connection and able to process queries
+PostgreSQL,pgbouncer.pools.clientConnectionsWaiting,Gauge,true,,Client connections waiting on a server connection
+PostgreSQL,pgbouncer.pools.serverConnectionsLinked,Gauge,true,,Server connections linked to a client connection
+PostgreSQL,pgbouncer.pools.serverConnectionsIdle,Gauge,true,,Server connections idle and ready for a client query
+PostgreSQL,pgbouncer.pools.serverConnectionsUser,Gauge,true,,"Server connections idle more than server_check_delay, needing server_check_query"
+PostgreSQL,pgbouncer.pools.serverConnectionsTested,Gauge,true,,Server connections currently running either server_reset_query or server_check_query
+PostgreSQL,pgbouncer.pools.serverConnectionsLogin,Gauge,true,,Server connections currently in the process of logging in
+PostgreSQL,pgbouncer.pools.maxwaitInMilliseconds,Gauge,true,,Age of oldest unserved client connection
