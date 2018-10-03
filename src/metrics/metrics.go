@@ -50,22 +50,22 @@ type serverVersionRow struct {
 	Version string `db:"server_version"`
 }
 
-func collectVersion(connection *connection.PGSQLConnection) (semver.Version, error) {
+func collectVersion(connection *connection.PGSQLConnection) (*semver.Version, error) {
 	var versionRows []*serverVersionRow
 	if err := connection.Query(&versionRows, versionQuery); err != nil {
-		return semver.Version{}, err
+		return nil, err
 	}
 
 	v, err := semver.ParseTolerant(versionRows[0].Version)
 	if err != nil {
-		return semver.Version{}, err
+		return nil, err
 	}
 
-	return v, nil
+	return &v, nil
 }
 
 // PopulateInstanceMetrics populates the metrics for an instance
-func PopulateInstanceMetrics(instanceEntity *integration.Entity, version semver.Version, connection *connection.PGSQLConnection) {
+func PopulateInstanceMetrics(instanceEntity *integration.Entity, version *semver.Version, connection *connection.PGSQLConnection) {
 	metricSet := instanceEntity.NewMetricSet("PostgreSQLInstanceSample",
 		metric.Attribute{Key: "displayName", Value: instanceEntity.Metadata.Name},
 		metric.Attribute{Key: "entityName", Value: instanceEntity.Metadata.Namespace + ":" + instanceEntity.Metadata.Name},
@@ -88,7 +88,7 @@ func PopulateInstanceMetrics(instanceEntity *integration.Entity, version semver.
 }
 
 // PopulateDatabaseMetrics populates the metrics for a database
-func PopulateDatabaseMetrics(databases args.DatabaseList, version semver.Version, integration *integration.Integration, connection *connection.PGSQLConnection) {
+func PopulateDatabaseMetrics(databases args.DatabaseList, version *semver.Version, integration *integration.Integration, connection *connection.PGSQLConnection) {
 	databaseDefinitions := generateDatabaseDefinitions(databases, version)
 
 	for _, queryDef := range databaseDefinitions {

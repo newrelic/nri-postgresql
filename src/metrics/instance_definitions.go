@@ -4,7 +4,7 @@ import (
 	"github.com/blang/semver"
 )
 
-func generateInstanceDefinitions(version semver.Version) []*QueryDefinition {
+func generateInstanceDefinitions(version *semver.Version) []*QueryDefinition {
 	queryDefinitions := make([]*QueryDefinition, 1, 3)
 	v91 := semver.MustParse("9.1.0")
 	v92 := semver.MustParse("9.2.0")

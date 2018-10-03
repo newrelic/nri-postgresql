@@ -7,7 +7,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/args"
 )
 
-func generateDatabaseDefinitions(databases args.DatabaseList, version semver.Version) []*QueryDefinition {
+func generateDatabaseDefinitions(databases args.DatabaseList, version *semver.Version) []*QueryDefinition {
 	queryDefinitions := make([]*QueryDefinition, 0, 2)
 
 	v91 := semver.MustParse("9.1.0")
