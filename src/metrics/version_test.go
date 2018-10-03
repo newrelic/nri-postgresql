@@ -1,4 +1,4 @@
-package main
+package metrics
 
 import (
 	"testing"
@@ -18,7 +18,7 @@ func Test_collectVersion(t *testing.T) {
 
 	mock.ExpectQuery(versionQuery).WillReturnRows(versionRows)
 
-	expected := semver.Version{
+	expected := &semver.Version{
 		Major: 10,
 		Minor: 3,
 	}

@@ -14,7 +14,7 @@ func Test_generateDatabaseDefinitions_LengthV8(t *testing.T) {
 
 	databaseList := args.DatabaseList{"test1": {}}
 
-	queryDefinitions := generateDatabaseDefinitions(databaseList, v8)
+	queryDefinitions := generateDatabaseDefinitions(databaseList, &v8)
 
 	assert.Equal(t, 1, len(queryDefinitions))
 }
@@ -23,7 +23,7 @@ func Test_generateDatabaseDefinitions_LengthV912(t *testing.T) {
 	v912 := semver.MustParse("9.1.2")
 	databaseList := args.DatabaseList{"test1": {}}
 
-	queryDefinitions := generateDatabaseDefinitions(databaseList, v912)
+	queryDefinitions := generateDatabaseDefinitions(databaseList, &v912)
 
 	assert.Equal(t, 1, len(queryDefinitions))
 }
@@ -32,7 +32,7 @@ func Test_generateDatabaseDefinitions_LengthV925(t *testing.T) {
 	v925 := semver.MustParse("9.2.5")
 	databaseList := args.DatabaseList{"test1": {}}
 
-	queryDefinitions := generateDatabaseDefinitions(databaseList, v925)
+	queryDefinitions := generateDatabaseDefinitions(databaseList, &v925)
 
 	assert.Equal(t, 2, len(queryDefinitions))
 }

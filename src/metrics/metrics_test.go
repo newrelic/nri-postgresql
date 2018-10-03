@@ -31,7 +31,7 @@ func TestPopulateInstanceMetrics(t *testing.T) {
 	mock.ExpectQuery(".*scheduled_checkpoints_performed.*").
 		WillReturnRows(instanceRows)
 
-	PopulateInstanceMetrics(testEntity, version, testConnection)
+	PopulateInstanceMetrics(testEntity, &version, testConnection)
 
 	expected := map[string]interface{}{
 		"bgwriter.checkpointsScheduledPerSecond":             float64(0),
@@ -73,7 +73,7 @@ func TestPopulateDatabaseMetrics(t *testing.T) {
 	mock.ExpectQuery(".*UNDER91.*").
 		WillReturnRows(databaseRows)
 
-	PopulateDatabaseMetrics(dbList, version, testIntegration, testConnection)
+	PopulateDatabaseMetrics(dbList, &version, testIntegration, testConnection)
 
 	expected := map[string]interface{}{
 		"db.connections":           float64(1),
@@ -295,9 +295,9 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 		"pgbouncer.stats.avgBytesIn":                                      float64(11),
 		"pgbouncer.stats.avgBytesOut":                                     float64(12),
 		"pgbouncer.stats.avgQueryDurationInMilliseconds":                  float64(13),
-		"displayName": "testDB",
-		"entityName":  "pgbouncer:testDB",
-		"event_type":  "PgBouncerSample",
+		"displayName":                                                     "testDB",
+		"entityName":                                                      "pgbouncer:testDB",
+		"event_type":                                                      "PgBouncerSample",
 	}
 
 	expectedPool := map[string]interface{}{

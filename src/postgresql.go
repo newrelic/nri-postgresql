@@ -19,7 +19,7 @@ const (
 func main() {
 	var args args.ArgumentList
 	// Create Integration
-	i, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
+	postgresIntegration, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
@@ -35,39 +35,29 @@ func main() {
 	}
 
 	databaseList := args.GetCollectionList()
+	connectionInfo := connection.DefaultConnectionInfo(&args)
 
-	// Create a new connection
-	ci := connection.DefaultConnectionInfo(&args)
-	con, err := ci.NewConnection()
+	instance, err := postgresIntegration.Entity(args.Hostname, "instance")
 	if err != nil {
-		log.Error("Error creating connection to SQL Server: %s", err.Error())
+		log.Error("Error creating instance entity: %s", err.Error())
 		os.Exit(1)
 	}
 
-	instance, err := i.Entity("testInstance", "instance")
-	version, err := collectVersion(con)
-
-	if args.HasInventory() {
-		inventory.PopulateInventory(instance, con)
+	if args.HasMetrics() {
+		metrics.PopulateMetrics(connectionInfo, databaseList, instance, postgresIntegration, args.Pgbouncer)
 	}
 
-	if args.HasMetrics() {
-		metrics.PopulateInstanceMetrics(instance, version, con)
-		metrics.PopulateDatabaseMetrics(databaseList, version, i, con)
-		metrics.PopulateTableMetrics(databaseList, i, ci)
-		metrics.PopulateIndexMetrics(databaseList, i, ci)
-		if args.Pgbouncer {
-			ci.Database = "pgbouncer"
-			con, err = ci.NewConnection()
-			if err != nil {
-				log.Error("Error creating connection to pgbouncer database: %s", err)
-			} else {
-				metrics.PopulatePgBouncerMetrics(i, con)
-			}
+	if args.HasInventory() {
+		con, err := connectionInfo.NewConnection()
+		defer con.Close()
+		if err != nil {
+			log.Error("Inventory collection failed: error creating connection to SQL Server: %s", err.Error())
+		} else {
+			inventory.PopulateInventory(instance, con)
 		}
 	}
 
-	if err = i.Publish(); err != nil {
+	if err = postgresIntegration.Publish(); err != nil {
 		log.Error(err.Error())
 	}
 }

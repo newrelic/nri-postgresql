@@ -11,8 +11,62 @@ import (
 	"github.com/newrelic/nri-postgresql/src/connection"
 )
 
+const (
+	versionQuery = `SHOW server_version`
+)
+
+// PopulateMetrics collects metrics for each type
+func PopulateMetrics(ci *connection.Info, databaseList args.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer bool) {
+
+	con, err := ci.NewConnection()
+	defer con.Close()
+	if err != nil {
+		log.Error("Metrics collection failed: error creating connection to SQL Server: %s", err.Error())
+		return
+	}
+
+	version, err := collectVersion(con)
+	if err != nil {
+		log.Error("Metrics collection failed: error collecting version number: %s", err.Error())
+		return
+	}
+
+	PopulateInstanceMetrics(instance, version, con)
+	PopulateDatabaseMetrics(databaseList, version, i, con)
+	PopulateTableMetrics(databaseList, i, ci)
+	PopulateIndexMetrics(databaseList, i, ci)
+	if collectPgBouncer {
+		ci.Database = "pgbouncer"
+		con, err = ci.NewConnection()
+		defer con.Close()
+		if err != nil {
+			log.Error("Error creating connection to pgbouncer database: %s", err)
+		} else {
+			PopulatePgBouncerMetrics(i, con)
+		}
+	}
+}
+
+type serverVersionRow struct {
+	Version string `db:"server_version"`
+}
+
+func collectVersion(connection *connection.PGSQLConnection) (*semver.Version, error) {
+	var versionRows []*serverVersionRow
+	if err := connection.Query(&versionRows, versionQuery); err != nil {
+		return nil, err
+	}
+
+	v, err := semver.ParseTolerant(versionRows[0].Version)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v, nil
+}
+
 // PopulateInstanceMetrics populates the metrics for an instance
-func PopulateInstanceMetrics(instanceEntity *integration.Entity, version semver.Version, connection *connection.PGSQLConnection) {
+func PopulateInstanceMetrics(instanceEntity *integration.Entity, version *semver.Version, connection *connection.PGSQLConnection) {
 	metricSet := instanceEntity.NewMetricSet("PostgreSQLInstanceSample",
 		metric.Attribute{Key: "displayName", Value: instanceEntity.Metadata.Name},
 		metric.Attribute{Key: "entityName", Value: instanceEntity.Metadata.Namespace + ":" + instanceEntity.Metadata.Name},
@@ -35,7 +89,7 @@ func PopulateInstanceMetrics(instanceEntity *integration.Entity, version semver.
 }
 
 // PopulateDatabaseMetrics populates the metrics for a database
-func PopulateDatabaseMetrics(databases args.DatabaseList, version semver.Version, integration *integration.Integration, connection *connection.PGSQLConnection) {
+func PopulateDatabaseMetrics(databases args.DatabaseList, version *semver.Version, integration *integration.Integration, connection *connection.PGSQLConnection) {
 	databaseDefinitions := generateDatabaseDefinitions(databases, version)
 
 	for _, queryDef := range databaseDefinitions {
@@ -78,6 +132,7 @@ func PopulateTableMetrics(databases args.DatabaseList, integration *integration.
 		// Create a new connection to the database
 		ci.Database = database
 		con, err := ci.NewConnection()
+		defer con.Close()
 		if err != nil {
 			log.Error("Failed to connect to database %s: %s", database, err.Error())
 			continue
@@ -140,6 +195,7 @@ func PopulateIndexMetrics(databases args.DatabaseList, integration *integration.
 	for database, schemaList := range databases {
 		ci.Database = database
 		con, err := ci.NewConnection()
+		defer con.Close()
 		if err != nil {
 			log.Error("Failed to create new connection to database %s: %s", database, err.Error())
 			continue

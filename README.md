@@ -1,31 +1,49 @@
 # New Relic Infrastructure Integration for PostgreSQL
 
-Reports status and metrics for postgresql service
+
+The New Relic Infrastructure Integration for PostgreSQL captures critical performance metrics and inventory reported by PostgreSQL instances. Data on the level of instance, database, and collection is collected. Additionally, the integration can be configured to collect metrics on PgBouncer.
+
+Inventory data for the configuration of the instance is collected from the `pg_statistics` database.
 
 ## Requirements
 
-Document if the Integration has some special requirement. Ex: Installing an
-extra module, permissions to execute a binary, etc.
-
-## Configuration
-
-Document if the Integration needs some configuration for running. Ex: Set
-up permissions, add a special user, etc.
+A user with the necessary permissions must be present on the database for all metrics to be collected. See the documentation for details on permissions.
 
 ## Installation
 
-Describe the installation process for the Integration.
+- download an archive file for the PostgreSQL Integration
+- extract `postgresql-definition.yml` and `/bin` directory into `/var/db/newrelic-infra/newrelic-integrations`
+- add execute permissions for the binary file `nr-postgresql` (if required)
+- extract `postgresql-config.yml.sample` into `/etc/newrelic-infra/integrations.d`
 
 ## Usage
 
-Document mandatory and optional arguments for running the Integration, and how to execute it.
+This is the description about how to run the PostgreSQL Integration with New Relic Infrastructure agent, so it is required to have the agent installed (see [agent installation](https://docs.newrelic.com/docs/infrastructure/new-relic-infrastructure/installation/install-infrastructure-linux)).
+
+In order to use the PostgreSQL Integration it is required to configure `postgresql-config.yml.sample` file. Firstly, rename the file to `postgresql-config.yml`. Then, depending on your needs, specify all instances that you want to monitor. Once this is done, restart the Infrastructure agent.
+
+You can view your data in Insights by creating your own custom NRQL queries. To do so, use the **PostgreSQLInstanceSample**, **PostgresSQLDatabaseSample**, **PostgreSQLTableSample**,**PostgreSQLIndexSample**, and **PgBouncerSample** event types.
 
 ## Compatibility
 
-* Supported OS:
-* postgresql versions:
-* Edition:
+* Supported OS: No limitations
+* Supported PostgreSQL version: 9.0+
 
 ## Integration Development usage
 
-Describe the development workflow for this Integration.
+Assuming that you have source code you can build and run the PostgreSQL Integration locally.
+
+* Go to directory of the PostgreSQL Integration and build it
+```bash
+$ make
+```
+* The command above will execute tests for the PostgreSQL Integration and build an executable file called `nr-postgresql` in `bin` directory.
+```bash
+$ ./bin/nr-postgresql
+```
+* If you want to know more about usage of `./nr-postgresql` check
+```bash
+$ ./bin/nr-postgresql --help
+```
+
+For managing external dependencies [govendor tool](https://github.com/kardianos/govendor) is used. It is required to lock all external dependencies to specific version (if possible) into vendor directory.
