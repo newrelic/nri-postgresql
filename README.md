@@ -1,13 +1,13 @@
 # New Relic Infrastructure Integration for PostgreSQL
 
 
-The New Relic Infrastructure Integration for PostgreSQL captures critical performance metrics and inventory reported by PostgreSQL instances. Data on the level of mongos, mongod, config server, database, and collection is collected. Additionally, the integration can be configured to collect metrics on PgBouncer.
+The New Relic Infrastructure Integration for PostgreSQL captures critical performance metrics and inventory reported by PostgreSQL instances. Data on the level of instance, database, and collection is collected. Additionally, the integration can be configured to collect metrics on PgBouncer.
 
-Inventory data for the configuration of each mongod, mongos, and config server is collected.
+Inventory data for the configuration of the instance is collected from the `pg_statistics` database.
 
 ## Requirements
 
-A user with the necessary permissions must be present on the cluster and each mongod for all metrics to be collected. See the documentation for details.
+A user with the necessary permissions must be present on the database for all metrics to be collected. See the documentation for details on permissions.
 
 ## Installation
 
