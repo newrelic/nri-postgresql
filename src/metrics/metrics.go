@@ -53,7 +53,7 @@ type serverVersionRow struct {
 func collectVersion(connection *connection.PGSQLConnection) (semver.Version, error) {
 	var versionRows []*serverVersionRow
 	if err := connection.Query(&versionRows, versionQuery); err != nil {
-		log.Error("Failed to execute version query: %v", err)
+		return semver.Version{}, err
 	}
 
 	v, err := semver.ParseTolerant(versionRows[0].Version)
