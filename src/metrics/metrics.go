@@ -15,6 +15,7 @@ const (
 	versionQuery = `SHOW server_version`
 )
 
+// PopulateMetrics collects metrics for each type
 func PopulateMetrics(ci *connection.Info, databaseList args.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer bool) {
 
 	con, err := ci.NewConnection()

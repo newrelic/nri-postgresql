@@ -52,7 +52,6 @@ func main() {
 		defer con.Close()
 		if err != nil {
 			log.Error("Inventory collection failed: error creating connection to SQL Server: %s", err.Error())
-			return
 		} else {
 			inventory.PopulateInventory(instance, con)
 		}
