@@ -48,7 +48,6 @@ func main() {
 	}
 
 	if args.HasInventory() {
-		// TODO connection database for inventory?
 		con, err := connectionInfo.NewConnection("postgres")
 		if err != nil {
 			log.Error("Inventory collection failed: error creating connection to SQL Server: %s", err.Error())

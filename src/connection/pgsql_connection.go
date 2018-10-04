@@ -55,7 +55,8 @@ func DefaultConnectionInfo(al *args.ArgumentList) Info {
 
 // NewConnection creates a new PGSQLConnection from args
 func (connectionInfo *infoStruct) NewConnection(database string) (*PGSQLConnection, error) {
-	db, err := sqlx.Connect(database, createConnectionURL(connectionInfo))
+	connectionInfo.Database = database
+	db, err := sqlx.Connect("postgres", createConnectionURL(connectionInfo))
 	if err != nil {
 		return nil, err
 	}
