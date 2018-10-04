@@ -75,8 +75,8 @@ func Test_createConnectionURL(t *testing.T) {
 				Hostname:               "localhost",
 				EnableSSL:              true,
 				TrustServerCertificate: true,
-				Port:    "5432",
-				Timeout: "30",
+				Port:                   "5432",
+				Timeout:                "30",
 			},
 			"postgres://user:pass@localhost:5432/postgres?connect_timeout=30&sslmode=require",
 		},
@@ -128,7 +128,7 @@ func Test_createConnectionURL(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		if out := createConnectionURL(DefaultConnectionInfo(tc.arg)); out != tc.want {
+		if out := createConnectionURL(DefaultConnectionInfo(tc.arg).(*infoStruct)); out != tc.want {
 			t.Errorf("Test Case %s Failed: Expected '%s' got '%s'", tc.name, tc.want, out)
 		}
 	}

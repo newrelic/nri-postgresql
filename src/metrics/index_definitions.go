@@ -7,8 +7,13 @@ import (
 	"github.com/newrelic/nri-postgresql/src/args"
 )
 
-func generateIndexDefinitions(schemaList args.SchemaList) *QueryDefinition {
-	return indexDefinition.insertSchemaTableIndexes(schemaList)
+func generateIndexDefinitions(schemaList args.SchemaList) []*QueryDefinition {
+	queryDefinitions := make([]*QueryDefinition, 0)
+	if def := indexDefinition.insertSchemaTableIndexes(schemaList); def != nil {
+		queryDefinitions = append(queryDefinitions, def)
+	}
+
+	return queryDefinitions
 }
 
 func (qd *QueryDefinition) insertSchemaTableIndexes(schemaList args.SchemaList) *QueryDefinition {
@@ -19,6 +24,10 @@ func (qd *QueryDefinition) insertSchemaTableIndexes(schemaList args.SchemaList) 
 				schemaTableIndexes = append(schemaTableIndexes, fmt.Sprintf("'%s.%s.%s'", schema, table, index))
 			}
 		}
+	}
+
+	if len(schemaTableIndexes) == 0 {
+		return nil
 	}
 
 	schemaTableIndexString := strings.Join(schemaTableIndexes, ",")

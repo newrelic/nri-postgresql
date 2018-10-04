@@ -16,14 +16,15 @@ const (
 )
 
 // PopulateMetrics collects metrics for each type
-func PopulateMetrics(ci *connection.Info, databaseList args.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer bool) {
+func PopulateMetrics(ci connection.Info, databaseList args.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer bool) {
 
-	con, err := ci.NewConnection()
-	defer con.Close()
+	// TODO connect to a database for version?
+	con, err := ci.NewConnection("")
 	if err != nil {
 		log.Error("Metrics collection failed: error creating connection to SQL Server: %s", err.Error())
 		return
 	}
+	defer con.Close()
 
 	version, err := collectVersion(con)
 	if err != nil {
@@ -36,8 +37,7 @@ func PopulateMetrics(ci *connection.Info, databaseList args.DatabaseList, instan
 	PopulateTableMetrics(databaseList, i, ci)
 	PopulateIndexMetrics(databaseList, i, ci)
 	if collectPgBouncer {
-		ci.Database = "pgbouncer"
-		con, err = ci.NewConnection()
+		con, err = ci.NewConnection("pgbouncer")
 		defer con.Close()
 		if err != nil {
 			log.Error("Error creating connection to pgbouncer database: %s", err)
@@ -127,11 +127,14 @@ func PopulateDatabaseMetrics(databases args.DatabaseList, version *semver.Versio
 }
 
 // PopulateTableMetrics populates the metrics for a table
-func PopulateTableMetrics(databases args.DatabaseList, integration *integration.Integration, ci *connection.Info) {
+func PopulateTableMetrics(databases args.DatabaseList, integration *integration.Integration, ci connection.Info) {
 	for database, schemaList := range databases {
+		if len(schemaList) == 0 {
+			return
+		}
+
 		// Create a new connection to the database
-		ci.Database = database
-		con, err := ci.NewConnection()
+		con, err := ci.NewConnection(database)
 		defer con.Close()
 		if err != nil {
 			log.Error("Failed to connect to database %s: %s", database, err.Error())
@@ -143,6 +146,7 @@ func PopulateTableMetrics(databases args.DatabaseList, integration *integration.
 }
 
 func populateTableMetricsForDatabase(schemaList args.SchemaList, con *connection.PGSQLConnection, integration *integration.Integration) {
+
 	tableDefinitions := generateTableDefinitions(schemaList)
 
 	// collect into model
@@ -191,10 +195,9 @@ func populateTableMetricsForDatabase(schemaList args.SchemaList, con *connection
 }
 
 // PopulateIndexMetrics populates the metrics for an index
-func PopulateIndexMetrics(databases args.DatabaseList, integration *integration.Integration, ci *connection.Info) {
+func PopulateIndexMetrics(databases args.DatabaseList, integration *integration.Integration, ci connection.Info) {
 	for database, schemaList := range databases {
-		ci.Database = database
-		con, err := ci.NewConnection()
+		con, err := ci.NewConnection(database)
 		defer con.Close()
 		if err != nil {
 			log.Error("Failed to create new connection to database %s: %s", database, err.Error())
@@ -205,54 +208,57 @@ func PopulateIndexMetrics(databases args.DatabaseList, integration *integration.
 }
 
 func populateIndexMetricsForDatabase(schemaList args.SchemaList, con *connection.PGSQLConnection, integration *integration.Integration) {
-	indexDefinition := generateIndexDefinitions(schemaList)
+	indexDefinitions := generateIndexDefinitions(schemaList)
 
-	// collect into model
-	dataModels := indexDefinition.GetDataModels()
-	if err := con.Query(dataModels, indexDefinition.GetQuery()); err != nil {
-		log.Error("Could not execute index query: %s", err.Error())
-		return
+	for _, definition := range indexDefinitions {
+
+		// collect into model
+		dataModels := definition.GetDataModels()
+		if err := con.Query(dataModels, definition.GetQuery()); err != nil {
+			log.Error("Could not execute index query: %s", err.Error())
+			return
+		}
+
+		// for each row in the response
+		v := reflect.Indirect(reflect.ValueOf(dataModels))
+		for i := 0; i < v.Len(); i++ {
+			row := v.Index(i).Interface()
+			dbName, err := GetDatabaseName(row)
+			if err != nil {
+				log.Error("Unable to get database name: %s", err.Error())
+			}
+			schemaName, err := GetSchemaName(row)
+			if err != nil {
+				log.Error("Unable to get schema name: %s", err.Error())
+			}
+			tableName, err := GetTableName(row)
+			if err != nil {
+				log.Error("Unable to get table name: %s", err.Error())
+			}
+			indexName, err := GetIndexName(row)
+			if err != nil {
+				log.Error("Unable to get index name: %s", err.Error())
+			}
+
+			indexEntity, err := integration.Entity(indexName, "index")
+			if err != nil {
+				log.Error("Failed to get table entity for index %s: %s", indexName, err.Error())
+			}
+			metricSet := indexEntity.NewMetricSet("PostgreSQLIndexSample",
+				metric.Attribute{Key: "displayName", Value: indexEntity.Metadata.Name},
+				metric.Attribute{Key: "entityName", Value: indexEntity.Metadata.Namespace + ":" + indexEntity.Metadata.Name},
+				metric.Attribute{Key: "database", Value: dbName},
+				metric.Attribute{Key: "schema", Value: schemaName},
+				metric.Attribute{Key: "table", Value: tableName},
+			)
+
+			if err := metricSet.MarshalMetrics(row); err != nil {
+				log.Error("Failed to populate index entity with metrics: %s", err.Error())
+			}
+
+		}
+
 	}
-
-	// for each row in the response
-	v := reflect.Indirect(reflect.ValueOf(dataModels))
-	for i := 0; i < v.Len(); i++ {
-		row := v.Index(i).Interface()
-		dbName, err := GetDatabaseName(row)
-		if err != nil {
-			log.Error("Unable to get database name: %s", err.Error())
-		}
-		schemaName, err := GetSchemaName(row)
-		if err != nil {
-			log.Error("Unable to get schema name: %s", err.Error())
-		}
-		tableName, err := GetTableName(row)
-		if err != nil {
-			log.Error("Unable to get table name: %s", err.Error())
-		}
-		indexName, err := GetIndexName(row)
-		if err != nil {
-			log.Error("Unable to get index name: %s", err.Error())
-		}
-
-		indexEntity, err := integration.Entity(indexName, "index")
-		if err != nil {
-			log.Error("Failed to get table entity for index %s: %s", indexName, err.Error())
-		}
-		metricSet := indexEntity.NewMetricSet("PostgreSQLIndexSample",
-			metric.Attribute{Key: "displayName", Value: indexEntity.Metadata.Name},
-			metric.Attribute{Key: "entityName", Value: indexEntity.Metadata.Namespace + ":" + indexEntity.Metadata.Name},
-			metric.Attribute{Key: "database", Value: dbName},
-			metric.Attribute{Key: "schema", Value: schemaName},
-			metric.Attribute{Key: "table", Value: tableName},
-		)
-
-		if err := metricSet.MarshalMetrics(row); err != nil {
-			log.Error("Failed to populate index entity with metrics: %s", err.Error())
-		}
-
-	}
-
 }
 
 // PopulatePgBouncerMetrics populates pgbouncer metrics

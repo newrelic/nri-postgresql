@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/stretchr/testify/mock"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
@@ -20,4 +21,13 @@ func CreateMockSQL(t *testing.T) (con *PGSQLConnection, mock sqlmock.Sqlmock) {
 	}
 
 	return
+}
+
+type MockInfo struct {
+	mock.Mock
+}
+
+func (mi *MockInfo) NewConnection(database string) (*PGSQLConnection, error) {
+	args := mi.Called(database)
+	return args.Get(0).(*PGSQLConnection), args.Error(1)
 }
