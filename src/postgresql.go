@@ -48,11 +48,11 @@ func main() {
 	}
 
 	if args.HasInventory() {
-		con, err := connectionInfo.NewConnection()
-		defer con.Close()
+		con, err := connectionInfo.NewConnection("postgres")
 		if err != nil {
 			log.Error("Inventory collection failed: error creating connection to SQL Server: %s", err.Error())
 		} else {
+			defer con.Close()
 			inventory.PopulateInventory(instance, con)
 		}
 	}

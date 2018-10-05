@@ -8,9 +8,13 @@ import (
 )
 
 func generateTableDefinitions(schemaList args.SchemaList) []*QueryDefinition {
-	queryDefinitions := make([]*QueryDefinition, 2)
-	queryDefinitions[0] = tableBloatDefinition.insertSchemaTables(schemaList)
-	queryDefinitions[1] = tableDefinition.insertSchemaTables(schemaList)
+	queryDefinitions := make([]*QueryDefinition, 0)
+	if def := tableBloatDefinition.insertSchemaTables(schemaList); def != nil {
+		queryDefinitions = append(queryDefinitions, def)
+	}
+	if def := tableDefinition.insertSchemaTables(schemaList); def != nil {
+		queryDefinitions = append(queryDefinitions, def)
+	}
 
 	return queryDefinitions
 }
@@ -21,6 +25,10 @@ func (qd *QueryDefinition) insertSchemaTables(schemaList args.SchemaList) *Query
 		for table := range tableList {
 			schemaTables = append(schemaTables, fmt.Sprintf("'%s.%s'", schema, table))
 		}
+	}
+
+	if len(schemaTables) == 0 {
+		return nil
 	}
 
 	schemaTablesString := strings.Join(schemaTables, ",")

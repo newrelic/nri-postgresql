@@ -18,7 +18,11 @@ type PGSQLConnection struct {
 }
 
 // Info holds all the information needed from the user to create a new connection
-type Info struct {
+type Info interface {
+	NewConnection(database string) (*PGSQLConnection, error)
+}
+
+type connectionInfo struct {
 	Database               string
 	Username               string
 	Password               string
@@ -33,8 +37,8 @@ type Info struct {
 }
 
 // DefaultConnectionInfo takes an argument list and constructs a default connection out of it
-func DefaultConnectionInfo(al *args.ArgumentList) *Info {
-	return &Info{
+func DefaultConnectionInfo(al *args.ArgumentList) Info {
+	return &connectionInfo{
 		Database:               "postgres",
 		Username:               al.Username,
 		Password:               al.Password,
@@ -50,8 +54,9 @@ func DefaultConnectionInfo(al *args.ArgumentList) *Info {
 }
 
 // NewConnection creates a new PGSQLConnection from args
-func (connectionInfo *Info) NewConnection() (*PGSQLConnection, error) {
-	db, err := sqlx.Connect("postgres", createConnectionURL(connectionInfo))
+func (ci *connectionInfo) NewConnection(database string) (*PGSQLConnection, error) {
+	ci.Database = database
+	db, err := sqlx.Connect("postgres", createConnectionURL(ci))
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +81,7 @@ func (p PGSQLConnection) Query(v interface{}, query string) error {
 
 // createConnectionURL creates the connection string. A list of paramters
 // can be found here https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters
-func createConnectionURL(ci *Info) string {
+func createConnectionURL(ci *connectionInfo) string {
 	connectionURL := &url.URL{
 		Scheme: "postgres",
 		User:   url.UserPassword(ci.Username, ci.Password),
@@ -100,7 +105,7 @@ func createConnectionURL(ci *Info) string {
 }
 
 // addSSLQueries add SSL query parameters
-func addSSLQueries(query url.Values, ci *Info) {
+func addSSLQueries(query url.Values, ci *connectionInfo) {
 	if ci.TrustServerCertificate {
 		query.Add("sslmode", "require")
 	} else {

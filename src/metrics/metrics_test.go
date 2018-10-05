@@ -8,6 +8,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/args"
 	"github.com/newrelic/nri-postgresql/src/connection"
 	"github.com/stretchr/testify/assert"
+	tmock "github.com/stretchr/testify/mock"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
@@ -192,6 +193,25 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 	assert.Equal(t, expectedBase, tableEntity.Metrics[1].Metrics)
 }
 
+func Test_populateTableMetricsForDatabase_noTables(t *testing.T) {
+	testIntegration, _ := integration.New("test", "test")
+
+	dbList := args.DatabaseList{
+		"db1": args.SchemaList{
+			"schema1": args.TableList{},
+		},
+	}
+
+	testConnection, _ := connection.CreateMockSQL(t)
+
+	populateTableMetricsForDatabase(dbList["db1"], testConnection, testIntegration)
+
+	tableEntity, err := testIntegration.Entity("table1", "table")
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(tableEntity.Metrics))
+
+}
+
 func Test_populateIndexMetricsForDatabase(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
@@ -236,6 +256,26 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 	indexEntity, err := testIntegration.Entity("index1", "index")
 	assert.Nil(t, err)
 	assert.Equal(t, expected, indexEntity.Metrics[0].Metrics)
+}
+
+func Test_populateIndexMetricsForDatabase_noIndexes(t *testing.T) {
+	testIntegration, _ := integration.New("test", "test")
+
+	dbList := args.DatabaseList{
+		"db1": args.SchemaList{
+			"schema1": args.TableList{
+				"table1": []string{},
+			},
+		},
+	}
+
+	testConnection, _ := connection.CreateMockSQL(t)
+
+	populateIndexMetricsForDatabase(dbList["db1"], testConnection, testIntegration)
+
+	indexEntity, err := testIntegration.Entity("index1", "index")
+	assert.Nil(t, err)
+	assert.Equal(t, 0, len(indexEntity.Metrics))
 }
 
 func TestPopulatePgBouncerMetrics(t *testing.T) {
@@ -318,4 +358,31 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, expectedStats, pbEntity.Metrics[0].Metrics)
 	assert.Equal(t, expectedPool, pbEntity.Metrics[1].Metrics)
+}
+
+func TestPopulateMetrics(t *testing.T) {
+	testIntegration, _ := integration.New("test", "test")
+
+	dbList := args.DatabaseList{
+		"db1": args.SchemaList{
+			"schema1": args.TableList{
+				"table1": []string{
+					"index1",
+				},
+			},
+		},
+	}
+
+	ci := &connection.MockInfo{}
+	testConnection, mock := connection.CreateMockSQL(t)
+
+	versionRows := sqlmock.NewRows([]string{"server_version"}).AddRow("9.2.24")
+	mock.ExpectQuery(".*server_version.*").WillReturnRows(versionRows)
+
+	ci.On("NewConnection", tmock.Anything).Return(testConnection, nil)
+
+	instance, _ := testIntegration.Entity("testInstance", "instance")
+
+	PopulateMetrics(ci, dbList, instance, testIntegration, true)
+
 }
