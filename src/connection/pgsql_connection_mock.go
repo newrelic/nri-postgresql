@@ -23,10 +23,12 @@ func CreateMockSQL(t *testing.T) (con *PGSQLConnection, mock sqlmock.Sqlmock) {
 	return
 }
 
+// MockInfo is a mock struct which implements connection.Info
 type MockInfo struct {
 	mock.Mock
 }
 
+// NewConnection creates a new mock info connection from the mockinfo struct
 func (mi *MockInfo) NewConnection(database string) (*PGSQLConnection, error) {
 	args := mi.Called(database)
 	return args.Get(0).(*PGSQLConnection), args.Error(1)
