@@ -9,6 +9,9 @@ import (
 
 func generateDatabaseDefinitions(databases args.DatabaseList, version *semver.Version) []*QueryDefinition {
 	queryDefinitions := make([]*QueryDefinition, 0, 2)
+	if len(databases) == 0 {
+		return queryDefinitions
+	}
 
 	v91 := semver.MustParse("9.1.0")
 	v92 := semver.MustParse("9.2.0")
