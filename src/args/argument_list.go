@@ -58,8 +58,10 @@ func (al ArgumentList) validateSSL() error {
 	if al.EnableSSL {
 		if !al.TrustServerCertificate && al.SSLRootCertLocation == "" {
 			return errors.New("invalid configuration: must specify a certificate file when using SSL and not trusting server certificate")
-		} else if (al.SSLCertLocation != "" && al.SSLKeyLocation == "") || (al.SSLKeyLocation != "" && al.SSLCertLocation == "") {
-			return errors.New("invalid configuration: must specify both a cert and key file")
+		}
+
+		if al.SSLCertLocation == "" || al.SSLKeyLocation == "" {
+			return errors.New("invalid configuration: must specify both a client cert and key file when enabling SSL")
 		}
 	}
 
