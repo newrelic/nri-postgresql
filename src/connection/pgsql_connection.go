@@ -106,6 +106,9 @@ func createConnectionURL(ci *connectionInfo) string {
 
 // addSSLQueries add SSL query parameters
 func addSSLQueries(query url.Values, ci *connectionInfo) {
+	query.Add("sslcert", ci.SSLCertLocation)
+	query.Add("sslkey", ci.SSLKeyLocation)
+
 	if ci.TrustServerCertificate {
 		query.Add("sslmode", "require")
 	} else {
@@ -113,8 +116,4 @@ func addSSLQueries(query url.Values, ci *connectionInfo) {
 		query.Add("sslrootcert", ci.SSLRootCertLocation)
 	}
 
-	if ci.SSLCertLocation != "" && ci.SSLKeyLocation != "" {
-		query.Add("sslcert", ci.SSLCertLocation)
-		query.Add("sslkey", ci.SSLKeyLocation)
-	}
 }
