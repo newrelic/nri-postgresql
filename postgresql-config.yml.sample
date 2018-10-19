@@ -1,24 +1,33 @@
 integration_name: com.newrelic.postgresql
 
 instances:
-  - name: <INSTANCE IDENTIFIER>
+  # A name for the collection
+  - name: sample_postgres
+    # The only supported command is all_data
     command: all_data
     arguments:
-      username: <The username for the PostgreSQL database>
-      password: <The password for the specified user>
-      hostname: <(Optional) The PostgreSQL hostname, default is localhost>
-      port: <(Optional) The port where PostgreSQL database is listening, default is 5432>
-      collection_list: <The list of entities to collect metrics on, of the form '{"database_name":{"schema_name":{"table_name":["index_name"]}'>
-      enable_ssl: <(Optional) true or false. Indicates if SSL encryption should be used, default is false>
-      trust_server_certificate: <(Optional) true or false. If true server certificate is not verified for SSL. If false certificate will be verified against supplied certificate>
-      ssl_root_cert_location: <(Optional) Absolute path to PEM encoded root certificate file. Required if enable_ssl is true and trust_server_certificate is false>
-
-      # Location of client SSL certificate. Will be used instead of the default ~/.postgresql/postgresql.crt
-      ssl_cert_location: <(Optional) Absolute path to PEM encoded client cert file. Must specify ssl_key_location if this is specify. Required if enable_ssl is true>
-
-      # Location of client secret key for the client certification. Will be used instead of the default ~/.postgresql/postgresql.key
-      ssl_key_location: <(Optional) Absolute path to PEM encoded client key file. Must specify ssl_cert_location if this is specify. Required if enable_ssl is true>
-      timeout: <(Optional) Maximum wait for connection, in seconds. Set 0 for no timeout>
+      # The username for the postgres instance. Required.
+      username: postgres
+      # The password for the postgres instance. Required.
+      password: pass
+      # The hostname for the postgres instance. Defaults to localhost.
+      hostname: psql-sample.localnet
+      # The port of the postgres instance. If PgBouncer is being used,
+      # use the port it is running on. Defaults to 5432
+      port: 6432
+      # The JSON object which contains the entities to monitor. The nesting
+      # levels of JSON are database name -> schema name -> table name -> index name
+      collection_list: '{"postgres":{"public":{"pg_table1":["pg_index1","pg_index2"],"pg_table2":[]}}}'
+      # True if SSL is to be used. Defaults to false.
+      enable_ssl: true
+      # True if the SSL certificate should be trusted without validating.
+      # Setting this to true may open up the monitoring service to MITM attacks.
+      # Defaults to false.
+      trust_server_certificate: false
+      ssl_root_cert_location: /etc/newrelic-infra/root_cert.crt
+      ssl_cert_location: /etc/newrelic-infra/postgresql.crt
+      ssl_key_location: /etc/newrelic-infra/postgresql.key
+      timeout:  10
     labels:
       env: production
       role: postgresql
