@@ -3,89 +3,61 @@ package main
 import (
 	"os"
 
-	sdkArgs "github.com/newrelic/infra-integrations-sdk/args"
-	"github.com/newrelic/infra-integrations-sdk/data/event"
-	"github.com/newrelic/infra-integrations-sdk/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/newrelic/infra-integrations-sdk/log"
+	"github.com/newrelic/nri-postgresql/src/args"
+	"github.com/newrelic/nri-postgresql/src/connection"
+	"github.com/newrelic/nri-postgresql/src/inventory"
+	"github.com/newrelic/nri-postgresql/src/metrics"
 )
 
-type argumentList struct {
-	sdkArgs.DefaultArgumentList
-}
-
 const (
-	integrationName    = "com.New Relic.postgresql"
+	integrationName    = "com.newrelic.postgresql"
 	integrationVersion = "0.1.0"
 )
 
-var (
-	args argumentList
-)
-
 func main() {
+	var args args.ArgumentList
 	// Create Integration
-	i, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
+	postgresIntegration, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
 	}
 
-	// Create Entity, entities name must be unique
-	e1, err := i.Entity("instance-1", "custom")
-	if err != nil {
-		log.Error(err.Error())
+	// Setup logging with verbose
+	log.SetupLogging(args.Verbose)
+
+	// Validate arguments
+	if err := args.Validate(); err != nil {
+		log.Error("Configuration error for args %v: %s", args, err.Error())
 		os.Exit(1)
 	}
 
-	// Add Event
-	if args.All() || args.Events {
-		err = e1.AddEvent(event.New("restart", "status"))
-		if err != nil {
-			log.Error(err.Error())
-		}
-	}
+	databaseList := args.GetCollectionList()
+	connectionInfo := connection.DefaultConnectionInfo(&args)
 
-	// Add Inventory item
-	if args.All() || args.Inventory {
-		err = e1.SetInventoryItem("instance", "version", "3.0.1")
-		if err != nil {
-			log.Error(err.Error())
-		}
-	}
-
-	// Add Metric
-	if args.All() || args.Metrics {
-		m1 := e1.NewMetricSet("CustomSample")
-		err = m1.SetMetric("some-data", 1000, metric.GAUGE)
-		if err != nil {
-			log.Error(err.Error())
-		}
-	}
-
-	// Create another Entity
-	e2, err := i.Entity("instance-2", "custom")
+	instance, err := postgresIntegration.Entity(args.Hostname, "instance")
 	if err != nil {
-		log.Error(err.Error())
+		log.Error("Error creating instance entity: %s", err.Error())
 		os.Exit(1)
 	}
 
-	if args.All() || args.Inventory {
-		err = e2.SetInventoryItem("instance", "version", "3.0.4")
+	if args.HasMetrics() {
+		metrics.PopulateMetrics(connectionInfo, databaseList, instance, postgresIntegration, args.Pgbouncer)
+	}
+
+	if args.HasInventory() {
+		con, err := connectionInfo.NewConnection("postgres")
 		if err != nil {
-			log.Error(err.Error())
+			log.Error("Inventory collection failed: error creating connection to SQL Server: %s", err.Error())
+		} else {
+			defer con.Close()
+			inventory.PopulateInventory(instance, con)
 		}
 	}
 
-	if args.All() || args.Metrics {
-		m2 := e2.NewMetricSet("CustomSample")
-		err = m2.SetMetric("some-data", 2000, metric.GAUGE)
-		if err != nil {
-			log.Error(err.Error())
-		}
-	}
-
-	if err = i.Publish(); err != nil {
+	if err = postgresIntegration.Publish(); err != nil {
 		log.Error(err.Error())
 	}
 }
