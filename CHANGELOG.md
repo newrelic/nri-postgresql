@@ -5,15 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
-### Added
-- X
+## 0.1.2 - 2018-10-22
+### Fixed
+- Missing dependency
 
-### Changed
-- X
-
-### Removed
-- X
+## 0.1.1 - 2018-10-22
+### Fixed
+- Issue in Makefile that was causing `make package` to fail.
 
 ## 0.1.0 - 2018-09-19
 ### Added

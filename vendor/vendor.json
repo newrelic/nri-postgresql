@@ -109,6 +109,12 @@
 			"revisionTime": "2018-05-06T18:05:49Z"
 		},
 		{
+			"checksumSHA1": "WmBSFdqpdYRIkp0I408JIZ3LDMY=",
+			"path": "github.com/stretchr/testify/mock",
+			"revision": "04af85275a5c7ac09d16bb3b9b2e751ed45154e5",
+			"revisionTime": "2018-10-09T18:43:15Z"
+		},
+		{
 			"checksumSHA1": "WfiM+grLatLDuXKj1roCcRDod/4=",
 			"path": "gopkg.in/DATA-DOG/go-sqlmock.v1",
 			"revision": "d76b18b42f285b792bf985118980ce9eacea9d10",
