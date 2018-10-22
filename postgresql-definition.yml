@@ -9,3 +9,15 @@ commands:
       - ./bin/nr-postgresql
     prefix: config/postgresql
     interval: 15
+  metrics:
+    command:
+      - ./bin/nr-postgresql
+      - --metrics
+    prefix: config/postgresql
+    interval: 15
+  inventory:
+    command:
+      - ./bin/nr-postgresql
+      - --inventory
+    prefix: config/postgresql
+    interval: 15
