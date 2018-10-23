@@ -17,6 +17,7 @@ instances:
       port: 6432
       # The JSON object which contains the entities to monitor. The nesting
       # levels of JSON are database name -> schema name -> table name -> index name
+      # parameter is requied for collection. If left as an empty JSON object nothing will be collected.
       collection_list: '{"postgres":{"public":{"pg_table1":["pg_index1","pg_index2"],"pg_table2":[]}}}'
       # True if SSL is to be used. Defaults to false.
       enable_ssl: true
