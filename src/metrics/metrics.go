@@ -66,7 +66,7 @@ func collectVersion(connection *connection.PGSQLConnection) (*semver.Version, er
 
 // PopulateInstanceMetrics populates the metrics for an instance
 func PopulateInstanceMetrics(instanceEntity *integration.Entity, version *semver.Version, connection *connection.PGSQLConnection) {
-	metricSet := instanceEntity.NewMetricSet("PostgreSQLInstanceSample",
+	metricSet := instanceEntity.NewMetricSet("PostgresqlInstanceSample",
 		metric.Attribute{Key: "displayName", Value: instanceEntity.Metadata.Name},
 		metric.Attribute{Key: "entityName", Value: instanceEntity.Metadata.Namespace + ":" + instanceEntity.Metadata.Name},
 	)
@@ -112,7 +112,7 @@ func PopulateDatabaseMetrics(databases args.DatabaseList, version *semver.Versio
 			if err != nil {
 				log.Error("Failed to get database entity for name %s: %s", name, err.Error())
 			}
-			metricSet := databaseEntity.NewMetricSet("PostgreSQLDatabaseSample",
+			metricSet := databaseEntity.NewMetricSet("PostgresqlDatabaseSample",
 				metric.Attribute{Key: "displayName", Value: databaseEntity.Metadata.Name},
 				metric.Attribute{Key: "entityName", Value: databaseEntity.Metadata.Namespace + ":" + databaseEntity.Metadata.Name},
 			)
@@ -178,7 +178,7 @@ func populateTableMetricsForDatabase(schemaList args.SchemaList, con *connection
 			if err != nil {
 				log.Error("Failed to get table entity for table %s: %s", tableName, err.Error())
 			}
-			metricSet := tableEntity.NewMetricSet("PostgreSQLTableSample",
+			metricSet := tableEntity.NewMetricSet("PostgresqlTableSample",
 				metric.Attribute{Key: "displayName", Value: tableEntity.Metadata.Name},
 				metric.Attribute{Key: "entityName", Value: tableEntity.Metadata.Namespace + ":" + tableEntity.Metadata.Name},
 				metric.Attribute{Key: "database", Value: dbName},
@@ -243,7 +243,7 @@ func populateIndexMetricsForDatabase(schemaList args.SchemaList, con *connection
 			if err != nil {
 				log.Error("Failed to get table entity for index %s: %s", indexName, err.Error())
 			}
-			metricSet := indexEntity.NewMetricSet("PostgreSQLIndexSample",
+			metricSet := indexEntity.NewMetricSet("PostgresqlIndexSample",
 				metric.Attribute{Key: "displayName", Value: indexEntity.Metadata.Name},
 				metric.Attribute{Key: "entityName", Value: indexEntity.Metadata.Namespace + ":" + indexEntity.Metadata.Name},
 				metric.Attribute{Key: "database", Value: dbName},

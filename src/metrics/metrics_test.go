@@ -44,7 +44,7 @@ func TestPopulateInstanceMetrics(t *testing.T) {
 		"bgwriter.buffersAllocatedPerSecond":                 float64(0),
 		"displayName":                                        "testInstance",
 		"entityName":                                         "instance:testInstance",
-		"event_type":                                         "PostgreSQLInstanceSample",
+		"event_type":                                         "PostgresqlInstanceSample",
 	}
 
 	assert.Equal(t, expected, testEntity.Metrics[0].Metrics)
@@ -89,7 +89,7 @@ func TestPopulateDatabaseMetrics(t *testing.T) {
 		"db.rowsDeletedPerSecond":  float64(0),
 		"displayName":              "testDB",
 		"entityName":               "database:testDB",
-		"event_type":               "PostgreSQLDatabaseSample",
+		"event_type":               "PostgresqlDatabaseSample",
 	}
 
 	dbEntity, err := testIntegration.Entity("testDB", "database")
@@ -173,7 +173,7 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 		"schema":                                   "schema1",
 		"displayName":                              "table1",
 		"entityName":                               "table:table1",
-		"event_type":                               "PostgreSQLTableSample",
+		"event_type":                               "PostgresqlTableSample",
 	}
 
 	expectedBloat := map[string]interface{}{
@@ -184,7 +184,7 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 		"schema":                 "schema1",
 		"displayName":            "table1",
 		"entityName":             "table:table1",
-		"event_type":             "PostgreSQLTableSample",
+		"event_type":             "PostgresqlTableSample",
 	}
 
 	tableEntity, err := testIntegration.Entity("table1", "table")
@@ -247,7 +247,7 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 		"table":                      "table1",
 		"displayName":                "index1",
 		"entityName":                 "index:index1",
-		"event_type":                 "PostgreSQLIndexSample",
+		"event_type":                 "PostgresqlIndexSample",
 		"index.sizeInBytes":          float64(1),
 		"index.rowsReadPerSecond":    float64(0),
 		"index.rowsFetchedPerSecond": float64(0),
