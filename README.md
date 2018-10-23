@@ -22,7 +22,7 @@ This is the description about how to run the PostgreSQL Integration with New Rel
 
 In order to use the PostgreSQL Integration it is required to configure `postgresql-config.yml.sample` file. Firstly, rename the file to `postgresql-config.yml`. Then, depending on your needs, specify all instances that you want to monitor. Once this is done, restart the Infrastructure agent.
 
-You can view your data in Insights by creating your own custom NRQL queries. To do so, use the **PostgreSQLInstanceSample**, **PostgresSQLDatabaseSample**, **PostgreSQLTableSample**,**PostgreSQLIndexSample**, and **PgBouncerSample** event types.
+You can view your data in Insights by creating your own custom NRQL queries. To do so, use the **PostgresqlInstanceSample**, **PostgressqlDatabaseSample**, **PostgresqlTableSample**,**PostgresqlIndexSample**, and **PgBouncerSample** event types.
 
 ## Compatibility
 
