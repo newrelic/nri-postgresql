@@ -13,7 +13,7 @@ import (
 
 const (
 	integrationName    = "com.newrelic.postgresql"
-	integrationVersion = "0.2.0"
+	integrationVersion = "0.2.1"
 )
 
 func main() {
