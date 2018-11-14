@@ -75,7 +75,7 @@ func TestPopulateInstanceMetrics_NoRows(t *testing.T) {
 	expected := map[string]interface{}{
 		"displayName": "testInstance",
 		"entityName":  "instance:testInstance",
-		"event_type":  "PostgreSQLInstanceSample",
+		"event_type":  "PostgresqlInstanceSample",
 	}
 
 	assert.Equal(t, expected, testEntity.Metrics[0].Metrics)
@@ -108,9 +108,20 @@ func TestPopulateDatabaseMetrics(t *testing.T) {
 	PopulateDatabaseMetrics(dbList, &version, testIntegration, testConnection)
 
 	expected := map[string]interface{}{
-		"displayName": "testDB",
-		"entityName":  "database:testDB",
-		"event_type":  "PostgreSQLDatabaseSample",
+
+		"db.bufferHitsPerSecond":   float64(0),
+		"db.commitsPerSecond":      float64(0),
+		"db.connections":           float64(1),
+		"db.readsPerSecond":        float64(0),
+		"db.rollbacksPerSecond":    float64(0),
+		"db.rowsDeletedPerSecond":  float64(0),
+		"db.rowsFetchedPerSecond":  float64(0),
+		"db.rowsInsertedPerSecond": float64(0),
+		"db.rowsReturnedPerSecond": float64(0),
+		"db.rowsUpdatedPerSecond":  float64(0),
+		"displayName":              "testDB",
+		"entityName":               "database:testDB",
+		"event_type":               "PostgresqlDatabaseSample",
 	}
 
 	dbEntity, err := testIntegration.Entity("testDB", "database")
@@ -356,9 +367,9 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 		"pgbouncer.stats.avgBytesIn":                                      float64(11),
 		"pgbouncer.stats.avgBytesOut":                                     float64(12),
 		"pgbouncer.stats.avgQueryDurationInMilliseconds":                  float64(13),
-		"displayName": "testDB",
-		"entityName":  "pgbouncer:testDB",
-		"event_type":  "PgBouncerSample",
+		"displayName":                                                     "testDB",
+		"entityName":                                                      "pgbouncer:testDB",
+		"event_type":                                                      "PgBouncerSample",
 	}
 
 	expectedPool := map[string]interface{}{
