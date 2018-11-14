@@ -50,6 +50,37 @@ func TestPopulateInstanceMetrics(t *testing.T) {
 	assert.Equal(t, expected, testEntity.Metrics[0].Metrics)
 }
 
+func TestPopulateInstanceMetrics_NoRows(t *testing.T) {
+	testIntegration, _ := integration.New("test", "test")
+	testEntity, _ := testIntegration.Entity("testInstance", "instance")
+
+	version := semver.MustParse("9.0.0")
+
+	testConnection, mock := connection.CreateMockSQL(t)
+	instanceRows := sqlmock.NewRows([]string{
+		"scheduled_checkpoints_performed",
+		"requested_checkpoints_performed",
+		"buffers_written_during_checkpoint",
+		"buffers_written_by_background_writer",
+		"background_writer_stops",
+		"buffers_written_by_backend",
+		"buffers_allocated",
+	})
+
+	mock.ExpectQuery(".*scheduled_checkpoints_performed.*").
+		WillReturnRows(instanceRows)
+
+	PopulateInstanceMetrics(testEntity, &version, testConnection)
+
+	expected := map[string]interface{}{
+		"displayName": "testInstance",
+		"entityName":  "instance:testInstance",
+		"event_type":  "PostgresqlInstanceSample",
+	}
+
+	assert.Equal(t, expected, testEntity.Metrics[0].Metrics)
+}
+
 func TestPopulateDatabaseMetrics(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
@@ -77,16 +108,17 @@ func TestPopulateDatabaseMetrics(t *testing.T) {
 	PopulateDatabaseMetrics(dbList, &version, testIntegration, testConnection)
 
 	expected := map[string]interface{}{
-		"db.connections":           float64(1),
-		"db.commitsPerSecond":      float64(0),
-		"db.rollbacksPerSecond":    float64(0),
-		"db.readsPerSecond":        float64(0),
+
 		"db.bufferHitsPerSecond":   float64(0),
-		"db.rowsReturnedPerSecond": float64(0),
+		"db.commitsPerSecond":      float64(0),
+		"db.connections":           float64(1),
+		"db.readsPerSecond":        float64(0),
+		"db.rollbacksPerSecond":    float64(0),
+		"db.rowsDeletedPerSecond":  float64(0),
 		"db.rowsFetchedPerSecond":  float64(0),
 		"db.rowsInsertedPerSecond": float64(0),
+		"db.rowsReturnedPerSecond": float64(0),
 		"db.rowsUpdatedPerSecond":  float64(0),
-		"db.rowsDeletedPerSecond":  float64(0),
 		"displayName":              "testDB",
 		"entityName":               "database:testDB",
 		"event_type":               "PostgresqlDatabaseSample",
