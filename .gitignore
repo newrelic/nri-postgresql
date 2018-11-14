@@ -38,3 +38,8 @@ Session.vim
 # VSCode
 .vscode
 debug
+server.key
+server.crt
+root.crt
+postgresql-config.yml
+Makefile-deploy.mk

@@ -79,6 +79,13 @@ func PopulateInstanceMetrics(instanceEntity *integration.Entity, version *semver
 		}
 
 		vp := reflect.Indirect(reflect.ValueOf(dataModels))
+
+		// Nothing was returned
+		if vp.Len() == 0 {
+			log.Debug("No data returned from instance query '%s'", queryDef.GetQuery())
+			continue
+		}
+
 		vpInterface := vp.Index(0).Interface()
 		err := metricSet.MarshalMetrics(vpInterface)
 		if err != nil {
