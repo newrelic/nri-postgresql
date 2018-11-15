@@ -31,8 +31,8 @@ func PopulateMetrics(ci connection.Info, databaseList args.DatabaseList, instanc
 		return
 	}
 
-	PopulateInstanceMetrics(instance, version, con)
-	PopulateDatabaseMetrics(databaseList, version, i, con)
+	PopulateInstanceMetrics(instance, version, con, ci.Hostname())
+	PopulateDatabaseMetrics(databaseList, version, i, con, ci.Hostname())
 	PopulateTableMetrics(databaseList, i, ci)
 	PopulateIndexMetrics(databaseList, i, ci)
 	if collectPgBouncer {
@@ -41,7 +41,7 @@ func PopulateMetrics(ci connection.Info, databaseList args.DatabaseList, instanc
 		if err != nil {
 			log.Error("Error creating connection to pgbouncer database: %s", err)
 		} else {
-			PopulatePgBouncerMetrics(i, con)
+			PopulatePgBouncerMetrics(i, con, ci.Hostname())
 		}
 	}
 }
@@ -65,10 +65,11 @@ func collectVersion(connection *connection.PGSQLConnection) (*semver.Version, er
 }
 
 // PopulateInstanceMetrics populates the metrics for an instance
-func PopulateInstanceMetrics(instanceEntity *integration.Entity, version *semver.Version, connection *connection.PGSQLConnection) {
+func PopulateInstanceMetrics(instanceEntity *integration.Entity, version *semver.Version, connection *connection.PGSQLConnection, hostname string) {
 	metricSet := instanceEntity.NewMetricSet("PostgresqlInstanceSample",
 		metric.Attribute{Key: "displayName", Value: instanceEntity.Metadata.Name},
 		metric.Attribute{Key: "entityName", Value: instanceEntity.Metadata.Namespace + ":" + instanceEntity.Metadata.Name},
+		metric.Attribute{Key: "host", Value: hostname},
 	)
 
 	for _, queryDef := range generateInstanceDefinitions(version) {
@@ -95,7 +96,7 @@ func PopulateInstanceMetrics(instanceEntity *integration.Entity, version *semver
 }
 
 // PopulateDatabaseMetrics populates the metrics for a database
-func PopulateDatabaseMetrics(databases args.DatabaseList, version *semver.Version, integration *integration.Integration, connection *connection.PGSQLConnection) {
+func PopulateDatabaseMetrics(databases args.DatabaseList, version *semver.Version, integration *integration.Integration, connection *connection.PGSQLConnection, hostname string) {
 	databaseDefinitions := generateDatabaseDefinitions(databases, version)
 
 	for _, queryDef := range databaseDefinitions {
@@ -122,6 +123,7 @@ func PopulateDatabaseMetrics(databases args.DatabaseList, version *semver.Versio
 			metricSet := databaseEntity.NewMetricSet("PostgresqlDatabaseSample",
 				metric.Attribute{Key: "displayName", Value: databaseEntity.Metadata.Name},
 				metric.Attribute{Key: "entityName", Value: databaseEntity.Metadata.Namespace + ":" + databaseEntity.Metadata.Name},
+				metric.Attribute{Key: "host", Value: hostname},
 			)
 
 			if err := metricSet.MarshalMetrics(db); err != nil {
@@ -147,11 +149,11 @@ func PopulateTableMetrics(databases args.DatabaseList, integration *integration.
 			continue
 		}
 
-		populateTableMetricsForDatabase(schemaList, con, integration)
+		populateTableMetricsForDatabase(schemaList, con, integration, ci.Hostname())
 	}
 }
 
-func populateTableMetricsForDatabase(schemaList args.SchemaList, con *connection.PGSQLConnection, integration *integration.Integration) {
+func populateTableMetricsForDatabase(schemaList args.SchemaList, con *connection.PGSQLConnection, integration *integration.Integration, hostname string) {
 
 	tableDefinitions := generateTableDefinitions(schemaList)
 
@@ -190,6 +192,7 @@ func populateTableMetricsForDatabase(schemaList args.SchemaList, con *connection
 				metric.Attribute{Key: "entityName", Value: tableEntity.Metadata.Namespace + ":" + tableEntity.Metadata.Name},
 				metric.Attribute{Key: "database", Value: dbName},
 				metric.Attribute{Key: "schema", Value: schemaName},
+				metric.Attribute{Key: "host", Value: hostname},
 			)
 
 			if err := metricSet.MarshalMetrics(row); err != nil {
@@ -209,11 +212,11 @@ func PopulateIndexMetrics(databases args.DatabaseList, integration *integration.
 			log.Error("Failed to create new connection to database %s: %s", database, err.Error())
 			continue
 		}
-		populateIndexMetricsForDatabase(schemaList, con, integration)
+		populateIndexMetricsForDatabase(schemaList, con, integration, ci.Hostname())
 	}
 }
 
-func populateIndexMetricsForDatabase(schemaList args.SchemaList, con *connection.PGSQLConnection, integration *integration.Integration) {
+func populateIndexMetricsForDatabase(schemaList args.SchemaList, con *connection.PGSQLConnection, integration *integration.Integration, hostname string) {
 	indexDefinitions := generateIndexDefinitions(schemaList)
 
 	for _, definition := range indexDefinitions {
@@ -256,6 +259,7 @@ func populateIndexMetricsForDatabase(schemaList args.SchemaList, con *connection
 				metric.Attribute{Key: "database", Value: dbName},
 				metric.Attribute{Key: "schema", Value: schemaName},
 				metric.Attribute{Key: "table", Value: tableName},
+				metric.Attribute{Key: "host", Value: hostname},
 			)
 
 			if err := metricSet.MarshalMetrics(row); err != nil {
@@ -268,7 +272,7 @@ func populateIndexMetricsForDatabase(schemaList args.SchemaList, con *connection
 }
 
 // PopulatePgBouncerMetrics populates pgbouncer metrics
-func PopulatePgBouncerMetrics(integration *integration.Integration, con *connection.PGSQLConnection) {
+func PopulatePgBouncerMetrics(integration *integration.Integration, con *connection.PGSQLConnection, hostname string) {
 	pgbouncerDefs := generatePgBouncerDefinitions()
 
 	for _, definition := range pgbouncerDefs {
@@ -295,6 +299,7 @@ func PopulatePgBouncerMetrics(integration *integration.Integration, con *connect
 			metricSet := pgEntity.NewMetricSet("PgBouncerSample",
 				metric.Attribute{Key: "displayName", Value: name},
 				metric.Attribute{Key: "entityName", Value: "pgbouncer:" + name},
+				metric.Attribute{Key: "host", Value: hostname},
 			)
 
 			if err := metricSet.MarshalMetrics(db); err != nil {

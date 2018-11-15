@@ -32,7 +32,7 @@ func TestPopulateInstanceMetrics(t *testing.T) {
 	mock.ExpectQuery(".*scheduled_checkpoints_performed.*").
 		WillReturnRows(instanceRows)
 
-	PopulateInstanceMetrics(testEntity, &version, testConnection)
+	PopulateInstanceMetrics(testEntity, &version, testConnection, "testhost")
 
 	expected := map[string]interface{}{
 		"bgwriter.checkpointsScheduledPerSecond":             float64(0),
@@ -45,6 +45,7 @@ func TestPopulateInstanceMetrics(t *testing.T) {
 		"displayName":                                        "testInstance",
 		"entityName":                                         "instance:testInstance",
 		"event_type":                                         "PostgresqlInstanceSample",
+		"host":                                               "testhost",
 	}
 
 	assert.Equal(t, expected, testEntity.Metrics[0].Metrics)
@@ -70,12 +71,13 @@ func TestPopulateInstanceMetrics_NoRows(t *testing.T) {
 	mock.ExpectQuery(".*scheduled_checkpoints_performed.*").
 		WillReturnRows(instanceRows)
 
-	PopulateInstanceMetrics(testEntity, &version, testConnection)
+	PopulateInstanceMetrics(testEntity, &version, testConnection, "testhost")
 
 	expected := map[string]interface{}{
 		"displayName": "testInstance",
 		"entityName":  "instance:testInstance",
 		"event_type":  "PostgresqlInstanceSample",
+		"host":        "testhost",
 	}
 
 	assert.Equal(t, expected, testEntity.Metrics[0].Metrics)
@@ -105,7 +107,7 @@ func TestPopulateDatabaseMetrics(t *testing.T) {
 	mock.ExpectQuery(".*UNDER91.*").
 		WillReturnRows(databaseRows)
 
-	PopulateDatabaseMetrics(dbList, &version, testIntegration, testConnection)
+	PopulateDatabaseMetrics(dbList, &version, testIntegration, testConnection, "testhost")
 
 	expected := map[string]interface{}{
 
@@ -122,6 +124,7 @@ func TestPopulateDatabaseMetrics(t *testing.T) {
 		"displayName":              "testDB",
 		"entityName":               "database:testDB",
 		"event_type":               "PostgresqlDatabaseSample",
+		"host":                     "testhost",
 	}
 
 	dbEntity, err := testIntegration.Entity("testDB", "database")
@@ -179,7 +182,7 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 		WillReturnRows(bloatRows)
 	mock.ExpectQuery(".*TABLEQUERY.*").
 		WillReturnRows(tableRows)
-	populateTableMetricsForDatabase(dbList["db1"], testConnection, testIntegration)
+	populateTableMetricsForDatabase(dbList["db1"], testConnection, testIntegration, "testhost")
 
 	expectedBase := map[string]interface{}{
 		"table.totalSizeInBytes":                   float64(1),
@@ -206,6 +209,7 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 		"displayName":                              "table1",
 		"entityName":                               "table:table1",
 		"event_type":                               "PostgresqlTableSample",
+		"host":                                     "testhost",
 	}
 
 	expectedBloat := map[string]interface{}{
@@ -217,6 +221,7 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 		"displayName":            "table1",
 		"entityName":             "table:table1",
 		"event_type":             "PostgresqlTableSample",
+		"host":                   "testhost",
 	}
 
 	tableEntity, err := testIntegration.Entity("table1", "table")
@@ -236,7 +241,7 @@ func Test_populateTableMetricsForDatabase_noTables(t *testing.T) {
 
 	testConnection, _ := connection.CreateMockSQL(t)
 
-	populateTableMetricsForDatabase(dbList["db1"], testConnection, testIntegration)
+	populateTableMetricsForDatabase(dbList["db1"], testConnection, testIntegration, "testhost")
 
 	tableEntity, err := testIntegration.Entity("table1", "table")
 	assert.Nil(t, err)
@@ -271,7 +276,7 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 	mock.ExpectQuery(".*INDEXQUERY.*").
 		WillReturnRows(indexRows)
 
-	populateIndexMetricsForDatabase(dbList["db1"], testConnection, testIntegration)
+	populateIndexMetricsForDatabase(dbList["db1"], testConnection, testIntegration, "testhost")
 
 	expected := map[string]interface{}{
 		"database":                   "db1",
@@ -283,6 +288,7 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 		"index.sizeInBytes":          float64(1),
 		"index.rowsReadPerSecond":    float64(0),
 		"index.rowsFetchedPerSecond": float64(0),
+		"host":                       "testhost",
 	}
 
 	indexEntity, err := testIntegration.Entity("index1", "index")
@@ -303,7 +309,7 @@ func Test_populateIndexMetricsForDatabase_noIndexes(t *testing.T) {
 
 	testConnection, _ := connection.CreateMockSQL(t)
 
-	populateIndexMetricsForDatabase(dbList["db1"], testConnection, testIntegration)
+	populateIndexMetricsForDatabase(dbList["db1"], testConnection, testIntegration, "testhost")
 
 	indexEntity, err := testIntegration.Entity("index1", "index")
 	assert.Nil(t, err)
@@ -352,7 +358,7 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 	mock.ExpectQuery("SHOW POOLS;").
 		WillReturnRows(pgbouncerPoolsRows)
 
-	PopulatePgBouncerMetrics(testIntegration, testConnection)
+	PopulatePgBouncerMetrics(testIntegration, testConnection, "testhost")
 
 	expectedStats := map[string]interface{}{
 		"pgbouncer.stats.transactionsPerSecond":                           float64(0),
@@ -367,9 +373,10 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 		"pgbouncer.stats.avgBytesIn":                                      float64(11),
 		"pgbouncer.stats.avgBytesOut":                                     float64(12),
 		"pgbouncer.stats.avgQueryDurationInMilliseconds":                  float64(13),
-		"displayName":                                                     "testDB",
-		"entityName":                                                      "pgbouncer:testDB",
-		"event_type":                                                      "PgBouncerSample",
+		"displayName": "testDB",
+		"entityName":  "pgbouncer:testDB",
+		"event_type":  "PgBouncerSample",
+		"host":        "testhost",
 	}
 
 	expectedPool := map[string]interface{}{
@@ -384,6 +391,7 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 		"displayName":                              "testDB",
 		"entityName":                               "pgbouncer:testDB",
 		"event_type":                               "PgBouncerSample",
+		"host":                                     "testhost",
 	}
 
 	pbEntity, err := testIntegration.Entity("testDB", "pgbouncer")
