@@ -28,6 +28,11 @@ type MockInfo struct {
 	mock.Mock
 }
 
+// Hostname returns a mocked host name "testhost"
+func (mi *MockInfo) Hostname() string {
+	return "testhost"
+}
+
 // NewConnection creates a new mock info connection from the mockinfo struct
 func (mi *MockInfo) NewConnection(database string) (*PGSQLConnection, error) {
 	args := mi.Called(database)

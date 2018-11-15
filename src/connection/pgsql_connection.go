@@ -20,6 +20,7 @@ type PGSQLConnection struct {
 // Info holds all the information needed from the user to create a new connection
 type Info interface {
 	NewConnection(database string) (*PGSQLConnection, error)
+	Hostname() string
 }
 
 type connectionInfo struct {
@@ -64,6 +65,10 @@ func (ci *connectionInfo) NewConnection(database string) (*PGSQLConnection, erro
 	return &PGSQLConnection{
 		connection: db,
 	}, nil
+}
+
+func (ci *connectionInfo) Hostname() string {
+	return ci.Host
 }
 
 // Close closes the PosgreSQL connection. If an error occurs
