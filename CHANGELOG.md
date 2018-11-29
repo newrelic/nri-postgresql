@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.0 - 2018-11-29
+### Changes
+- Bumped version for GA release 
+
 ## 0.2.3 - 2018-11-15
 ### Added
 - Added host name as metadata for easier filtering
