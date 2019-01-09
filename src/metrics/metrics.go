@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"reflect"
+	"strings"
 
 	"github.com/blang/semver"
 	"github.com/newrelic/infra-integrations-sdk/data/metric"
@@ -56,7 +57,25 @@ func collectVersion(connection *connection.PGSQLConnection) (*semver.Version, er
 		return nil, err
 	}
 
+	// special case for ubuntu parsing
+	version := versionRows[0].Version
+	if strings.Contains(version, "Ubuntu") {
+		return parseUbuntuVersion(version)
+	}
+
 	v, err := semver.ParseTolerant(versionRows[0].Version)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v, nil
+}
+
+func parseUbuntuVersion(version string) (*semver.Version, error) {
+	specialIndex := strings.Index(version, " (Ubuntu")
+	partialVersion := version[:specialIndex]
+
+	v, err := semver.ParseTolerant(partialVersion)
 	if err != nil {
 		return nil, err
 	}
