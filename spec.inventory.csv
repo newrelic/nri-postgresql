@@ -1,5 +1,5 @@
 entity name,inventory source,inventory path
-instance,config/postgresql,
+instance,config/postgresql,*
 database,,
 table,,
 index,,
