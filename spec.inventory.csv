@@ -1,0 +1,6 @@
+entity name,inventory source,inventory path
+instance,config/postgresql,*
+database,,
+table,,
+index,,
+pgbouncer,,
