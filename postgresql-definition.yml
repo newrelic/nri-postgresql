@@ -1,6 +1,6 @@
 name: com.newrelic.postgresql
 description: Reports status and metrics for postgresql service
-protocol_version: 1
+protocol_version: 2
 os: linux
 
 commands:

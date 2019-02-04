@@ -49,6 +49,26 @@ func Test_collectVersion_Ubuntu(t *testing.T) {
 	assert.Equal(t, expected, version)
 }
 
+func Test_collectVersion_Debian(t *testing.T) {
+
+	testConnection, mock := connection.CreateMockSQL(t)
+
+	versionRows := sqlmock.NewRows([]string{"server_version"}).
+		AddRow("10.4 (Debian 10.4-2.pgdg16.04+1)")
+
+	mock.ExpectQuery(versionQuery).WillReturnRows(versionRows)
+
+	expected := &semver.Version{
+		Major: 10,
+		Minor: 4,
+	}
+
+	version, err := collectVersion(testConnection)
+
+	assert.Nil(t, err)
+	assert.Equal(t, expected, version)
+}
+
 func Test_collectVersion_Err(t *testing.T) {
 
 	testConnection, mock := connection.CreateMockSQL(t)

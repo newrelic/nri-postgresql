@@ -57,10 +57,12 @@ func collectVersion(connection *connection.PGSQLConnection) (*semver.Version, er
 		return nil, err
 	}
 
-	// special case for ubuntu parsing
+	// special cases for ubuntu/debian parsing
 	version := versionRows[0].Version
 	if strings.Contains(version, "Ubuntu") {
-		return parseUbuntuVersion(version)
+		return parseSpecialVersion(version, strings.Index(version, " (Ubuntu"))
+	} else if strings.Contains(version, "Debian") {
+		return parseSpecialVersion(version, strings.Index(version, " (Debian"))
 	}
 
 	v, err := semver.ParseTolerant(versionRows[0].Version)
@@ -71,8 +73,7 @@ func collectVersion(connection *connection.PGSQLConnection) (*semver.Version, er
 	return &v, nil
 }
 
-func parseUbuntuVersion(version string) (*semver.Version, error) {
-	specialIndex := strings.Index(version, " (Ubuntu")
+func parseSpecialVersion(version string, specialIndex int) (*semver.Version, error) {
 	partialVersion := version[:specialIndex]
 
 	v, err := semver.ParseTolerant(partialVersion)
