@@ -33,10 +33,10 @@ prep-pkg-env:
 	@echo "=== Main === [ prep-pkg-env ]: adding built binaries and configuration and definition files..."
 	@cp $(BINS_DIR)/$(BINARY_NAME) $(SOURCE_DIR)/var/db/newrelic-infra/newrelic-integrations/bin
 	@chmod 755 $(SOURCE_DIR)/var/db/newrelic-infra/newrelic-integrations/bin/*
-	@cp ./*.yml $(SOURCE_DIR)/var/db/newrelic-infra/newrelic-integrations/
-	@chmod 644 $(SOURCE_DIR)/var/db/newrelic-infra/newrelic-integrations/*.yml
-	@cp ./*.sample $(SOURCE_DIR)/etc/newrelic-infra/integrations.d/
-	@chmod 644 $(SOURCE_DIR)/etc/newrelic-infra/integrations.d/*.sample
+	@cp ./*-definition.yml $(SOURCE_DIR)/var/db/newrelic-infra/newrelic-integrations/
+	@chmod 644 $(SOURCE_DIR)/var/db/newrelic-infra/newrelic-integrations/*-definition.yml
+	@cp ./*-config.yml.sample $(SOURCE_DIR)/etc/newrelic-infra/integrations.d/
+	@chmod 644 $(SOURCE_DIR)/etc/newrelic-infra/integrations.d/*-config.yml.sample
 
 deb: prep-pkg-env
 	@echo "=== Main === [ deb ]: building DEB package..."
