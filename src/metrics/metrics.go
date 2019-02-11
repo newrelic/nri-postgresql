@@ -38,10 +38,10 @@ func PopulateMetrics(ci connection.Info, databaseList args.DatabaseList, instanc
 	PopulateIndexMetrics(databaseList, i, ci)
 	if collectPgBouncer {
 		con, err = ci.NewConnection("pgbouncer")
-		defer con.Close()
 		if err != nil {
 			log.Error("Error creating connection to pgbouncer database: %s", err)
 		} else {
+			defer con.Close()
 			PopulatePgBouncerMetrics(i, con, ci.Hostname())
 		}
 	}
