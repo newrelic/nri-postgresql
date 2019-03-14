@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.0.4 - 2019-03-14
+### Fixes
+- Remove quote_ident that was causing failures on some systems
+
 ## 1.0.3 - 2019-02-11
 ### Fixes
 - Doesn't panic on failed pgbouncer connection
