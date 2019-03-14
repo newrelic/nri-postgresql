@@ -43,7 +43,7 @@ var indexDefinition = &QueryDefinition{
 				t.schemaname as schema_name,
 					t.tablename as table_name,
 					indexname as index_name,
-					pg_relation_size(quote_ident(indexrelname)::text) AS index_size,
+					pg_relation_size(indexrelname) AS index_size,
 					idx_tup_read AS tuples_read,
 					idx_tup_fetch AS tuples_fetched
 			FROM pg_tables t
