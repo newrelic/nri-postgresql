@@ -19,7 +19,7 @@ const (
 // PopulateMetrics collects metrics for each type
 func PopulateMetrics(ci connection.Info, databaseList args.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer bool) {
 
-	con, err := ci.NewConnection("postgres")
+	con, err := ci.NewConnection(ci.Databasename())
 	if err != nil {
 		log.Error("Metrics collection failed: error creating connection to SQL Server: %s", err.Error())
 		return
