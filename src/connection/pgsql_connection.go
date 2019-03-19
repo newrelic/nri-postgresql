@@ -21,6 +21,7 @@ type PGSQLConnection struct {
 type Info interface {
 	NewConnection(database string) (*PGSQLConnection, error)
 	Hostname() string
+	Databasename() string
 }
 
 type connectionInfo struct {
@@ -40,7 +41,7 @@ type connectionInfo struct {
 // DefaultConnectionInfo takes an argument list and constructs a default connection out of it
 func DefaultConnectionInfo(al *args.ArgumentList) Info {
 	return &connectionInfo{
-		Database:               "postgres",
+		Database:               al.Database,
 		Username:               al.Username,
 		Password:               al.Password,
 		Host:                   al.Hostname,
@@ -56,8 +57,7 @@ func DefaultConnectionInfo(al *args.ArgumentList) Info {
 
 // NewConnection creates a new PGSQLConnection from args
 func (ci *connectionInfo) NewConnection(database string) (*PGSQLConnection, error) {
-	ci.Database = database
-	db, err := sqlx.Connect("postgres", createConnectionURL(ci))
+	db, err := sqlx.Connect("postgres", createConnectionURL(ci, database))
 	if err != nil {
 		return nil, err
 	}
@@ -69,6 +69,10 @@ func (ci *connectionInfo) NewConnection(database string) (*PGSQLConnection, erro
 
 func (ci *connectionInfo) Hostname() string {
 	return ci.Host
+}
+
+func (ci *connectionInfo) Databasename() string {
+	return ci.Database
 }
 
 // Close closes the PosgreSQL connection. If an error occurs
@@ -86,12 +90,12 @@ func (p PGSQLConnection) Query(v interface{}, query string) error {
 
 // createConnectionURL creates the connection string. A list of paramters
 // can be found here https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters
-func createConnectionURL(ci *connectionInfo) string {
+func createConnectionURL(ci *connectionInfo, database string) string {
 	connectionURL := &url.URL{
 		Scheme: "postgres",
 		User:   url.UserPassword(ci.Username, ci.Password),
 		Host:   fmt.Sprintf("%s:%s", ci.Host, ci.Port),
-		Path:   ci.Database,
+		Path:   database,
 	}
 
 	query := url.Values{}

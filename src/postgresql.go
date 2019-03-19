@@ -13,7 +13,7 @@ import (
 
 const (
 	integrationName    = "com.newrelic.postgresql"
-	integrationVersion = "1.0.4"
+	integrationVersion = "1.1.0"
 )
 
 func main() {
@@ -48,9 +48,9 @@ func main() {
 	}
 
 	if args.HasInventory() {
-		con, err := connectionInfo.NewConnection("postgres")
+		con, err := connectionInfo.NewConnection(connectionInfo.Databasename())
 		if err != nil {
-			log.Error("Inventory collection failed: error creating connection to SQL Server: %s", err.Error())
+			log.Error("Inventory collection failed: error creating connection to PostgreSQL: %s", err.Error())
 		} else {
 			defer con.Close()
 			inventory.PopulateInventory(instance, con)

@@ -15,6 +15,7 @@ type ArgumentList struct {
 	Username               string `default:"" help:"The username for the PostgreSQL database"`
 	Password               string `default:"" help:"The password for the specified username"`
 	Hostname               string `default:"localhost" help:"The PostgreSQL hostname to connect to"`
+	Database               string `default:"postgres" help:"The PostgreSQL database name to connect to"`
 	Port                   string `default:"5432" help:"The port to connect to the PostgreSQL database"`
 	CollectionList         string `default:"{}" help:"A JSON object which defines the databases, schemas, tables, and indexes to collect. Collects nothing by default."`
 	EnableSSL              bool   `default:"false" help:"If true will use SSL encryption, false will not use encryption"`
