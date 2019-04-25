@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.0.0 - 2019-04-25
+### Changes
+- Prefix entity namespaces with pg-
+- Update SDK
+- Add identity attributes
+
 ## 1.1.0 - 2019-03-19
 ### Changes
 - Add optional database connection param to allow collecting metrics from any database
