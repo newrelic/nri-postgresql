@@ -32,7 +32,7 @@ func TestPopulateInstanceMetrics(t *testing.T) {
 	mock.ExpectQuery(".*scheduled_checkpoints_performed.*").
 		WillReturnRows(instanceRows)
 
-	PopulateInstanceMetrics(testEntity, &version, testConnection, "testhost")
+	PopulateInstanceMetrics(testEntity, &version, testConnection)
 
 	expected := map[string]interface{}{
 		"bgwriter.checkpointsScheduledPerSecond":             float64(0),
@@ -45,7 +45,6 @@ func TestPopulateInstanceMetrics(t *testing.T) {
 		"displayName":                                        "testInstance",
 		"entityName":                                         "instance:testInstance",
 		"event_type":                                         "PostgresqlInstanceSample",
-		"host":                                               "testhost",
 	}
 
 	assert.Equal(t, expected, testEntity.Metrics[0].Metrics)
@@ -71,13 +70,12 @@ func TestPopulateInstanceMetrics_NoRows(t *testing.T) {
 	mock.ExpectQuery(".*scheduled_checkpoints_performed.*").
 		WillReturnRows(instanceRows)
 
-	PopulateInstanceMetrics(testEntity, &version, testConnection, "testhost")
+	PopulateInstanceMetrics(testEntity, &version, testConnection)
 
 	expected := map[string]interface{}{
 		"displayName": "testInstance",
 		"entityName":  "instance:testInstance",
 		"event_type":  "PostgresqlInstanceSample",
-		"host":        "testhost",
 	}
 
 	assert.Equal(t, expected, testEntity.Metrics[0].Metrics)
@@ -107,7 +105,8 @@ func TestPopulateDatabaseMetrics(t *testing.T) {
 	mock.ExpectQuery(".*UNDER91.*").
 		WillReturnRows(databaseRows)
 
-	PopulateDatabaseMetrics(dbList, &version, testIntegration, testConnection, "testhost")
+	ci := &connection.MockInfo{}
+	PopulateDatabaseMetrics(dbList, &version, testIntegration, testConnection, ci)
 
 	expected := map[string]interface{}{
 
@@ -124,10 +123,9 @@ func TestPopulateDatabaseMetrics(t *testing.T) {
 		"displayName":              "testDB",
 		"entityName":               "database:testDB",
 		"event_type":               "PostgresqlDatabaseSample",
-		"host":                     "testhost",
 	}
 
-	dbEntity, err := testIntegration.Entity("testDB", "database")
+	dbEntity, err := testIntegration.Entity("testDB", "pg-database", integration.NewIDAttribute("host", "testhost"), integration.NewIDAttribute("port", "1234"))
 	assert.Nil(t, err)
 	assert.Equal(t, expected, dbEntity.Metrics[0].Metrics)
 }
@@ -182,7 +180,9 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 		WillReturnRows(bloatRows)
 	mock.ExpectQuery(".*TABLEQUERY.*").
 		WillReturnRows(tableRows)
-	populateTableMetricsForDatabase(dbList["db1"], testConnection, testIntegration, "testhost")
+
+	ci := &connection.MockInfo{}
+	populateTableMetricsForDatabase(dbList["db1"], testConnection, testIntegration, ci)
 
 	expectedBase := map[string]interface{}{
 		"table.totalSizeInBytes":                   float64(1),
@@ -209,7 +209,6 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 		"displayName":                              "table1",
 		"entityName":                               "table:table1",
 		"event_type":                               "PostgresqlTableSample",
-		"host":                                     "testhost",
 	}
 
 	expectedBloat := map[string]interface{}{
@@ -221,10 +220,13 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 		"displayName":            "table1",
 		"entityName":             "table:table1",
 		"event_type":             "PostgresqlTableSample",
-		"host":                   "testhost",
 	}
 
-	tableEntity, err := testIntegration.Entity("table1", "table")
+	id1 := integration.NewIDAttribute("pg-database", "db1")
+	id2 := integration.NewIDAttribute("pg-schema", "schema1")
+	id3 := integration.NewIDAttribute("host", "testhost")
+	id4 := integration.NewIDAttribute("port", "1234")
+	tableEntity, err := testIntegration.Entity("table1", "pg-table", id1, id2, id3, id4)
 	assert.Nil(t, err)
 	assert.Equal(t, expectedBloat, tableEntity.Metrics[0].Metrics)
 	assert.Equal(t, expectedBase, tableEntity.Metrics[1].Metrics)
@@ -241,7 +243,8 @@ func Test_populateTableMetricsForDatabase_noTables(t *testing.T) {
 
 	testConnection, _ := connection.CreateMockSQL(t)
 
-	populateTableMetricsForDatabase(dbList["db1"], testConnection, testIntegration, "testhost")
+	ci := &connection.MockInfo{}
+	populateTableMetricsForDatabase(dbList["db1"], testConnection, testIntegration, ci)
 
 	tableEntity, err := testIntegration.Entity("table1", "table")
 	assert.Nil(t, err)
@@ -276,7 +279,8 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 	mock.ExpectQuery(".*INDEXQUERY.*").
 		WillReturnRows(indexRows)
 
-	populateIndexMetricsForDatabase(dbList["db1"], testConnection, testIntegration, "testhost")
+	ci := &connection.MockInfo{}
+	populateIndexMetricsForDatabase(dbList["db1"], testConnection, testIntegration, ci)
 
 	expected := map[string]interface{}{
 		"database":                   "db1",
@@ -288,10 +292,14 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 		"index.sizeInBytes":          float64(1),
 		"index.rowsReadPerSecond":    float64(0),
 		"index.rowsFetchedPerSecond": float64(0),
-		"host": "testhost",
 	}
 
-	indexEntity, err := testIntegration.Entity("index1", "index")
+	id1 := integration.NewIDAttribute("pg-database", "db1")
+	id2 := integration.NewIDAttribute("pg-schema", "schema1")
+	id3 := integration.NewIDAttribute("host", "testhost")
+	id4 := integration.NewIDAttribute("port", "1234")
+	id5 := integration.NewIDAttribute("pg-table", "table1")
+	indexEntity, err := testIntegration.Entity("index1", "pg-index", id1, id2, id3, id4, id5)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, indexEntity.Metrics[0].Metrics)
 }
@@ -309,7 +317,8 @@ func Test_populateIndexMetricsForDatabase_noIndexes(t *testing.T) {
 
 	testConnection, _ := connection.CreateMockSQL(t)
 
-	populateIndexMetricsForDatabase(dbList["db1"], testConnection, testIntegration, "testhost")
+	ci := &connection.MockInfo{}
+	populateIndexMetricsForDatabase(dbList["db1"], testConnection, testIntegration, ci)
 
 	indexEntity, err := testIntegration.Entity("index1", "index")
 	assert.Nil(t, err)
@@ -358,7 +367,8 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 	mock.ExpectQuery("SHOW POOLS;").
 		WillReturnRows(pgbouncerPoolsRows)
 
-	PopulatePgBouncerMetrics(testIntegration, testConnection, "testhost")
+	ci := &connection.MockInfo{}
+	PopulatePgBouncerMetrics(testIntegration, testConnection, ci)
 
 	expectedStats := map[string]interface{}{
 		"pgbouncer.stats.transactionsPerSecond":                           float64(0),
@@ -394,7 +404,9 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 		"host":                                     "testhost",
 	}
 
-	pbEntity, err := testIntegration.Entity("testDB", "pgbouncer")
+	id3 := integration.NewIDAttribute("host", "testhost")
+	id4 := integration.NewIDAttribute("port", "1234")
+	pbEntity, err := testIntegration.Entity("testDB", "pgbouncer", id3, id4)
 	assert.Nil(t, err)
 	assert.Equal(t, expectedStats, pbEntity.Metrics[0].Metrics)
 	assert.Equal(t, expectedPool, pbEntity.Metrics[1].Metrics)

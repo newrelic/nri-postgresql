@@ -28,13 +28,13 @@ type MockInfo struct {
 	mock.Mock
 }
 
-// Hostname returns a mocked host name "testhost"
-func (mi *MockInfo) Hostname() string {
-	return "testhost"
+// HostPort returns a mocked host name "testhost"
+func (mi *MockInfo) HostPort() (string, string) {
+	return "testhost", "1234"
 }
 
-// Databasename returns a mocked database name "postgres"
-func (mi *MockInfo) Databasename() string {
+// DatabaseName returns a mocked database name "postgres"
+func (mi *MockInfo) DatabaseName() string {
 	return "postgres"
 }
 

@@ -68,7 +68,7 @@ func (ci *connectionInfo) NewConnection(database string) (*PGSQLConnection, erro
 }
 
 func (ci *connectionInfo) HostPort() (string, string) {
-  return  ci.Host, ci.Port
+	return ci.Host, ci.Port
 }
 
 func (ci *connectionInfo) DatabaseName() string {

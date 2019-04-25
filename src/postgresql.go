@@ -1,7 +1,7 @@
 package main
 
 import (
-  "fmt"
+	"fmt"
 	"os"
 
 	"github.com/newrelic/infra-integrations-sdk/integration"
@@ -38,7 +38,7 @@ func main() {
 	databaseList := args.GetCollectionList()
 	connectionInfo := connection.DefaultConnectionInfo(&args)
 
-  instance, err := postgresIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
+	instance, err := postgresIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 	if err != nil {
 		log.Error("Error creating instance entity: %s", err.Error())
 		os.Exit(1)
