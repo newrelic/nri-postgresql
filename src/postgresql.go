@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/newrelic/infra-integrations-sdk/integration"
@@ -13,7 +14,7 @@ import (
 
 const (
 	integrationName    = "com.newrelic.postgresql"
-	integrationVersion = "1.1.0"
+	integrationVersion = "2.0.0"
 )
 
 func main() {
@@ -37,7 +38,7 @@ func main() {
 	databaseList := args.GetCollectionList()
 	connectionInfo := connection.DefaultConnectionInfo(&args)
 
-	instance, err := postgresIntegration.Entity(args.Hostname, "instance")
+	instance, err := postgresIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 	if err != nil {
 		log.Error("Error creating instance entity: %s", err.Error())
 		os.Exit(1)
@@ -48,7 +49,7 @@ func main() {
 	}
 
 	if args.HasInventory() {
-		con, err := connectionInfo.NewConnection(connectionInfo.Databasename())
+		con, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
 		if err != nil {
 			log.Error("Inventory collection failed: error creating connection to PostgreSQL: %s", err.Error())
 		} else {

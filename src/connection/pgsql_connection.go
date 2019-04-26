@@ -20,8 +20,8 @@ type PGSQLConnection struct {
 // Info holds all the information needed from the user to create a new connection
 type Info interface {
 	NewConnection(database string) (*PGSQLConnection, error)
-	Hostname() string
-	Databasename() string
+	HostPort() (string, string)
+	DatabaseName() string
 }
 
 type connectionInfo struct {
@@ -67,11 +67,11 @@ func (ci *connectionInfo) NewConnection(database string) (*PGSQLConnection, erro
 	}, nil
 }
 
-func (ci *connectionInfo) Hostname() string {
-	return ci.Host
+func (ci *connectionInfo) HostPort() (string, string) {
+	return ci.Host, ci.Port
 }
 
-func (ci *connectionInfo) Databasename() string {
+func (ci *connectionInfo) DatabaseName() string {
 	return ci.Database
 }
 

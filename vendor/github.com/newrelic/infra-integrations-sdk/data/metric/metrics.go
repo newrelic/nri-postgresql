@@ -10,7 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Attribute represents an attribute metric in key-value pair format.
+// Attribute represents a metric attribute key-value pair.
 type Attribute struct {
 	Key   string
 	Value string
@@ -55,6 +55,13 @@ func NewSet(eventType string, storer persist.Storer, attributes ...Attribute) (s
 	}
 
 	return
+}
+
+// AddCustomAttributes add customAttributes to MetricSet
+func AddCustomAttributes(metricSet *Set, customAttributes []Attribute) {
+	for _, attr := range customAttributes {
+		metricSet.setSetAttribute(attr.Key, attr.Value)
+	}
 }
 
 // Attr creates an attribute aimed to namespace a metric-set.
