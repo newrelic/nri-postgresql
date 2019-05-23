@@ -104,7 +104,7 @@ func TestBuildCollectionList_DatabaseList(t *testing.T) {
 func TestBuildCollectionList_DetailedList(t *testing.T) {
 
 	al := args.ArgumentList{
-    CollectionList: `{"database1": {"schema1": { "table1": ["index1"] }}}`,
+		CollectionList: `{"database1": {"schema1": { "table1": ["index1"] }}}`,
 	}
 
 	ci := connection.MockInfo{}
