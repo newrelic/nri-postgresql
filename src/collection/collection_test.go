@@ -100,3 +100,35 @@ func TestBuildCollectionList_DatabaseList(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, expected, dl)
 }
+
+func TestBuildCollectionList_DetailedList(t *testing.T) {
+
+	al := args.ArgumentList{
+    CollectionList: `{"database1": {"schema1": { "table1": ["index1"] }}}`,
+	}
+
+	ci := connection.MockInfo{}
+	testConnection, mock := connection.CreateMockSQL(t)
+
+	ci.On("NewConnection", "database1").Return(testConnection, nil)
+
+	instanceRows := sqlmock.NewRows([]string{
+		"schema_name",
+		"table_name",
+		"index_name",
+	}).AddRow("schema1", "table1", "index1")
+
+	mock.ExpectQuery(".*").WillReturnRows(instanceRows)
+
+	expected := DatabaseList{
+		"database1": SchemaList{
+			"schema1": TableList{
+				"table1": []string{"index1"},
+			},
+		},
+	}
+
+	dl, err := BuildCollectionList(al, &ci)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, dl)
+}
