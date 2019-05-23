@@ -2,9 +2,7 @@
 package args
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
 
 	sdkArgs "github.com/newrelic/infra-integrations-sdk/args"
 )
@@ -27,15 +25,6 @@ type ArgumentList struct {
 	Timeout                string `default:"10" help:"Maximum wait for connection, in seconds. Set 0 for no timeout"`
 }
 
-// DatabaseList is a map from database name to SchemaLists to collect
-type DatabaseList map[string]SchemaList
-
-// SchemaList is a map from schema name to TableList to collect
-type SchemaList map[string]TableList
-
-// TableList is a map from table name to an array of indexes to collect
-type TableList map[string][]string
-
 // Validate validates PostgreSQl arguments
 func (al ArgumentList) Validate() error {
 	if al.Username == "" || al.Password == "" {
@@ -44,12 +33,6 @@ func (al ArgumentList) Validate() error {
 
 	if err := al.validateSSL(); err != nil {
 		return err
-	}
-
-	var dl DatabaseList
-	err := json.Unmarshal([]byte(al.CollectionList), &dl)
-	if err != nil {
-		return fmt.Errorf("invalid configuration: failed to unmarshal CollectionList JSON: %s", err.Error())
 	}
 
 	return nil
@@ -67,12 +50,4 @@ func (al ArgumentList) validateSSL() error {
 	}
 
 	return nil
-}
-
-// GetCollectionList unmarshals the argument collection list into a DatabaseList
-func (al ArgumentList) GetCollectionList() DatabaseList {
-	var dl DatabaseList
-	_ = json.Unmarshal([]byte(al.CollectionList), &dl) // already checked in Validate()
-
-	return dl
 }

@@ -4,10 +4,10 @@ import (
 	"strings"
 
 	"github.com/blang/semver"
-	"github.com/newrelic/nri-postgresql/src/args"
+	"github.com/newrelic/nri-postgresql/src/collection"
 )
 
-func generateDatabaseDefinitions(databases args.DatabaseList, version *semver.Version) []*QueryDefinition {
+func generateDatabaseDefinitions(databases collection.DatabaseList, version *semver.Version) []*QueryDefinition {
 	queryDefinitions := make([]*QueryDefinition, 0, 2)
 	if len(databases) == 0 {
 		return queryDefinitions
@@ -29,7 +29,7 @@ func generateDatabaseDefinitions(databases args.DatabaseList, version *semver.Ve
 	return queryDefinitions
 }
 
-func (q *QueryDefinition) insertDatabaseNames(databases args.DatabaseList) *QueryDefinition {
+func (q *QueryDefinition) insertDatabaseNames(databases collection.DatabaseList) *QueryDefinition {
 	// TODO ensure len(databases) != 0
 	databaseList := ""
 	for database := range databases {

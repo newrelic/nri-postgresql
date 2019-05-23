@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/newrelic/nri-postgresql/src/args"
+	"github.com/newrelic/nri-postgresql/src/collection"
 )
 
-func generateIndexDefinitions(schemaList args.SchemaList) []*QueryDefinition {
+func generateIndexDefinitions(schemaList collection.SchemaList) []*QueryDefinition {
 	queryDefinitions := make([]*QueryDefinition, 0)
 	if def := indexDefinition.insertSchemaTableIndexes(schemaList); def != nil {
 		queryDefinitions = append(queryDefinitions, def)
@@ -16,7 +16,7 @@ func generateIndexDefinitions(schemaList args.SchemaList) []*QueryDefinition {
 	return queryDefinitions
 }
 
-func (qd *QueryDefinition) insertSchemaTableIndexes(schemaList args.SchemaList) *QueryDefinition {
+func (qd *QueryDefinition) insertSchemaTableIndexes(schemaList collection.SchemaList) *QueryDefinition {
 	schemaTableIndexes := make([]string, 0)
 	for schema, tableList := range schemaList {
 		for table, indexList := range tableList {

@@ -5,14 +5,14 @@ import (
 	"testing"
 
 	"github.com/blang/semver"
-	"github.com/newrelic/nri-postgresql/src/args"
+	"github.com/newrelic/nri-postgresql/src/collection"
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_generateDatabaseDefinitions_LengthV8(t *testing.T) {
 	v8 := semver.MustParse("8.0.0")
 
-	databaseList := args.DatabaseList{"test1": {}}
+	databaseList := collection.DatabaseList{"test1": {}}
 
 	queryDefinitions := generateDatabaseDefinitions(databaseList, &v8)
 
@@ -21,7 +21,7 @@ func Test_generateDatabaseDefinitions_LengthV8(t *testing.T) {
 
 func Test_generateDatabaseDefinitions_LengthV912(t *testing.T) {
 	v912 := semver.MustParse("9.1.2")
-	databaseList := args.DatabaseList{"test1": {}}
+	databaseList := collection.DatabaseList{"test1": {}}
 
 	queryDefinitions := generateDatabaseDefinitions(databaseList, &v912)
 
@@ -30,7 +30,7 @@ func Test_generateDatabaseDefinitions_LengthV912(t *testing.T) {
 
 func Test_generateDatabaseDefinitions_LengthV925(t *testing.T) {
 	v925 := semver.MustParse("9.2.5")
-	databaseList := args.DatabaseList{"test1": {}}
+	databaseList := collection.DatabaseList{"test1": {}}
 
 	queryDefinitions := generateDatabaseDefinitions(databaseList, &v925)
 
@@ -43,7 +43,7 @@ func Test_insertDatabaseNames(t *testing.T) {
 		dataModels: &[]struct{}{},
 	}
 
-	databaseList := args.DatabaseList{"test1": {}, "test2": {}}
+	databaseList := collection.DatabaseList{"test1": {}, "test2": {}}
 	testDefinition.insertDatabaseNames(databaseList)
 
 	expectedRegexp := `SELECT \* FROM test WHERE database IN \('test[12]','test[12]'\);`
