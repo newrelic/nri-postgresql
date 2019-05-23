@@ -25,7 +25,6 @@ type ArgumentList struct {
 	Timeout                string `default:"10" help:"Maximum wait for connection, in seconds. Set 0 for no timeout"`
 }
 
-
 // Validate validates PostgreSQl arguments
 func (al ArgumentList) Validate() error {
 	if al.Username == "" || al.Password == "" {

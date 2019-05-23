@@ -7,8 +7,8 @@ import (
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/newrelic/infra-integrations-sdk/log"
 	"github.com/newrelic/nri-postgresql/src/args"
-	"github.com/newrelic/nri-postgresql/src/connection"
 	"github.com/newrelic/nri-postgresql/src/collection"
+	"github.com/newrelic/nri-postgresql/src/connection"
 	"github.com/newrelic/nri-postgresql/src/inventory"
 	"github.com/newrelic/nri-postgresql/src/metrics"
 )
@@ -37,11 +37,11 @@ func main() {
 	}
 
 	connectionInfo := connection.DefaultConnectionInfo(&args)
-  collectionList, err := collection.BuildCollectionList(args, connectionInfo)
-  if err != nil {
-    log.Error("Error creating list of entities to collect: %s", err)
-    os.Exit(1)
-  }
+	collectionList, err := collection.BuildCollectionList(args, connectionInfo)
+	if err != nil {
+		log.Error("Error creating list of entities to collect: %s", err)
+		os.Exit(1)
+	}
 
 	instance, err := postgresIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 	if err != nil {
@@ -67,4 +67,3 @@ func main() {
 		log.Error(err.Error())
 	}
 }
-
