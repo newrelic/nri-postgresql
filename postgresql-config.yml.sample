@@ -17,10 +17,21 @@ instances:
       # The port of the postgres instance. If PgBouncer is being used,
       # use the port it is running on. Defaults to 5432
       port: 6432
-      # The JSON object which contains the entities to monitor. The nesting
-      # levels of JSON are database name -> schema name -> table name -> index name
-      # parameter is required for collection. If left as an empty JSON object nothing will be collected.
-      collection_list: '{"postgres":{"public":{"pg_table1":["pg_index1","pg_index2"],"pg_table2":[]}}}'
+      # Collection List can be either a JSON array or a JSON object. 
+      #
+      # If it is a JSON array, it will be interpreted as a list of database names to 
+      # collect all related metrics from. This will collect metrics for each database 
+      # specified, as well as all tables and indexes that belong to that database. 
+      # Example:
+      # collection_list: '["postgres"]'
+      #
+      # If it is a JSON object, you can more finely tune the entities that are collected. 
+      # Only the entities that are specified in the object will be collected. No automatic
+      # discovery will be performed.  
+      # The levels of JSON are database name -> schema name -> table name -> index name
+      # Example: 
+      # collection_list: '{"postgres":{"public":{"pg_table1":["pg_index1","pg_index2"],"pg_table2":[]}}}'
+      collection_list: '["postgres"]'
       # True if SSL is to be used. Defaults to false.
       enable_ssl: true
       # True if the SSL certificate should be trusted without validating.
