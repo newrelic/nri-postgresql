@@ -8,7 +8,7 @@ import (
 	"github.com/newrelic/infra-integrations-sdk/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/newrelic/infra-integrations-sdk/log"
-	"github.com/newrelic/nri-postgresql/src/args"
+	"github.com/newrelic/nri-postgresql/src/collection"
 	"github.com/newrelic/nri-postgresql/src/connection"
 )
 
@@ -17,7 +17,7 @@ const (
 )
 
 // PopulateMetrics collects metrics for each type
-func PopulateMetrics(ci connection.Info, databaseList args.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer bool) {
+func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer bool) {
 
 	con, err := ci.NewConnection(ci.DatabaseName())
 	if err != nil {
@@ -115,7 +115,7 @@ func PopulateInstanceMetrics(instanceEntity *integration.Entity, version *semver
 }
 
 // PopulateDatabaseMetrics populates the metrics for a database
-func PopulateDatabaseMetrics(databases args.DatabaseList, version *semver.Version, pgIntegration *integration.Integration, connection *connection.PGSQLConnection, ci connection.Info) {
+func PopulateDatabaseMetrics(databases collection.DatabaseList, version *semver.Version, pgIntegration *integration.Integration, connection *connection.PGSQLConnection, ci connection.Info) {
 	databaseDefinitions := generateDatabaseDefinitions(databases, version)
 
 	for _, queryDef := range databaseDefinitions {
@@ -156,7 +156,7 @@ func PopulateDatabaseMetrics(databases args.DatabaseList, version *semver.Versio
 }
 
 // PopulateTableMetrics populates the metrics for a table
-func PopulateTableMetrics(databases args.DatabaseList, pgIntegration *integration.Integration, ci connection.Info) {
+func PopulateTableMetrics(databases collection.DatabaseList, pgIntegration *integration.Integration, ci connection.Info) {
 	for database, schemaList := range databases {
 		if len(schemaList) == 0 {
 			return
@@ -174,7 +174,7 @@ func PopulateTableMetrics(databases args.DatabaseList, pgIntegration *integratio
 	}
 }
 
-func populateTableMetricsForDatabase(schemaList args.SchemaList, con *connection.PGSQLConnection, pgIntegration *integration.Integration, ci connection.Info) {
+func populateTableMetricsForDatabase(schemaList collection.SchemaList, con *connection.PGSQLConnection, pgIntegration *integration.Integration, ci connection.Info) {
 
 	tableDefinitions := generateTableDefinitions(schemaList)
 
@@ -229,7 +229,7 @@ func populateTableMetricsForDatabase(schemaList args.SchemaList, con *connection
 }
 
 // PopulateIndexMetrics populates the metrics for an index
-func PopulateIndexMetrics(databases args.DatabaseList, pgIntegration *integration.Integration, ci connection.Info) {
+func PopulateIndexMetrics(databases collection.DatabaseList, pgIntegration *integration.Integration, ci connection.Info) {
 	for database, schemaList := range databases {
 		con, err := ci.NewConnection(database)
 		defer con.Close()
@@ -241,7 +241,7 @@ func PopulateIndexMetrics(databases args.DatabaseList, pgIntegration *integratio
 	}
 }
 
-func populateIndexMetricsForDatabase(schemaList args.SchemaList, con *connection.PGSQLConnection, pgIntegration *integration.Integration, ci connection.Info) {
+func populateIndexMetricsForDatabase(schemaList collection.SchemaList, con *connection.PGSQLConnection, pgIntegration *integration.Integration, ci connection.Info) {
 	indexDefinitions := generateIndexDefinitions(schemaList)
 
 	for _, definition := range indexDefinitions {

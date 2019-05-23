@@ -5,7 +5,7 @@ import (
 
 	"github.com/blang/semver"
 	"github.com/newrelic/infra-integrations-sdk/integration"
-	"github.com/newrelic/nri-postgresql/src/args"
+	"github.com/newrelic/nri-postgresql/src/collection"
 	"github.com/newrelic/nri-postgresql/src/connection"
 	"github.com/stretchr/testify/assert"
 	tmock "github.com/stretchr/testify/mock"
@@ -85,7 +85,7 @@ func TestPopulateDatabaseMetrics(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
 	version := semver.MustParse("9.0.0")
-	dbList := args.DatabaseList{"test1": {}}
+	dbList := collection.DatabaseList{"test1": {}}
 
 	testConnection, mock := connection.CreateMockSQL(t)
 	databaseRows := sqlmock.NewRows([]string{
@@ -133,9 +133,9 @@ func TestPopulateDatabaseMetrics(t *testing.T) {
 func Test_populateTableMetricsForDatabase(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
-	dbList := args.DatabaseList{
-		"db1": args.SchemaList{
-			"schema1": args.TableList{
+	dbList := collection.DatabaseList{
+		"db1": collection.SchemaList{
+			"schema1": collection.TableList{
 				"table1": []string{},
 			},
 		},
@@ -235,9 +235,9 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 func Test_populateTableMetricsForDatabase_noTables(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
-	dbList := args.DatabaseList{
-		"db1": args.SchemaList{
-			"schema1": args.TableList{},
+	dbList := collection.DatabaseList{
+		"db1": collection.SchemaList{
+			"schema1": collection.TableList{},
 		},
 	}
 
@@ -255,9 +255,9 @@ func Test_populateTableMetricsForDatabase_noTables(t *testing.T) {
 func Test_populateIndexMetricsForDatabase(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
-	dbList := args.DatabaseList{
-		"db1": args.SchemaList{
-			"schema1": args.TableList{
+	dbList := collection.DatabaseList{
+		"db1": collection.SchemaList{
+			"schema1": collection.TableList{
 				"table1": []string{
 					"index1",
 				},
@@ -307,9 +307,9 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 func Test_populateIndexMetricsForDatabase_noIndexes(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
-	dbList := args.DatabaseList{
-		"db1": args.SchemaList{
-			"schema1": args.TableList{
+	dbList := collection.DatabaseList{
+		"db1": collection.SchemaList{
+			"schema1": collection.TableList{
 				"table1": []string{},
 			},
 		},
@@ -415,9 +415,9 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 func TestPopulateMetrics(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
-	dbList := args.DatabaseList{
-		"db1": args.SchemaList{
-			"schema1": args.TableList{
+	dbList := collection.DatabaseList{
+		"db1": collection.SchemaList{
+			"schema1": collection.TableList{
 				"table1": []string{
 					"index1",
 				},

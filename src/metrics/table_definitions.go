@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/newrelic/nri-postgresql/src/args"
+	"github.com/newrelic/nri-postgresql/src/collection"
 )
 
-func generateTableDefinitions(schemaList args.SchemaList) []*QueryDefinition {
+func generateTableDefinitions(schemaList collection.SchemaList) []*QueryDefinition {
 	queryDefinitions := make([]*QueryDefinition, 0)
 	if def := tableBloatDefinition.insertSchemaTables(schemaList); def != nil {
 		queryDefinitions = append(queryDefinitions, def)
@@ -19,7 +19,7 @@ func generateTableDefinitions(schemaList args.SchemaList) []*QueryDefinition {
 	return queryDefinitions
 }
 
-func (qd *QueryDefinition) insertSchemaTables(schemaList args.SchemaList) *QueryDefinition {
+func (qd *QueryDefinition) insertSchemaTables(schemaList collection.SchemaList) *QueryDefinition {
 	schemaTables := make([]string, 0)
 	for schema, tableList := range schemaList {
 		for table := range tableList {
