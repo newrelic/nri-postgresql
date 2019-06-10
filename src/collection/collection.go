@@ -1,9 +1,11 @@
 package collection
 
 import (
+  "database/sql"
 	"encoding/json"
 	"errors"
 
+	"github.com/newrelic/infra-integrations-sdk/log"
 	"github.com/newrelic/nri-postgresql/src/args"
 	"github.com/newrelic/nri-postgresql/src/connection"
 )
@@ -67,26 +69,31 @@ func buildSchemaListForDatabase(dbname string, con *connection.PGSQLConnection) 
       and t2.schemaname = t1.table_schema;`
 
 	var dataModel []struct {
-		SchemaName *string `db:"schema_name"`
-		TableName  *string `db:"table_name"`
-		IndexName  *string `db:"index_name"`
+		SchemaName sql.NullString `db:"schema_name"`
+		TableName  sql.NullString `db:"table_name"`
+		IndexName  sql.NullString `db:"index_name"`
 	}
 	err := con.Query(&dataModel, query)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, row := range dataModel {
-		if _, ok := schemaList[*row.SchemaName]; !ok {
-			schemaList[*row.SchemaName] = make(TableList)
+	for index, row := range dataModel {
+    if !row.SchemaName.Valid || !row.TableName.Valid {
+      log.Error("Query responded with a null schema name or table name. Skipping row %d", index)
+      continue
+    }
+
+		if _, ok := schemaList[row.SchemaName.String]; !ok {
+			schemaList[row.SchemaName.String] = make(TableList)
 		}
 
-		if _, ok := schemaList[*row.TableName]; !ok {
-			schemaList[*row.SchemaName][*row.TableName] = make([]string, 0)
+		if _, ok := schemaList[row.TableName.String]; !ok {
+			schemaList[row.SchemaName.String][row.TableName.String] = make([]string, 0)
 		}
 
-		if row.IndexName != nil {
-			schemaList[*row.SchemaName][*row.TableName] = append(schemaList[*row.SchemaName][*row.TableName], *row.IndexName)
+		if row.IndexName.Valid {
+			schemaList[row.SchemaName.String][row.TableName.String] = append(schemaList[row.SchemaName.String][row.TableName.String], row.IndexName.String)
 		}
 	}
 
