@@ -1,7 +1,7 @@
 package collection
 
 import (
-  "database/sql"
+	"database/sql"
 	"encoding/json"
 	"errors"
 
@@ -79,10 +79,10 @@ func buildSchemaListForDatabase(dbname string, con *connection.PGSQLConnection) 
 	}
 
 	for index, row := range dataModel {
-    if !row.SchemaName.Valid || !row.TableName.Valid {
-      log.Error("Query responded with a null schema name or table name. Skipping row %d", index)
-      continue
-    }
+		if !row.SchemaName.Valid || !row.TableName.Valid {
+			log.Error("Query responded with a null schema name or table name. Skipping row %d", index)
+			continue
+		}
 
 		if _, ok := schemaList[row.SchemaName.String]; !ok {
 			schemaList[row.SchemaName.String] = make(TableList)
