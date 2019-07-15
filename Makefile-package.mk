@@ -1,8 +1,11 @@
-PACKAGE_TYPES     ?= deb rpm
+PACKAGE_TYPES     ?= deb rpm tarball
 PROJECT_NAME       = nri-$(INTEGRATION)
 BINS_DIR           = $(TARGET_DIR)/bin/linux_amd64
 SOURCE_DIR         = $(TARGET_DIR)/source
 PACKAGES_DIR       = $(TARGET_DIR)/packages
+TARBALL_DIR       ?= $(PACKAGES_DIR)/tarball
+PKG_TARBALL       ?= true
+GOARCH            ?= amd64
 VERSION           ?= 0.0.0
 RELEASE           ?= dev
 LICENSE            = "https://newrelic.com/terms (also see LICENSE.txt installed with this package)"
@@ -47,5 +50,11 @@ rpm: prep-pkg-env
 	@echo "=== Main === [ rpm ]: building RPM package..."
 	@mkdir -p $(PACKAGES_DIR)/rpm
 	@fpm $(FPM_COMMON_OPTIONS) $(FPM_RPM_OPTIONS) .
+
+FILENAME_TARBALL_LINUX = $(PROJECT_NAME)_linux_$(VERSION)_$(GOARCH).tar.gz
+tarball: prep-pkg-env
+	@echo "=== Main === [ tar ]: building Tarball package..."
+	@mkdir -p $(TARBALL_DIR)
+	tar -czf $(TARBALL_DIR)/$(FILENAME_TARBALL_LINUX) -C $(SOURCE_DIR) ./
 
 .PHONY: package create-bins prep-pkg-env $(PACKAGE_TYPES)
