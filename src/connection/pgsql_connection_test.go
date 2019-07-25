@@ -2,9 +2,11 @@ package connection
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/newrelic/nri-postgresql/src/args"
+	"github.com/stretchr/testify/assert"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
@@ -47,6 +49,53 @@ func Test_PGSQLConnection_Query(t *testing.T) {
 	if temp[0].One != 1 || temp[0].Two != 2 {
 		t.Error("Query did not marshal correctly")
 	}
+}
+
+func Test_PGSQLConnection_HaveExtensionInSchema(t *testing.T) {
+	conn, mock := CreateMockSQL(t)
+
+	exentionRows := sqlmock.NewRows([]string{
+		"schema",
+		"extension",
+	}).AddRow("schema1", "extension1")
+	mock.ExpectQuery(".*EXTENSIONS_LIST.*").WillReturnRows(exentionRows)
+
+	result := conn.HaveExtensionInSchema("extension1", "schema1")
+	assert.Equal(t, true, result)
+}
+
+func Test_PGSQLConnection_HaveExtensionInSchema_WithMissingExtension(t *testing.T) {
+	conn, mock := CreateMockSQL(t)
+
+	exentionRows := sqlmock.NewRows([]string{
+		"schema",
+		"extension",
+	}).AddRow("schema1", "extension1")
+	mock.ExpectQuery(".*EXTENSIONS_LIST.*").WillReturnRows(exentionRows)
+
+	result := conn.HaveExtensionInSchema("missing", "schema1")
+	assert.Equal(t, false, result)
+}
+
+func Test_PGSQLConnection_HaveExtensionInSchema_WithMissingSchema(t *testing.T) {
+	conn, mock := CreateMockSQL(t)
+
+	exentionRows := sqlmock.NewRows([]string{
+		"schema",
+		"extension",
+	}).AddRow("schema1", "extension1")
+	mock.ExpectQuery(".*EXTENSIONS_LIST.*").WillReturnRows(exentionRows)
+
+	result := conn.HaveExtensionInSchema("extension1", "missing")
+	assert.Equal(t, false, result)
+}
+
+func Test_PGSQLConnection_HaveExtensionInSchema_WithFailedQuery(t *testing.T) {
+	conn, mock := CreateMockSQL(t)
+	mock.ExpectQuery(".*EXTENSIONS_LIST.*").WillReturnError(fmt.Errorf("error"))
+
+	result := conn.HaveExtensionInSchema("extension1", "missing")
+	assert.Equal(t, false, result)
 }
 
 func Test_createConnectionURL(t *testing.T) {

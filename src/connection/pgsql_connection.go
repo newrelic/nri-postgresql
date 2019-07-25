@@ -12,6 +12,15 @@ import (
 	"github.com/newrelic/nri-postgresql/src/args"
 )
 
+const (
+	extensionsQuery = `
+    SELECT -- EXTENSIONS_LIST
+           n.nspname AS schema,
+           e.extname AS extension
+      FROM pg_extension AS e
+      JOIN pg_namespace AS n ON n.oid = e.extnamespace;`
+)
+
 // PGSQLConnection represents a wrapper around a PostgreSQL connection
 type PGSQLConnection struct {
 	connection *sqlx.DB
@@ -86,6 +95,53 @@ func (p PGSQLConnection) Close() {
 // Query runs a query and loads results into v
 func (p PGSQLConnection) Query(v interface{}, query string) error {
 	return p.connection.Select(v, query)
+}
+
+type extensions map[string]map[string]bool
+
+type extensionRow struct {
+	SchemaName    string `db:"schema"`
+	ExtensionName string `db:"extension"`
+}
+
+func (p PGSQLConnection) getExtensions() (extensions, error) {
+	var extensionRows []*extensionRow
+	if err := p.Query(&extensionRows, extensionsQuery); err != nil {
+		log.Warn("Failure acquiring list of extensions: %+v", err)
+		return nil, err
+	}
+
+	extensionList := make(extensions, 0)
+	for _, row := range extensionRows {
+		if _, ok := extensionList[row.ExtensionName]; !ok {
+			extensionList[row.ExtensionName] = make(map[string]bool)
+		}
+
+		if len(row.SchemaName) > 0 {
+			extensionList[row.ExtensionName][row.SchemaName] = true
+		}
+	}
+
+	return extensionList, nil
+}
+
+// HaveExtensionInSchema checks to see if the given Extension is
+// installed on the current database in the given schema
+func (p PGSQLConnection) HaveExtensionInSchema(extensionName, schemaName string) bool {
+	extensions, err := p.getExtensions()
+	if err != nil {
+		return false
+	}
+
+	if _, ok := extensions[extensionName]; !ok {
+		return false
+	}
+
+	if _, ok := extensions[extensionName][schemaName]; !ok {
+		return false
+	}
+
+	return true
 }
 
 // createConnectionURL creates the connection string. A list of paramters
