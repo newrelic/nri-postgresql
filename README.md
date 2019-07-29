@@ -24,6 +24,15 @@ In order to use the PostgreSQL Integration it is required to configure `postgres
 
 You can view your data in Insights by creating your own custom NRQL queries. To do so, use the **PostgresqlInstanceSample**, **PostgressqlDatabaseSample**, **PostgresqlTableSample**,**PostgresqlIndexSample**, and **PgBouncerSample** event types.
 
+### Database Lock Metrics
+
+Collecting DB Lock Metrics requires that you first install the `tablefunc` extension on the `public` schema of the database you will be collecting lock metrics for. You can do so by:
+
+1. Installing the postgresql contribs package for your particular OS; and then
+2. Run the query `CREATE EXTENSION tablefunc;` against your database's public schema
+
+Afterwards, simply enable db lock collection by setting `collect_db_lock_metrics: true` in your nri-postgresql config file.
+
 ## Compatibility
 
 * Supported OS: No limitations

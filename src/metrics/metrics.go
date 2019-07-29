@@ -17,7 +17,7 @@ const (
 )
 
 // PopulateMetrics collects metrics for each type
-func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer bool) {
+func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer, CollectDbLocks bool) {
 
 	con, err := ci.NewConnection(ci.DatabaseName())
 	if err != nil {
@@ -34,9 +34,12 @@ func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, i
 
 	PopulateInstanceMetrics(instance, version, con)
 	PopulateDatabaseMetrics(databaseList, version, i, con, ci)
-	PopulateDatabaseLockMetrics(databaseList, version, i, con, ci)
+	if CollectDbLocks {
+		PopulateDatabaseLockMetrics(databaseList, version, i, con, ci)
+	}
 	PopulateTableMetrics(databaseList, i, ci)
 	PopulateIndexMetrics(databaseList, i, ci)
+
 	if collectPgBouncer {
 		con, err = ci.NewConnection("pgbouncer")
 		if err != nil {
