@@ -161,14 +161,14 @@ func TestPopulateDatabaseLockMetrics_WithTablefuncExtension(t *testing.T) {
 	PopulateDatabaseLockMetrics(dbList, &version, testIntegration, testConnection, ci)
 
 	expected := map[string]interface{}{
-		"db.locks.AccessExclusiveLock":      float64(1),
-		"db.locks.AccessShareLock":          float64(2),
-		"db.locks.ExclusiveLock":            float64(3),
-		"db.locks.RowExclusiveLock":         float64(4),
-		"db.locks.RowShareLock":             float64(5),
-		"db.locks.ShareLock":                float64(6),
-		"db.locks.ShareRowExclusiveLock":    float64(7),
-		"db.locks.ShareUpdateExclusiveLock": float64(8),
+		"db.locks.accessExclusiveLock":      float64(1),
+		"db.locks.accessShareLock":          float64(2),
+		"db.locks.exclusiveLock":            float64(3),
+		"db.locks.rowExclusiveLock":         float64(4),
+		"db.locks.rowShareLock":             float64(5),
+		"db.locks.shareLock":                float64(6),
+		"db.locks.shareRowExclusiveLock":    float64(7),
+		"db.locks.shareUpdateExclusiveLock": float64(8),
 		"displayName":                       "testDB",
 		"entityName":                        "database:testDB",
 		"event_type":                        "PostgresqlDatabaseSample",
