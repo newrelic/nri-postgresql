@@ -32,6 +32,10 @@ instances:
       # Example: 
       # collection_list: '{"postgres":{"public":{"pg_table1":["pg_index1","pg_index2"],"pg_table2":[]}}}'
       collection_list: '["postgres"]'
+      # True if database lock metrics should be collected
+      # Note: requires that the `tablefunc` extension be installed on the public schema
+      # of the database where lock metrics will be collected.
+      collect_db_lock_metrics: false
       # True if SSL is to be used. Defaults to false.
       enable_ssl: true
       # True if the SSL certificate should be trusted without validating.

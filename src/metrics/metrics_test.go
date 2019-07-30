@@ -130,6 +130,74 @@ func TestPopulateDatabaseMetrics(t *testing.T) {
 	assert.Equal(t, expected, dbEntity.Metrics[0].Metrics)
 }
 
+func TestPopulateDatabaseLockMetrics_WithTablefuncExtension(t *testing.T) {
+	testIntegration, _ := integration.New("test", "test")
+
+	version := semver.MustParse("9.0.0")
+	dbList := collection.DatabaseList{"test1": {}}
+
+	testConnection, mock := connection.CreateMockSQL(t)
+
+	extensionRows := sqlmock.NewRows([]string{
+		"schema",
+		"extension",
+	}).AddRow("public", "tablefunc")
+	mock.ExpectQuery(".*EXTENSIONS_LIST.*").WillReturnRows(extensionRows)
+
+	lockRows := sqlmock.NewRows([]string{
+		"database",
+		"access_exclusive_lock",
+		"access_share_lock",
+		"exclusive_lock",
+		"row_exclusive_lock",
+		"row_share_lock",
+		"share_lock",
+		"share_row_exclusive_lock",
+		"share_update_exclusive_lock",
+	}).AddRow("testDB", 1, 2, 3, 4, 5, 6, 7, 8)
+	mock.ExpectQuery(".*LOCKS_DEFINITION.*").WillReturnRows(lockRows)
+
+	ci := &connection.MockInfo{}
+	PopulateDatabaseLockMetrics(dbList, &version, testIntegration, testConnection, ci)
+
+	expected := map[string]interface{}{
+		"db.locks.AccessExclusiveLock":      float64(1),
+		"db.locks.AccessShareLock":          float64(2),
+		"db.locks.ExclusiveLock":            float64(3),
+		"db.locks.RowExclusiveLock":         float64(4),
+		"db.locks.RowShareLock":             float64(5),
+		"db.locks.ShareLock":                float64(6),
+		"db.locks.ShareRowExclusiveLock":    float64(7),
+		"db.locks.ShareUpdateExclusiveLock": float64(8),
+		"displayName":                       "testDB",
+		"entityName":                        "database:testDB",
+		"event_type":                        "PostgresqlDatabaseSample",
+	}
+
+	dbEntity, err := testIntegration.Entity("testDB", "pg-database", integration.NewIDAttribute("host", "testhost"), integration.NewIDAttribute("port", "1234"))
+
+	assert.Nil(t, err)
+	assert.Equal(t, expected, dbEntity.Metrics[0].Metrics)
+}
+
+func TestPopulateDatabaseLockMetrics_WithoutTablefuncExtension(t *testing.T) {
+	testIntegration, _ := integration.New("test", "test")
+
+	version := semver.MustParse("9.0.0")
+	dbList := collection.DatabaseList{"test1": {}}
+
+	testConnection, mock := connection.CreateMockSQL(t)
+	extensionRows := sqlmock.NewRows([]string{"schema", "extension"})
+	mock.ExpectQuery(".*EXTENSIONS_LIST.*").WillReturnRows(extensionRows)
+
+	ci := &connection.MockInfo{}
+	PopulateDatabaseLockMetrics(dbList, &version, testIntegration, testConnection, ci)
+	dbEntity, err := testIntegration.Entity("testDB", "pg-database", integration.NewIDAttribute("host", "testhost"), integration.NewIDAttribute("port", "1234"))
+
+	assert.Nil(t, err)
+	assert.Empty(t, dbEntity.Metrics)
+}
+
 func Test_populateTableMetricsForDatabase(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
@@ -435,6 +503,6 @@ func TestPopulateMetrics(t *testing.T) {
 
 	instance, _ := testIntegration.Entity("testInstance", "instance")
 
-	PopulateMetrics(ci, dbList, instance, testIntegration, true)
+	PopulateMetrics(ci, dbList, instance, testIntegration, true, true)
 
 }

@@ -17,7 +17,7 @@ const (
 )
 
 // PopulateMetrics collects metrics for each type
-func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer bool) {
+func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer, collectDbLocks bool) {
 
 	con, err := ci.NewConnection(ci.DatabaseName())
 	if err != nil {
@@ -34,8 +34,12 @@ func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, i
 
 	PopulateInstanceMetrics(instance, version, con)
 	PopulateDatabaseMetrics(databaseList, version, i, con, ci)
+	if collectDbLocks {
+		PopulateDatabaseLockMetrics(databaseList, version, i, con, ci)
+	}
 	PopulateTableMetrics(databaseList, i, ci)
 	PopulateIndexMetrics(databaseList, i, ci)
+
 	if collectPgBouncer {
 		con, err = ci.NewConnection("pgbouncer")
 		if err != nil {
@@ -117,8 +121,27 @@ func PopulateInstanceMetrics(instanceEntity *integration.Entity, version *semver
 // PopulateDatabaseMetrics populates the metrics for a database
 func PopulateDatabaseMetrics(databases collection.DatabaseList, version *semver.Version, pgIntegration *integration.Integration, connection *connection.PGSQLConnection, ci connection.Info) {
 	databaseDefinitions := generateDatabaseDefinitions(databases, version)
+	processDatabaseDefinitions(databaseDefinitions, pgIntegration, connection, ci)
+}
 
-	for _, queryDef := range databaseDefinitions {
+// PopulateDatabaseLockMetrics populates the lock metrics for a database
+func PopulateDatabaseLockMetrics(databases collection.DatabaseList, version *semver.Version, pgIntegration *integration.Integration, connection *connection.PGSQLConnection, ci connection.Info) {
+	if !connection.HaveExtensionInSchema("tablefunc", "public") {
+		log.Warn("Crosstab function not available; database lock metric gathering not possible.")
+		log.Warn("To enable database lock metrics, enable the 'tablefunc' extension on the public")
+		log.Warn("schema of your database. You can do so by:")
+		log.Warn("  1. Installing the postgresql contribs package for your OS; and")
+		log.Warn("  2. Run the query 'CREATE EXTENSION tablefunc;' against your database's public schema")
+		return
+	}
+
+	lockDefinitions := generateLockDefinitions(databases, version)
+
+	processDatabaseDefinitions(lockDefinitions, pgIntegration, connection, ci)
+}
+
+func processDatabaseDefinitions(definitions []*QueryDefinition, pgIntegration *integration.Integration, connection *connection.PGSQLConnection, ci connection.Info) {
+	for _, queryDef := range definitions {
 		// collect into model
 		dataModels := queryDef.GetDataModels()
 		if err := connection.Query(dataModels, queryDef.GetQuery()); err != nil {
@@ -232,11 +255,11 @@ func populateTableMetricsForDatabase(schemaList collection.SchemaList, con *conn
 func PopulateIndexMetrics(databases collection.DatabaseList, pgIntegration *integration.Integration, ci connection.Info) {
 	for database, schemaList := range databases {
 		con, err := ci.NewConnection(database)
-		defer con.Close()
 		if err != nil {
 			log.Error("Failed to create new connection to database %s: %s", database, err.Error())
 			continue
 		}
+		defer con.Close()
 		populateIndexMetricsForDatabase(schemaList, con, pgIntegration, ci)
 	}
 }
