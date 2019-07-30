@@ -78,3 +78,11 @@ PostgreSQL,pgbouncer.pools.serverConnectionsUser,Gauge,true,,"Server connections
 PostgreSQL,pgbouncer.pools.serverConnectionsTested,Gauge,true,,Server connections currently running either server_reset_query or server_check_query
 PostgreSQL,pgbouncer.pools.serverConnectionsLogin,Gauge,true,,Server connections currently in the process of logging in
 PostgreSQL,pgbouncer.pools.maxwaitInMilliseconds,Gauge,true,,Age of oldest unserved client connection
+PostgreSQL,db.locks.accessExclusiveLock,Gauge,true,,Number of access exclusive locks
+PostgreSQL,db.locks.accessShareLock,Gauge,true,,Number of access share locks
+PostgreSQL,db.locks.exclusiveLock,Gauge,true,,Number of exclusive locks
+PostgreSQL,db.locks.rowExclusiveLock,Gauge,true,,Number of row exclusive locks
+PostgreSQL,db.locks.rowShareLock,Gauge,true,,Number of row share locks
+PostgreSQL,db.locks.shareLock,Gauge,true,,Number of share locks
+PostgreSQL,db.locks.shareRowExclusiveLock,Gauge,true,,Number of share row exclusive locks
+PostgreSQL,db.locks.shareUpdateExclusiveLock,Gauge,true,,Number of share update exclusive locks
