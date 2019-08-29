@@ -6,9 +6,13 @@ Link the issue it solves (if there is one).
 #### PR Review Checklist
 ### Author
 
+- [ ] the PR should focus on a single subject. Change only relevant files to the problem you’re working on
+Clean and format the code
+- [ ] add unit tests for your changes and make sure all unit tests are passing
 - [ ] add a risk label after carefully considering the "blast radius" of your changes
 - [ ] describe the _intent_ of your changes in the description. don't just rewrite your code in prose
 - [ ] assign at least one reviewer
+- [ ] address the feedback 
 
 ### Reviewer
 
