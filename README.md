@@ -5,6 +5,8 @@ The New Relic Infrastructure Integration for PostgreSQL captures critical perfor
 
 Inventory data for the configuration of the instance is collected from the `pg_statistics` database.
 
+See our [documentation web site](https://docs.newrelic.com/docs/integrations/host-integrations/host-integrations-list/postgresql-monitoring-integration) for more details.
+
 ## Requirements
 
 A user with the necessary permissions must be present on the database for all metrics to be collected. See the documentation for details on permissions.
