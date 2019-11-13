@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <?define Version = "{IntegrationVersion}" ?>
     <?define ProductId = "*" ?>
-    <?define UpgradeCode = "{0fd47b2e-a0b7-48c8-be05-b4ce8122fdaa}" ?>
+    <?define UpgradeCode = "{3aa48fb0-e51f-470b-93eb-c623dfb4fe39}" ?>
 
     <Product Id="$(var.ProductId)"
              Name="New Relic Infrastructure Integration, nri-{IntegrationName}"
@@ -67,14 +67,14 @@
 
     <Fragment>
         <ComponentGroup Id="CustomPluginsBinComponent" Directory="CustomPluginsBinFolder">
-            <Component Id="CMP_NRI_{IntegrationName}_EXE" Guid="0fd47b2e-a0b7-48c8-be05-b4ce8122fdaa" Win64="yes">
+            <Component Id="CMP_NRI_{IntegrationName}_EXE" Guid="04f46bad-4f7a-415f-a504-d61c2af2bfd1" Win64="yes">
                 <File Id="FILE_NRI_{IntegrationName}_EXE"
                       Source="$(var.BinariesPath){IntegrationExe}"
                       KeyPath="yes"/>
             </Component>
         </ComponentGroup>
         <ComponentGroup Id="CustomPluginsComponent" Directory="CustomPluginsFolder">
-            <Component Id="CMP_NRI_{IntegrationName}_DEFINITION_YML" Guid="0fd47b2e-a0b7-48c8-be05-b4ce8122fdaa" Win64="yes"
+            <Component Id="CMP_NRI_{IntegrationName}_DEFINITION_YML" Guid="c5a194ca-fe79-47a8-a84f-f8f1f700c278" Win64="yes"
                        NeverOverwrite="yes" Permanent="yes">
                 <File Id="FILE_NRI_{IntegrationName}_DEFINITION_YML"
                       Name="{IntegrationName}-definition.yml"
@@ -83,7 +83,7 @@
             </Component>
         </ComponentGroup>
         <ComponentGroup Id="PluginConfigsComponent" Directory="PluginConfigsFolder">
-            <Component Id="CMP_NRI_{IntegrationName}_CONFIG_YML" Guid="0fd47b2e-a0b7-48c8-be05-b4ce8122fdaa" Win64="yes"
+            <Component Id="CMP_NRI_{IntegrationName}_CONFIG_YML" Guid="93226d36-a575-4729-a273-87cc231bed0d" Win64="yes"
                        NeverOverwrite="yes" Permanent="yes">
                 <File Id="FILE_NRI_{IntegrationName}_CONFIG_YML"
                       Name="{IntegrationName}-config.yml.sample"

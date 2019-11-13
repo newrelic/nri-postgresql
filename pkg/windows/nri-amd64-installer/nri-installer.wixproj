@@ -4,7 +4,7 @@
         <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
         <ProductVersion>3.10</ProductVersion>
-        <ProjectGuid>0fd47b2e-a0b7-48c8-be05-b4ce8122fdaa</ProjectGuid>
+        <ProjectGuid>9fb130c1-e39d-428b-a1fa-c793c1975770</ProjectGuid>
         <SchemaVersion>2.0</SchemaVersion>
         <OutputName>$(integration)-amd64</OutputName>
         <OutputType>Package</OutputType>
