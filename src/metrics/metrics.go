@@ -2,7 +2,7 @@ package metrics
 
 import (
 	"reflect"
-	"strings"
+	"regexp"
 
 	"github.com/blang/semver"
 	"github.com/newrelic/infra-integrations-sdk/data/metric"
@@ -61,15 +61,18 @@ func collectVersion(connection *connection.PGSQLConnection) (*semver.Version, er
 		return nil, err
 	}
 
+	re := regexp.MustCompile(`[0-9]+\.[0-9]+(\.[0-9])?`)
+	version := re.FindString(versionRows[0].Version)
+
 	// special cases for ubuntu/debian parsing
-	version := versionRows[0].Version
-	if strings.Contains(version, "Ubuntu") {
-		return parseSpecialVersion(version, strings.Index(version, " (Ubuntu"))
-	} else if strings.Contains(version, "Debian") {
-		return parseSpecialVersion(version, strings.Index(version, " (Debian"))
-	}
+	//version := versionRows[0].Version
+	//if strings.Contains(version, "Ubuntu") {
+	//return parseSpecialVersion(version, strings.Index(version, " (Ubuntu"))
+	//} else if strings.Contains(version, "Debian") {
+	//return parseSpecialVersion(version, strings.Index(version, " (Debian"))
+	//}
 
-	v, err := semver.ParseTolerant(versionRows[0].Version)
+	v, err := semver.ParseTolerant(version)
 	if err != nil {
 		return nil, err
 	}
@@ -77,16 +80,16 @@ func collectVersion(connection *connection.PGSQLConnection) (*semver.Version, er
 	return &v, nil
 }
 
-func parseSpecialVersion(version string, specialIndex int) (*semver.Version, error) {
-	partialVersion := version[:specialIndex]
+//func parseSpecialVersion(version string, specialIndex int) (*semver.Version, error) {
+//partialVersion := version[:specialIndex]
 
-	v, err := semver.ParseTolerant(partialVersion)
-	if err != nil {
-		return nil, err
-	}
+//v, err := semver.ParseTolerant(partialVersion)
+//if err != nil {
+//return nil, err
+//}
 
-	return &v, nil
-}
+//return &v, nil
+//}
 
 // PopulateInstanceMetrics populates the metrics for an instance
 func PopulateInstanceMetrics(instanceEntity *integration.Entity, version *semver.Version, connection *connection.PGSQLConnection) {

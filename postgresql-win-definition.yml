@@ -1,0 +1,23 @@
+name: com.newrelic.postgresql
+description: Reports status and metrics for postgresql service
+protocol_version: 2
+os: windows
+
+commands:
+  all_data:
+    command:
+      - .\bin\nr-postgresql.exe
+    prefix: config/postgresql
+    interval: 15
+  metrics:
+    command:
+      - .\bin\nr-postgresql.exe
+      - --metrics
+    prefix: config/postgresql
+    interval: 15
+  inventory:
+    command:
+      - .\bin\nr-postgresql.exe
+      - --inventory
+    prefix: config/postgresql
+    interval: 15

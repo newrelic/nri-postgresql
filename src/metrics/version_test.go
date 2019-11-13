@@ -29,6 +29,27 @@ func Test_collectVersion(t *testing.T) {
 	assert.Equal(t, expected, version)
 }
 
+func Test_collectVersion_EnterpriseDB(t *testing.T) {
+
+	testConnection, mock := connection.CreateMockSQL(t)
+
+	versionRows := sqlmock.NewRows([]string{"server_version"}).
+		AddRow("9.6.7.13")
+
+	mock.ExpectQuery(versionQuery).WillReturnRows(versionRows)
+
+	expected := &semver.Version{
+		Major: 9,
+		Minor: 6,
+    Patch: 7,
+	}
+
+	version, err := collectVersion(testConnection)
+
+	assert.Nil(t, err)
+	assert.Equal(t, expected, version)
+}
+
 func Test_collectVersion_Ubuntu(t *testing.T) {
 
 	testConnection, mock := connection.CreateMockSQL(t)

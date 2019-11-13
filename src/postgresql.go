@@ -1,3 +1,4 @@
+//go:generate goversioninfo
 package main
 
 import (
@@ -15,7 +16,7 @@ import (
 
 const (
 	integrationName    = "com.newrelic.postgresql"
-	integrationVersion = "2.1.3"
+	integrationVersion = "2.1.4"
 )
 
 func main() {
