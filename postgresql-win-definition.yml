@@ -6,18 +6,18 @@ os: windows
 commands:
   all_data:
     command:
-      - .\bin\nr-postgresql.exe
+      - .\bin\nri-postgresql.exe
     prefix: config/postgresql
     interval: 15
   metrics:
     command:
-      - .\bin\nr-postgresql.exe
+      - .\bin\nri-postgresql.exe
       - --metrics
     prefix: config/postgresql
     interval: 15
   inventory:
     command:
-      - .\bin\nr-postgresql.exe
+      - .\bin\nri-postgresql.exe
       - --inventory
     prefix: config/postgresql
     interval: 15

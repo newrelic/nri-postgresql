@@ -15,7 +15,7 @@ A user with the necessary permissions must be present on the database for all me
 
 - download an archive file for the PostgreSQL Integration
 - extract `postgresql-definition.yml` and `/bin` directory into `/var/db/newrelic-infra/newrelic-integrations`
-- add execute permissions for the binary file `nr-postgresql` (if required)
+- add execute permissions for the binary file `nri-postgresql` (if required)
 - extract `postgresql-config.yml.sample` into `/etc/newrelic-infra/integrations.d`
 
 ## Usage
@@ -48,13 +48,13 @@ Assuming that you have source code you can build and run the PostgreSQL Integrat
 ```bash
 $ make
 ```
-* The command above will execute tests for the PostgreSQL Integration and build an executable file called `nr-postgresql` in `bin` directory.
+* The command above will execute tests for the PostgreSQL Integration and build an executable file called `nri-postgresql` in `bin` directory.
 ```bash
-$ ./bin/nr-postgresql
+$ ./bin/nri-postgresql
 ```
-* If you want to know more about usage of `./nr-postgresql` check
+* If you want to know more about usage of `./nri-postgresql` check
 ```bash
-$ ./bin/nr-postgresql --help
+$ ./bin/nri-postgresql --help
 ```
 
 For managing external dependencies [govendor tool](https://github.com/kardianos/govendor) is used. It is required to lock all external dependencies to specific version (if possible) into vendor directory.
