@@ -7,7 +7,7 @@ param (
 
 $integration = $(Split-Path -Leaf $PSScriptRoot)
 $integrationName = $integration.Replace("nri-", "")
-$executable = "nr-$integrationName.exe"
+$executable = "nri-$integrationName.exe"
 
 if (-not (Test-Path env:GOPATH)) {
 	Write-Error "GOPATH not defined."
