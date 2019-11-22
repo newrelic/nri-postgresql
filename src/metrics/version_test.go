@@ -41,7 +41,7 @@ func Test_collectVersion_EnterpriseDB(t *testing.T) {
 	expected := &semver.Version{
 		Major: 9,
 		Minor: 6,
-    Patch: 7,
+		Patch: 7,
 	}
 
 	version, err := collectVersion(testConnection)
