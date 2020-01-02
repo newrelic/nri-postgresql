@@ -51,7 +51,7 @@ func main() {
 	}
 
 	if args.HasMetrics() {
-		metrics.PopulateMetrics(connectionInfo, collectionList, instance, postgresIntegration, args.Pgbouncer, args.CollectDbLockMetrics)
+		metrics.PopulateMetrics(connectionInfo, collectionList, instance, postgresIntegration, args.Pgbouncer, args.CollectDbLockMetrics, args.CustomMetricsQuery)
 	}
 
 	if args.HasInventory() {

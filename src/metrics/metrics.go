@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"fmt"
 	"reflect"
 	"regexp"
 
@@ -17,7 +18,7 @@ const (
 )
 
 // PopulateMetrics collects metrics for each type
-func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer, collectDbLocks bool) {
+func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer, collectDbLocks bool, customMetricsQuery string) {
 
 	con, err := ci.NewConnection(ci.DatabaseName())
 	if err != nil {
@@ -39,6 +40,9 @@ func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, i
 	}
 	PopulateTableMetrics(databaseList, i, ci)
 	PopulateIndexMetrics(databaseList, i, ci)
+	if customMetricsQuery != "" {
+		PopulateCustomMetrics(customMetricsQuery, i, con, ci, instance)
+	}
 
 	if collectPgBouncer {
 		con, err = ci.NewConnection("pgbouncer")
@@ -365,6 +369,85 @@ func PopulatePgBouncerMetrics(pgIntegration *integration.Integration, con *conne
 				log.Error("Failed to populate pgbouncer entity with metrics: %s", err.Error())
 			}
 
+		}
+	}
+}
+
+// PopulateCustomMetrics collects metrics from a custom query
+func PopulateCustomMetrics(customMetricsQuery string, pgIntegration *integration.Integration, con *connection.PGSQLConnection, ci connection.Info, instance *integration.Entity) {
+
+	rows, err := con.Queryx(customMetricsQuery)
+	if err != nil {
+		log.Error("Could not execute database query: %s", err.Error())
+	}
+	defer func() {
+		_ = rows.Close()
+	}()
+
+	for rows.Next() {
+		row := make(map[string]interface{})
+		err := rows.MapScan(row)
+		if err != nil {
+			log.Error("Failed to scan custom query row: %s", err)
+			return
+		}
+
+		nameInterface, ok := row["metric_name"]
+		if !ok {
+			log.Error("Missing required column 'metric_name' in custom query")
+			return
+		}
+		name, ok := nameInterface.(string)
+		if !ok {
+			log.Error("Non-string type %T for custom query 'metric_name' column", nameInterface)
+			continue
+		}
+
+		metricTypeInterface, ok := row["metric_type"]
+		if !ok {
+			log.Error("Missing required column 'metric_type' in custom query")
+			return
+		}
+		metricTypeString, ok := metricTypeInterface.(string)
+		if !ok {
+			log.Error("Non-string type %T for custom query 'metric_type' column", metricTypeInterface)
+			continue
+		}
+		metricType, err := metric.SourceTypeForName(metricTypeString)
+		if err != nil {
+			log.Error("Invalid metric type %s: %s", metricTypeString, err)
+			continue
+		}
+
+		value, ok := row["metric_value"]
+		if !ok {
+			log.Error("Missing required column 'metric_type' in custom query")
+			return
+		}
+
+		attributes := []metric.Attribute{
+			{Key: "displayName", Value: instance.Metadata.Name},
+			{Key: "entityName", Value: instance.Metadata.Namespace + ":" + instance.Metadata.Name},
+		}
+		for k, v := range row {
+			if k == "metric_name" || k == "metric_type" || k == "metric_value" {
+				continue
+			}
+
+			valString := fmt.Sprintf("%s", v)
+			if !ok {
+				log.Error("Non-string type %T for custom query attribute %s. Skipping attribute", v, k)
+				continue
+			}
+
+			attributes = append(attributes, metric.Attribute{Key: k, Value: valString})
+		}
+
+		ms := instance.NewMetricSet("PgCustomQuerySample", attributes...)
+		err = ms.SetMetric(name, value, metricType)
+		if err != nil {
+			log.Error("Failed to set metric: %s", err)
+			continue
 		}
 	}
 }

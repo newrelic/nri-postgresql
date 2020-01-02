@@ -24,6 +24,7 @@ type ArgumentList struct {
 	SSLCertLocation        string `default:"" help:"Absolute path to PEM encoded client cert file"`
 	SSLKeyLocation         string `default:"" help:"Absolute path to PEM encoded client key file"`
 	Timeout                string `default:"10" help:"Maximum wait for connection, in seconds. Set 0 for no timeout"`
+	CustomMetricsQuery     string `default:"" help:"A SQL query to collect custom metrics. Must have the columns metric_name, metric_type, and metric_value. Additional columns are added as attributes"`
 }
 
 // Validate validates PostgreSQl arguments
