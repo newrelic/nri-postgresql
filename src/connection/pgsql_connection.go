@@ -97,6 +97,11 @@ func (p PGSQLConnection) Query(v interface{}, query string) error {
 	return p.connection.Select(v, query)
 }
 
+// Queryx runs a query and returns a set of rows
+func (p PGSQLConnection) Queryx(query string) (*sqlx.Rows, error) {
+	return p.connection.Queryx(query)
+}
+
 type extensions map[string]map[string]bool
 
 type extensionRow struct {
@@ -111,7 +116,7 @@ func (p PGSQLConnection) getExtensions() (extensions, error) {
 		return nil, err
 	}
 
-	extensionList := make(extensions, 0)
+	extensionList := make(extensions)
 	for _, row := range extensionRows {
 		if _, ok := extensionList[row.ExtensionName]; !ok {
 			extensionList[row.ExtensionName] = make(map[string]bool)
