@@ -5,9 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.3.0 (2020-01-03)
+### Added
+- CustomMetricsQuery argument to support collecting non-standard metrics
+
 ## 2.2.0 (2019-11-18)
 ### Changed
 - Renamed the integration executable from nr-postgresql to nri-postgresql in order to be consistent with the package naming. **Important Note:** if you have any security module rules (eg. SELinux), alerts or automation that depends on the name of this binary, these will have to be updated.
+- 
 ## 2.1.4 - 2019-10-23
 ### Added
 - Windows MSI resources
