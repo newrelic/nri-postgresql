@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 2.3.0 (2020-01-03)
 ### Added
-- CustomMetricsQuery argument to support collecting non-standard metrics
+- `custom_metrics_query` argument to support collecting non-standard metrics
 
 ## 2.2.0 (2019-11-18)
 ### Changed
