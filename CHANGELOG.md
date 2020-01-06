@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.3.1 (2020-01-06)
+### Added
+- Example of `custom_metrics_query`
+
 ## 2.3.0 (2020-01-03)
 ### Added
 - `custom_metrics_query` argument to support collecting non-standard metrics
