@@ -15,7 +15,7 @@
             USERNAME: <postgres>
             PASSWORD: <pass>
             HOSTNAME: ${discovery.ip}
-            The database to connect to on the postgres instance. Defaults to postgres.
+            # The database to connect to on the postgres instance. Defaults to postgres.
             # DATABASE: postgres
             # The port of the postgres instance. If PgBouncer is being used,
             # use the port it is running on. Defaults to 5432
