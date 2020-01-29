@@ -14,6 +14,7 @@
           env:
             USERNAME: <postgres>
             PASSWORD: <pass>
+            # Using the discovered IP as the host address
             HOSTNAME: ${discovery.ip}
             # The database to connect to on the postgres instance. Defaults to postgres.
             # DATABASE: postgres
