@@ -1,0 +1,61 @@
+  postgresql-config.yml: |
+      ---
+      # Run auto discovery to find pods with label "app=postgresql"
+      # https://docs.newrelic.com/docs/integrations/host-integrations/installation/container-auto-discovery
+      discovery:
+        command:
+          # Run NRI Discovery for Kubernetes
+          # https://github.com/newrelic/nri-discovery-kubernetes
+          exec: /var/db/newrelic-infra/nri-discovery-kubernetes
+          match:
+            label.app: postgresql
+      integrations:
+        - name: nri-postgresql
+          env:
+            USERNAME: <postgres>
+            PASSWORD: <pass>
+            HOSTNAME: ${discovery.ip}
+            The database to connect to on the postgres instance. Defaults to postgres.
+            # DATABASE: postgres
+            # The port of the postgres instance. If PgBouncer is being used,
+            # use the port it is running on. Defaults to 5432
+            PORT: 5432
+            # Collection List can be either a JSON array or a JSON object.
+            #
+            # If it is a JSON array, it will be interpreted as a list of database names to
+            # collect all related metrics from. This will collect metrics for each database
+            # specified, as well as all tables and indexes that belong to that database.
+            # Example:
+            # COLLECTION_LIST: '["postgres"]'
+            #
+            # If it is a JSON object, you can more finely tune the entities that are collected.
+            # Only the entities that are specified in the object will be collected. No automatic
+            # discovery will be performed.  
+            # The levels of JSON are database name -> schema name -> table name -> index name
+            # Example:
+            # collection_list: '{"postgres":{"public":{"pg_table1":["pg_index1","pg_index2"],"pg_table2":[]}}}'
+            COLLECTION_LIST: '["postgres"]'
+            # True if database lock metrics should be collected
+            # Note: requires that the `tablefunc` extension be installed on the public schema
+            # of the database where lock metrics will be collected.
+            COLLECT_DB_LOCK_METRICS: false
+            ENABLE_SSL: true
+            # True if the SSL certificate should be trusted without validating.
+            # Setting this to true may open up the monitoring service to MITM attacks.
+            # Defaults to false.
+            TRUST_SERVER_CERTIFICATE: false
+            SSL_ROOT_CERT_LOCATION: /etc/newrelic-infra/root_cert.crt
+            SSL_CERT_LOCATION: /etc/newrelic-infra/postgresql.crt
+            SSL_KEY_LOCATION: /etc/newrelic-infra/postgresql.key
+            TIMEOUT: 10
+
+            CUSTOM_METRICS_QUERY: >-
+              select
+                'rows_inserted' as "metric_name",
+                'delta' as "metric_type",
+                sd.tup_inserted as "metric_value",
+                sd.datid as "database_id"
+              from pg_stat_database sd;
+          labels:
+            env: production
+            role: postgresql
