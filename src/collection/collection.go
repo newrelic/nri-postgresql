@@ -59,12 +59,16 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ci connection.Info) 
 func buildSchemaListForDatabase(dbname string, con *connection.PGSQLConnection) (SchemaList, error) {
 	schemaList := make(SchemaList)
 
-	query := `select 
+	query := `select
       table_schema as schema_name,
       t1.table_name as table_name,
       t2.indexname as index_name
-    from information_schema.tables as t1
-    full outer join pg_indexes t2 
+    from (
+        select table_schema, table_name from information_schema.tables
+      union all
+        select schemaname as table_schema, matviewname as table_name from pg_matviews
+      ) as t1
+    full outer join pg_indexes t2
       on t2.tablename = t1.table_name
       and t2.schemaname = t1.table_schema;`
 
