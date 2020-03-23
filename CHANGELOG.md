@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.3.3 (2020-01-06)
+### Added
+- ALL setting for `collection_list`
+
 ## 2.3.1 (2020-01-06)
 ### Added
 - Example of `custom_metrics_query`
@@ -16,7 +20,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 2.2.0 (2019-11-18)
 ### Changed
 - Renamed the integration executable from nr-postgresql to nri-postgresql in order to be consistent with the package naming. **Important Note:** if you have any security module rules (eg. SELinux), alerts or automation that depends on the name of this binary, these will have to be updated.
-- 
+-
 ## 2.1.4 - 2019-10-23
 ### Added
 - Windows MSI resources
@@ -64,7 +68,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 1.0.0 - 2018-11-29
 ### Changes
-- Bumped version for GA release 
+- Bumped version for GA release
 
 ## 0.2.3 - 2018-11-15
 ### Added
