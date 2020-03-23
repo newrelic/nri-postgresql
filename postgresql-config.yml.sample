@@ -18,7 +18,7 @@ instances:
       # The port of the postgres instance. If PgBouncer is being used,
       # use the port it is running on. Defaults to 5432
       port: 6432
-      # Collection List can be either a JSON array or a JSON object.
+      # Collection List can be either a JSON array, a JSON object, or the string literal 'ALL'.
       #
       # If it is a JSON array, it will be interpreted as a list of database names to
       # collect all related metrics from. This will collect metrics for each database
@@ -28,10 +28,14 @@ instances:
       #
       # If it is a JSON object, you can more finely tune the entities that are collected.
       # Only the entities that are specified in the object will be collected. No automatic
-      # discovery will be performed.  
+      # discovery will be performed.
       # The levels of JSON are database name -> schema name -> table name -> index name
       # Example:
       # collection_list: '{"postgres":{"public":{"pg_table1":["pg_index1","pg_index2"],"pg_table2":[]}}}'
+      #
+      # If it is the string literal 'ALL', it will collect metrics for all databases, schemas, tables, and indexes
+      # Example:
+      # collection_list: 'ALL'
       collection_list: '["postgres"]'
       # True if database lock metrics should be collected
       # Note: requires that the `tablefunc` extension be installed on the public schema
@@ -48,13 +52,13 @@ instances:
       ssl_key_location: /etc/newrelic-infra/postgresql.key
       timeout: 10
 
-      custom_metrics_query: >-
-        select
-          'rows_inserted' as "metric_name",
-          'delta' as "metric_type",
-          sd.tup_inserted as "metric_value",
-          sd.datid as "database_id"
-        from pg_stat_database sd;
+      # custom_metrics_query: >-
+      #   select
+      #     'rows_inserted' as "metric_name",
+      #     'delta' as "metric_type",
+      #     sd.tup_inserted as "metric_value",
+      #     sd.datid as "database_id"
+      #   from pg_stat_database sd;
     labels:
       env: production
       role: postgresql

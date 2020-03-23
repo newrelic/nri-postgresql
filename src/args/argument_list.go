@@ -15,7 +15,7 @@ type ArgumentList struct {
 	Hostname               string `default:"localhost" help:"The PostgreSQL hostname to connect to"`
 	Database               string `default:"postgres" help:"The PostgreSQL database name to connect to"`
 	Port                   string `default:"5432" help:"The port to connect to the PostgreSQL database"`
-	CollectionList         string `default:"{}" help:"A JSON object which defines the databases, schemas, tables, and indexes to collect. Collects nothing by default."`
+	CollectionList         string `default:"{}" help:"A JSON object which defines the databases, schemas, tables, and indexes to collect. Can also be a JSON array that whitelists databases. Can also be the string literal 'ALL' to collect everything. Collects nothing by default."`
 	EnableSSL              bool   `default:"false" help:"If true will use SSL encryption, false will not use encryption"`
 	TrustServerCertificate bool   `default:"false" help:"If true server certificate is not verified for SSL. If false certificate will be verified against supplied certificate"`
 	Pgbouncer              bool   `default:"false" help:"Collects metrics from PgBouncer instance. Assumes connection is through PgBouncer."`

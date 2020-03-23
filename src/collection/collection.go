@@ -24,6 +24,14 @@ type TableList map[string][]string
 // each of the databases listed in the array. If it is a hash, it collects only the objects
 // listed
 func BuildCollectionList(al args.ArgumentList, ci connection.Info) (DatabaseList, error) {
+	if al.CollectionList == "ALL" {
+		dbNames, err := getAllDatabaseNames(ci)
+		if err != nil {
+			return nil, err
+		}
+		return buildCollectionListFromDatabaseNames(dbNames, ci)
+	}
+
 	var dl DatabaseList
 	if err := json.Unmarshal([]byte(al.CollectionList), &dl); err == nil {
 		return dl, nil
@@ -37,6 +45,35 @@ func BuildCollectionList(al args.ArgumentList, ci connection.Info) (DatabaseList
 	return nil, errors.New("failed to parse collection list")
 }
 
+func getAllDatabaseNames(ci connection.Info) ([]string, error) {
+	query := `
+    SELECT datname FROM pg_database
+    WHERE datistemplate = false;`
+
+	con, err := ci.NewConnection(ci.DatabaseName())
+	if err != nil {
+		return nil, err
+	}
+	defer con.Close()
+
+	var dataModel []struct {
+		DatabaseName sql.NullString `db:"datname"`
+	}
+	err = con.Query(&dataModel, query)
+	if err != nil {
+		return nil, err
+	}
+
+	databaseNames := make([]string, 0, len(dataModel))
+	for _, database := range dataModel {
+		if database.DatabaseName.Valid {
+			databaseNames = append(databaseNames, database.DatabaseName.String)
+		}
+	}
+
+	return databaseNames, nil
+}
+
 func buildCollectionListFromDatabaseNames(dbnames []string, ci connection.Info) (DatabaseList, error) {
 	databaseList := make(DatabaseList)
 	for _, db := range dbnames {
@@ -44,6 +81,7 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ci connection.Info) 
 		if err != nil {
 			return nil, err
 		}
+		defer con.Close()
 
 		schemaList, err := buildSchemaListForDatabase(db, con)
 		if err != nil {
@@ -59,12 +97,12 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ci connection.Info) 
 func buildSchemaListForDatabase(dbname string, con *connection.PGSQLConnection) (SchemaList, error) {
 	schemaList := make(SchemaList)
 
-	query := `select 
+	query := `select
       table_schema as schema_name,
       t1.table_name as table_name,
       t2.indexname as index_name
     from information_schema.tables as t1
-    full outer join pg_indexes t2 
+    full outer join pg_indexes t2
       on t2.tablename = t1.table_name
       and t2.schemaname = t1.table_schema;`
 
