@@ -16,7 +16,7 @@ import (
 
 const (
 	integrationName    = "com.newrelic.postgresql"
-	integrationVersion = "2.3.2"
+	integrationVersion = "2.3.4"
 )
 
 func main() {

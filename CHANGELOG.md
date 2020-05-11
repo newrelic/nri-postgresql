@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.3.4 (2020-01-06)
+### Fixed
+- Tablespace bloat collection for Postgres 12+
+
 ## 2.3.3 (2020-01-06)
 ### Added
 - ALL setting for `collection_list`
