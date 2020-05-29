@@ -43,9 +43,12 @@ func (qd *QueryDefinition) insertSchemaTables(schemaList collection.SchemaList) 
 
 	schemaTablesString := strings.Join(schemaTables, ",")
 
-	qd.query = strings.Replace(qd.query, `%SCHEMA_TABLES%`, schemaTablesString, 1)
+	newDef := &QueryDefinition{
+		dataModels: qd.dataModels,
+		query:      strings.Replace(qd.query, `%SCHEMA_TABLES%`, schemaTablesString, 1),
+	}
 
-	return qd
+	return newDef
 }
 
 var tableDefinition = &QueryDefinition{
