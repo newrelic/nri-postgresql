@@ -2,8 +2,10 @@ package metrics
 
 import (
 	"fmt"
+	"io/ioutil"
 	"reflect"
 	"regexp"
+	"sync"
 
 	"github.com/blang/semver"
 	"github.com/newrelic/infra-integrations-sdk/data/metric"
@@ -11,6 +13,7 @@ import (
 	"github.com/newrelic/infra-integrations-sdk/log"
 	"github.com/newrelic/nri-postgresql/src/collection"
 	"github.com/newrelic/nri-postgresql/src/connection"
+	yaml "gopkg.in/yaml.v2"
 )
 
 const (
@@ -22,7 +25,7 @@ func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, i
 
 	con, err := ci.NewConnection(ci.DatabaseName())
 	if err != nil {
-		log.Error("Metrics collection failed: error creating connection to SQL Server: %s", err.Error())
+		log.Error("Metrics collection failed: error creating connection to PostgreSQL: %s", err.Error())
 		return
 	}
 	defer con.Close()
@@ -53,6 +56,159 @@ func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, i
 			PopulatePgBouncerMetrics(i, con, ci)
 		}
 	}
+}
+
+// PopulateCustomMetricsFromFile collects metrics defined by a custom config file
+func PopulateCustomMetricsFromFile(ci connection.Info, configFile string, psqlIntegration *integration.Integration) {
+	contents, err := ioutil.ReadFile(configFile)
+	if err != nil {
+		log.Error("Failed to read custom config file: %s", err)
+		return
+	}
+
+	var customYAML customMetricsYAML
+	err = yaml.Unmarshal(contents, &customYAML)
+	if err != nil {
+		log.Error("Failed to unmarshal custom config file: %s", err)
+		return
+	}
+
+	// Semaphore to run 10 custom queries concurrently
+	sem := make(chan struct{}, 10)
+	wg := sync.WaitGroup{}
+	for _, config := range customYAML.Queries {
+		sem <- struct{}{}
+		wg.Add(1)
+		go func(cfg customMetricsConfig) {
+			defer wg.Done()
+			defer func() {
+				<-sem
+			}()
+
+			CollectCustomConfig(ci, cfg, psqlIntegration)
+		}(config)
+	}
+	wg.Wait()
+
+}
+
+// CollectCustomConfig collects metrics defined by a custom config
+func CollectCustomConfig(ci connection.Info, cfg customMetricsConfig, pgIntegration *integration.Integration) {
+	dbName := func() string {
+		if cfg.Database == "" {
+			return ci.DatabaseName()
+		}
+		return cfg.Database
+	}()
+
+	con, err := ci.NewConnection(dbName)
+	if err != nil {
+		log.Error("Custom query collection failed: error creating connection to PostgreSQL: %s", err.Error())
+		return
+	}
+	defer con.Close()
+
+	rows, err := con.Queryx(cfg.Query)
+	if err != nil {
+		log.Error("Could not execute database query: %s", err.Error())
+		return
+	}
+	defer func() {
+		_ = rows.Close()
+	}()
+
+	host, port := ci.HostPort()
+	hostIDAttribute := integration.NewIDAttribute("host", host)
+	portIDAttribute := integration.NewIDAttribute("port", port)
+	databaseEntity, err := pgIntegration.Entity(dbName, "pg-database", hostIDAttribute, portIDAttribute)
+	if err != nil {
+		log.Error("Failed to create custom database entity: %s", err)
+	}
+
+	sampleName := func() string {
+		if cfg.SampleName == "" {
+			return "PostgreSQLCustomQuerySample"
+		}
+		return cfg.SampleName
+	}()
+
+	for rows.Next() {
+		row := make(map[string]interface{})
+		err := rows.MapScan(row)
+		if err != nil {
+			log.Error("Failed to scan custom query row: %s", err)
+			return
+		}
+
+		ms := databaseEntity.NewMetricSet(sampleName, metric.Attribute{
+			Key: "database", Value: dbName,
+		})
+
+		for k, v := range row {
+			sanitized := sanitizeValue(v)
+			metricType := func() metric.SourceType {
+				t, ok := cfg.MetricTypes[k]
+				if !ok {
+					return inferMetricType(sanitized)
+				}
+				return metric.SourceType(t)
+			}()
+
+			err := ms.SetMetric(k, sanitized, metricType)
+			if err != nil {
+				log.Warn("Failed to set metric: %s", err)
+			}
+		}
+	}
+}
+
+func sanitizeValue(val interface{}) interface{} {
+	switch val.(type) {
+	case string, float32, int, int32, int64:
+		return val
+	default:
+		return fmt.Sprintf("%v", val)
+	}
+}
+
+func inferMetricType(val interface{}) metric.SourceType {
+	switch val.(type) {
+	case string:
+		return metric.ATTRIBUTE
+	case float32, float64, int, int32, int64:
+		return metric.GAUGE
+	default:
+		return metric.ATTRIBUTE
+	}
+}
+
+type metricType metric.SourceType
+
+func (m *metricType) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var raw string
+	err := unmarshal(&raw)
+	if err != nil {
+		return err
+	}
+
+	st, err := metric.SourceTypeForName(raw)
+	if err != nil {
+		return err
+	}
+
+	*m = metricType(st)
+	return nil
+}
+
+type customMetricsYAML struct {
+	Queries []customMetricsConfig
+}
+
+type customMetricsConfig struct {
+	Query       string                `yaml:"query"`
+	Database    string                `yaml:"database"`
+	MetricTypes map[string]metricType `yaml:"metric_types"`
+	SampleName  string                `yaml:"sample_name"`
 }
 
 type serverVersionRow struct {
@@ -379,6 +535,7 @@ func PopulateCustomMetrics(customMetricsQuery string, pgIntegration *integration
 	rows, err := con.Queryx(customMetricsQuery)
 	if err != nil {
 		log.Error("Could not execute database query: %s", err.Error())
+		return
 	}
 	defer func() {
 		_ = rows.Close()

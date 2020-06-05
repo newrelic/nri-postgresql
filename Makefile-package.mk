@@ -40,6 +40,8 @@ prep-pkg-env:
 	@chmod 644 $(SOURCE_DIR)/var/db/newrelic-infra/newrelic-integrations/*-definition.yml
 	@cp ./*-config.yml.sample $(SOURCE_DIR)/etc/newrelic-infra/integrations.d/
 	@chmod 644 $(SOURCE_DIR)/etc/newrelic-infra/integrations.d/*-config.yml.sample
+	@cp ./postgresql-custom-query.yml.sample $(SOURCE_DIR)/etc/newrelic-infra/integrations.d/
+	@chmod 644 $(SOURCE_DIR)/etc/newrelic-infra/integrations.d/postgresql-custom-query.yml.sample
 
 deb: prep-pkg-env
 	@echo "=== Main === [ deb ]: building DEB package..."

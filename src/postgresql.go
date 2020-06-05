@@ -22,7 +22,7 @@ const (
 func main() {
 	var args args.ArgumentList
 	// Create Integration
-	postgresIntegration, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
+	pgIntegration, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
@@ -44,14 +44,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	instance, err := postgresIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
+	instance, err := pgIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 	if err != nil {
 		log.Error("Error creating instance entity: %s", err.Error())
 		os.Exit(1)
 	}
 
 	if args.HasMetrics() {
-		metrics.PopulateMetrics(connectionInfo, collectionList, instance, postgresIntegration, args.Pgbouncer, args.CollectDbLockMetrics, args.CustomMetricsQuery)
+		metrics.PopulateMetrics(connectionInfo, collectionList, instance, pgIntegration, args.Pgbouncer, args.CollectDbLockMetrics, args.CustomMetricsQuery)
+		if args.CustomMetricsConfig != "" {
+			metrics.PopulateCustomMetricsFromFile(connectionInfo, args.CustomMetricsConfig, pgIntegration)
+		}
 	}
 
 	if args.HasInventory() {
@@ -64,7 +67,7 @@ func main() {
 		}
 	}
 
-	if err = postgresIntegration.Publish(); err != nil {
+	if err = pgIntegration.Publish(); err != nil {
 		log.Error(err.Error())
 	}
 }
