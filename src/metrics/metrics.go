@@ -127,7 +127,7 @@ func CollectCustomConfig(ci connection.Info, cfg customMetricsConfig, pgIntegrat
 
 	sampleName := func() string {
 		if cfg.SampleName == "" {
-			return "PostgreSQLCustomQuerySample"
+			return "PostgresqlCustomSample"
 		}
 		return cfg.SampleName
 	}()
