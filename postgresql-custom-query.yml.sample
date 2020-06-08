@@ -1,5 +1,7 @@
 ---
 queries:
+
+  # Metric names are set to the column names in the query results
   - query: >-
       SELECT
       BG.checkpoints_timed AS scheduled_checkpoints_performed,
@@ -10,7 +12,14 @@ queries:
       BG.buffers_backend AS buffers_written_by_backend,
       BG.buffers_alloc AS buffers_allocated
       FROM pg_stat_bgwriter BG;
+
+    # database defaults to the auth database in the main config
     database: new_frontier_config_dev
+
+    # If not set explicitly here, metric type will default to
+    # 'gauge' for numbers and 'attribute' for strings
     metric_types:
       buffers_allocated: rate
+
+    # If unset, sample_name defaults to OracleCustomSample
     sample_name: MyCustomSample
