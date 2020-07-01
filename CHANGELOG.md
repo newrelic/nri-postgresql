@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.4.1 (2020-07-01)
+### Fixed
+- Stats collection for newer pgbouncer version
+
 ## 2.4.0 (2020-06-08)
 ### Added
 - Support for custom query file
