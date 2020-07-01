@@ -453,10 +453,10 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 		"pgbouncer.stats.avgBytesIn":                                      float64(11),
 		"pgbouncer.stats.avgBytesOut":                                     float64(12),
 		"pgbouncer.stats.avgQueryDurationInMilliseconds":                  float64(13),
-		"displayName":                                                     "testDB",
-		"entityName":                                                      "pgbouncer:testDB",
-		"event_type":                                                      "PgBouncerSample",
-		"host":                                                            "testhost",
+		"displayName": "testDB",
+		"entityName":  "pgbouncer:testDB",
+		"event_type":  "PgBouncerSample",
+		"host":        "testhost",
 	}
 
 	expectedPool := map[string]interface{}{
