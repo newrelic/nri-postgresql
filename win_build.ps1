@@ -79,7 +79,7 @@ if (-Not $skipTests) {
     {
         echo "Failed running tests"
         exit -1
-    }    
+    }
 }
 
 echo "--- Running Build"
@@ -102,7 +102,7 @@ go generate $mainPackage
 $fileName = ([io.fileinfo]$mainPackage).BaseName
 
 echo "creating $executable"
-go build -ldflags "-X main.buildVersion=$version" -o ".\target\bin\windows_$arch\$executable" $mainPackage
+go build -mod=vendor -ldflags "-X main.buildVersion=$version" -o ".\target\bin\windows_$arch\$executable" $mainPackage
 
 If (-Not $installer) {
     exit 0
