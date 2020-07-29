@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	sdkArgs "github.com/newrelic/infra-integrations-sdk/args"
+	"github.com/newrelic/infra-integrations-sdk/log"
 )
 
 // ArgumentList struct that holds all PostgreSQL arguments
@@ -48,7 +49,7 @@ func (al ArgumentList) validateSSL() error {
 		}
 
 		if al.SSLCertLocation == "" || al.SSLKeyLocation == "" {
-			return errors.New("invalid configuration: must specify both a client cert and key file when enabling SSL")
+			log.Warn("potentially invalid configuration: client cert and/or key file not present when SSL is enabled")
 		}
 	}
 
