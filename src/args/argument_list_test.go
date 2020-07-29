@@ -69,7 +69,7 @@ func TestValidate(t *testing.T) {
 				SSLCertLocation:        "my.crt",
 				CollectionList:         "{}",
 			},
-			true,
+			false,
 		},
 		{
 			"Missing Cert file with Key file",
@@ -84,7 +84,7 @@ func TestValidate(t *testing.T) {
 				SSLCertLocation:        "",
 				CollectionList:         "{}",
 			},
-			true,
+			false,
 		},
 	}
 
