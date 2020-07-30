@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.4.3 (2020-07-30)
+### Changed
+- Allow partial failures when building collection list
+
 ## 2.4.2 (2020-07-29)
 ### Fixed
 - Removed check for client-side certificate and key when enabling ssl. Server certificate and key are enough to create SSL connections
