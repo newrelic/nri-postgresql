@@ -79,13 +79,17 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ci connection.Info) 
 	for _, db := range dbnames {
 		con, err := ci.NewConnection(db)
 		if err != nil {
-			return nil, err
+			if err != nil {
+				log.Error("Failed to open connection to database '%s' to build collection list: %s", db, err)
+				continue
+			}
 		}
 		defer con.Close()
 
 		schemaList, err := buildSchemaListForDatabase(db, con)
 		if err != nil {
-			return nil, err
+			log.Error("Failed to build schema list for database '%s': %s", db, err)
+			continue
 		}
 
 		databaseList[db] = schemaList
