@@ -108,7 +108,7 @@ func buildSchemaListForDatabase(dbname string, con *connection.PGSQLConnection) 
     from information_schema.tables as t1
     full outer join pg_indexes t2
       on t2.tablename = t1.table_name
-      and t2.schemaname = t1.table_schema;`
+      and t2.schemaname = t1.table_schema`
 
 	var dataModel []struct {
 		SchemaName sql.NullString `db:"schema_name"`

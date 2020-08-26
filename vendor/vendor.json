@@ -27,16 +27,22 @@
 			"revisionTime": "2018-06-14T18:06:43Z"
 		},
 		{
-			"checksumSHA1": "xvqMCXXlR74in/1c09UadpfXz9Y=",
+			"checksumSHA1": "xipNTJ9e2pH8nk3stKhqnzQeZFM=",
 			"path": "github.com/lib/pq",
-			"revision": "4ded0e9383f75c197b3a2aaa6d590ac52df6fd79",
-			"revisionTime": "2018-08-23T06:29:44Z"
+			"revision": "ef080b6a8f499b5d60fe9f24a2f8a8beb671566d",
+			"revisionTime": "2020-08-12T19:37:26Z"
 		},
 		{
 			"checksumSHA1": "AU3fA8Sm33Vj9PBoRPSeYfxLRuE=",
 			"path": "github.com/lib/pq/oid",
 			"revision": "4ded0e9383f75c197b3a2aaa6d590ac52df6fd79",
 			"revisionTime": "2018-08-23T06:29:44Z"
+		},
+		{
+			"checksumSHA1": "n0MMCrKKsQuuhv7vLsrtRUGJVA8=",
+			"path": "github.com/lib/pq/scram",
+			"revision": "ef080b6a8f499b5d60fe9f24a2f8a8beb671566d",
+			"revisionTime": "2020-08-12T19:37:26Z"
 		},
 		{
 			"checksumSHA1": "ZfId5ZYn7jmL0xTxooHcxrLlXoA=",
