@@ -1,4 +1,4 @@
-DOCKER_IMAGE := golang:1.10
+DOCKER_IMAGE := golang:1.9
 INTEGRATION_DIR := nri-$(INTEGRATION)
 
 docker-fmt:
