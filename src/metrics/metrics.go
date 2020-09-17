@@ -591,10 +591,14 @@ func PopulateCustomMetrics(customMetricsQuery string, pgIntegration *integration
 				continue
 			}
 
-			valString := fmt.Sprintf("%s", v)
-			if !ok {
-				log.Error("Non-string type %T for custom query attribute %s. Skipping attribute", v, k)
-				continue
+			var valString string
+			switch v := v.(type) {
+			case []byte:
+				valString = string(v)
+			case string:
+				valString = v
+			default:
+				valString = fmt.Sprint(v)
 			}
 
 			attributes = append(attributes, metric.Attribute{Key: k, Value: valString})
