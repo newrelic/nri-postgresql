@@ -5,9 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.5.1 (2020-09-17)
+### Fixed
+- Issue with converting custom query results to strings
+
 ## 2.5.0 (2020-08-26)
 ### Changed
-- Updated the lib/pq library 
+- Updated the lib/pq library
 
 ## 2.4.3 (2020-07-30)
 ### Changed
