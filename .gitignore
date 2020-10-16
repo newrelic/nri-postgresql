@@ -43,3 +43,8 @@ server.crt
 root.crt
 postgresql-config.yml
 Makefile-deploy.mk
+
+.idea
+dist
+*.gpg
+
