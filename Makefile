@@ -58,6 +58,8 @@ test: deps
 
 # Include thematic Makefiles
 include Makefile-*.mk
+include $(CURDIR)/build/ci.mk
+include $(CURDIR)/build/release.mk
 
 check-version:
 ifdef GOOS
