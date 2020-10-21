@@ -8,19 +8,18 @@ on:
       - 'v*'
 
 env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
-  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GO_VERSION: '1.9.7'
-  GPG_MAIL: 'info@newrelic.com' # infrastructure-eng@newrelic.com
+  GPG_MAIL: 'infrastructure-eng@newrelic.com'
   GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
   GPG_PRIVATE_KEY_BASE64: ${{ secrets.GPG_PRIVATE_KEY_BASE64 }} # base64 encoded
   INTEGRATION: "postgresql"
   ORIGINAL_REPO_NAME: 'newrelic/nri-postgresql'
   PFX_CERTIFICATE_BASE64: ${{ secrets.PFX_CERTIFICATE_BASE64 }} # base64 encoded
-  PFX_CERTIFICATE_DESCRIPTION: 'Contoso' # 'New Relic Infrastructure Agent'
+  PFX_CERTIFICATE_DESCRIPTION: 'New Relic'
   PFX_PASSPHRASE:  ${{ secrets.PFX_PASSPHRASE }}
   REPO_FULL_NAME: ${{ github.event.repository.full_name }}
-  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+  SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
   SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
   SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   TAG: ${{ github.event.release.tag_name }}
@@ -40,12 +39,8 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/golang@master
-        env:
-          SNYK_TOKEN: ${{env.SNYK_TOKEN}}
-        with:
-          args: --severity-threshold=high
+      - name: Scan code for vulnerabilities
+        run: make ci/snyk-test
 
   test-nix:
     name: Run unit tests on *Nix
@@ -77,10 +72,32 @@ jobs:
         run: |
           .\build\windows\unit_tests.ps1
 
+  # can't run this step inside of container because of tests specific
+  test-integration-nix:
+    name: Run integration tests on *Nix
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        working-directory: src/github.com/${{env.ORIGINAL_REPO_NAME}}
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          path: src/github.com/${{env.ORIGINAL_REPO_NAME}}
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{env.GO_VERSION}}
+      - name: Integration test
+        env:
+          GOPATH: ${{ github.workspace }}
+        run: make integration-test
+
   prerelease:
     name: Build binary for *Nix/Win, create archives for *Nix/Win, create packages for *Nix, upload all artifacts into GH Release assets
     runs-on: ubuntu-20.04
-    needs: [validate, test-nix, test-windows]
+    needs: [validate, test-nix, test-windows, snyk, test-integration-nix]
     steps:
       - uses: actions/checkout@v2
       - name: Pre release
@@ -89,9 +106,9 @@ jobs:
         if: ${{ failure() }}
         uses: archive/github-actions-slack@master
         with:
-          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK }}
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
           slack-channel: ${{ env.SLACK_CHANNEL }}
-          slack-text: ":shit: Repo: ${REPO_FULL_NAME}, prerelease for nix FAILURE!"
+          slack-text: ":shit: Repo: ${{ env.REPO_FULL_NAME }}, prerelease for nix FAILURE!"
 
   package-win:
     name: Create MSI & Upload into GH Release assets
@@ -129,6 +146,6 @@ jobs:
         if: ${{ failure() }}
         uses: archive/github-actions-slack@master
         with:
-          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_WEBHOOK }}
+          slack-bot-user-oauth-access-token: ${{ secrets.SLACK_TOKEN }}
           slack-channel: ${{ env.SLACK_CHANNEL }}
-          slack-text: ":shit: Repo: ${REPO_FULL_NAME}, prerelease for Windows FAILURE!"
+          slack-text: ":shit: Repo: ${{ env.REPO_FULL_NAME }}, prerelease for Windows FAILURE!"
