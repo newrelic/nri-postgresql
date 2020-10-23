@@ -4,7 +4,7 @@
         <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
         <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
         <ProductVersion>3.10</ProductVersion>
-        <ProjectGuid>89a5d3bd-73d7-4ebb-8f3c-75a7c09e67a4</ProjectGuid>
+        <ProjectGuid>9fb130c1-e39d-428b-a1fa-c793c1975770</ProjectGuid>
         <SchemaVersion>2.0</SchemaVersion>
         <OutputName>nri-$(IntegrationName)-amd64</OutputName>
         <OutputType>Package</OutputType>
