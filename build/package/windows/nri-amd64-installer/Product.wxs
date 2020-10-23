@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <?define Version = "$(var.IntegrationVersion)" ?>
     <?define ProductId = "*" ?>
-    <?define UpgradeCode = "{f2334d3a-10f1-4a4c-9185-08d197f95b2b}" ?>
+    <?define UpgradeCode = "{3aa48fb0-e51f-470b-93eb-c623dfb4fe39}" ?>
 
     <Product Id="$(var.ProductId)"
              Name="New Relic Infrastructure Integration, nri-$(var.IntegrationName)"
