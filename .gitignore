@@ -44,7 +44,15 @@ root.crt
 postgresql-config.yml
 Makefile-deploy.mk
 
+bin/
+dist/
+
+# Local development tools/files
 .idea
-dist
+.env
+.envrc
 *.gpg
 
+# build files
+src/versioninfo.json
+src/resource.syso
