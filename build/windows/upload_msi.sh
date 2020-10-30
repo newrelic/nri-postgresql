@@ -2,7 +2,7 @@
 set -e
 #
 #
-# Gets dist/zip_dirty created by Goreleaser and reorganize inside files
+# Upload msi artifacts to GH Release assets
 #
 #
 INTEGRATION=$1
