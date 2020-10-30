@@ -4,6 +4,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
+	"strings"
 
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/newrelic/infra-integrations-sdk/log"
@@ -15,8 +17,13 @@ import (
 )
 
 const (
-	integrationName    = "com.newrelic.postgresql"
-	integrationVersion = "2.6.1"
+	integrationName = "com.newrelic.postgresql"
+)
+
+var (
+	integrationVersion = "0.0.0"
+	gitCommit          = ""
+	buildDate          = ""
 )
 
 func main() {
@@ -26,6 +33,18 @@ func main() {
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
+	}
+
+	if args.ShowVersion {
+		fmt.Printf(
+			"New Relic %s integration Version: %s, Platform: %s, GoVersion: %s, GitCommit: %s, BuildDate: %s\n",
+			strings.Title(strings.Replace(integrationName, "com.newrelic.", "", 1)),
+			integrationVersion,
+			fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH),
+			runtime.Version(),
+			gitCommit,
+			buildDate)
+		os.Exit(0)
 	}
 
 	// Setup logging with verbose
