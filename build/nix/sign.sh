@@ -3,7 +3,7 @@ set -e
 #
 #
 #
-# Sign RPM's & DEB's in /dist artifacts to GH Release Assets
+# Sign RPM's & DEB's in /dist artifacts
 #
 #
 #
@@ -25,7 +25,6 @@ rpm --import /tmp/RPM-GPG-KEY-${GPG_MAIL}
 
 cd dist
 
-# TODO @cciutea - review this step
 for rpm_file in $(find -regex ".*\.\(rpm\)");do
   echo "===> Signing $rpm_file"
   rpm --addsign $rpm_file

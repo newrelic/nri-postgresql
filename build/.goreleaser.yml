@@ -1,5 +1,5 @@
 builds:
-  - id: nri-postgresql-nix
+  - id: nri-nix
     main: ./src
     binary: nri-postgresql
     gobinary: "go1.9.7"
@@ -17,7 +17,7 @@ builds:
       - goos: darwin
         goarch: 386
 
-  - id: nri-postgresql-win
+  - id: nri-win
     main: ./src
     binary: nri-postgresql
     gobinary: "go1.9.7"
@@ -32,9 +32,9 @@ builds:
       pre: build/windows/set_exe_properties.sh {{ .Env.TAG }} "postgresql"
 
 nfpms:
-  - id: nri-postgresql-deb
+  - id: nri-deb
     builds:
-      - nri-postgresql-nix
+      - nri-nix
     file_name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
     vendor: "New Relic, Inc."
     homepage: "https://www.newrelic.com/infrastructure"
@@ -55,9 +55,9 @@ nfpms:
     dependencies:
       - "newrelic-infra"
 
-  - id: nri-postgresql-rpm
+  - id: nri-rpm
     builds:
-      - nri-postgresql-nix
+      - nri-nix
     file_name_template: "{{ .ProjectName }}-{{ .Version }}-{{ .Arch }}"
     vendor: "New Relic, Inc."
     homepage: "https://www.newrelic.com/infrastructure"
@@ -83,18 +83,18 @@ nfpms:
           amd64: 1.x86_64
 
 archives:
-  - id: nri-postgresql-nix
+  - id: nri-nix
     builds:
-      - nri-postgresql-nix
+      - nri-nix
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Version }}_{{ .Arch }}_dirty"
     files:
       - postgresql-config.yml.sample
       - postgresql-definition.yml
     format: tar.gz
 
-  - id: nri-postgresql-win
+  - id: nri-win
     builds:
-      - nri-postgresql-win
+      - nri-win
     name_template: "{{ .ProjectName }}-{{ .Arch }}.{{ .Version }}_dirty"
     files:
       - postgresql-win-config.yml.sample

@@ -34,6 +34,4 @@ sed \
   -e "s/{IntegrationExe}/$INTEGRATION_EXE/g" \
    ./build/windows/versioninfo.json.template > ./src/versioninfo.json
 
-# todo: do we need this export line
-export PATH="$PATH:/go/bin"
 go generate github.com/newrelic/nri-${INTEGRATION}/src/
