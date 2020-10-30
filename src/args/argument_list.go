@@ -28,6 +28,7 @@ type ArgumentList struct {
 	CustomMetricsConfig    string `default:"" help:"YAML configuration with one or more custom SQL queries to collect"`
 	CollectDbLockMetrics   bool   `default:"false" help:"If true, enables collection of lock metrics for the specified database. (Note: requires that the 'tablefunc' extension is installed)"`
 	CollectBloatMetrics    bool   `default:"true" help:"Enable collecting bloat metrics which can be performance intensive"`
+	ShowVersion            bool   `default:"false" help:"Print build information and exit"`
 }
 
 // Validate validates PostgreSQl arguments
