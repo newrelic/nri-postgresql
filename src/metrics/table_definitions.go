@@ -8,17 +8,19 @@ import (
 	"github.com/newrelic/nri-postgresql/src/collection"
 )
 
-func generateTableDefinitions(schemaList collection.SchemaList, version *semver.Version) []*QueryDefinition {
+func generateTableDefinitions(schemaList collection.SchemaList, version *semver.Version, collectBloat bool) []*QueryDefinition {
 	queryDefinitions := make([]*QueryDefinition, 0)
 
-	v12 := semver.MustParse("12.0.0")
-	if version.GTE(v12) {
-		if def := tableBloatDefinitionPostV12.insertSchemaTables(schemaList); def != nil {
-			queryDefinitions = append(queryDefinitions, def)
-		}
-	} else {
-		if def := tableBloatDefinition.insertSchemaTables(schemaList); def != nil {
-			queryDefinitions = append(queryDefinitions, def)
+	if collectBloat {
+		v12 := semver.MustParse("12.0.0")
+		if version.GTE(v12) {
+			if def := tableBloatDefinitionPostV12.insertSchemaTables(schemaList); def != nil {
+				queryDefinitions = append(queryDefinitions, def)
+			}
+		} else {
+			if def := tableBloatDefinition.insertSchemaTables(schemaList); def != nil {
+				queryDefinitions = append(queryDefinitions, def)
+			}
 		}
 	}
 

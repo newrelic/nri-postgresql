@@ -21,7 +21,13 @@ const (
 )
 
 // PopulateMetrics collects metrics for each type
-func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, instance *integration.Entity, i *integration.Integration, collectPgBouncer, collectDbLocks bool, customMetricsQuery string) {
+func PopulateMetrics(
+	ci connection.Info,
+	databaseList collection.DatabaseList,
+	instance *integration.Entity,
+	i *integration.Integration,
+	collectPgBouncer, collectDbLocks, collectBloat bool,
+	customMetricsQuery string) {
 
 	con, err := ci.NewConnection(ci.DatabaseName())
 	if err != nil {
@@ -41,7 +47,7 @@ func PopulateMetrics(ci connection.Info, databaseList collection.DatabaseList, i
 	if collectDbLocks {
 		PopulateDatabaseLockMetrics(databaseList, version, i, con, ci)
 	}
-	PopulateTableMetrics(databaseList, version, i, ci)
+	PopulateTableMetrics(databaseList, version, i, ci, collectBloat)
 	PopulateIndexMetrics(databaseList, i, ci)
 	if customMetricsQuery != "" {
 		PopulateCustomMetrics(customMetricsQuery, i, con, ci, instance)
@@ -344,7 +350,7 @@ func processDatabaseDefinitions(definitions []*QueryDefinition, pgIntegration *i
 }
 
 // PopulateTableMetrics populates the metrics for a table
-func PopulateTableMetrics(databases collection.DatabaseList, version *semver.Version, pgIntegration *integration.Integration, ci connection.Info) {
+func PopulateTableMetrics(databases collection.DatabaseList, version *semver.Version, pgIntegration *integration.Integration, ci connection.Info, collectBloat bool) {
 	for database, schemaList := range databases {
 		if len(schemaList) == 0 {
 			return
@@ -358,13 +364,13 @@ func PopulateTableMetrics(databases collection.DatabaseList, version *semver.Ver
 			continue
 		}
 
-		populateTableMetricsForDatabase(schemaList, version, con, pgIntegration, ci)
+		populateTableMetricsForDatabase(schemaList, version, con, pgIntegration, ci, collectBloat)
 	}
 }
 
-func populateTableMetricsForDatabase(schemaList collection.SchemaList, version *semver.Version, con *connection.PGSQLConnection, pgIntegration *integration.Integration, ci connection.Info) {
+func populateTableMetricsForDatabase(schemaList collection.SchemaList, version *semver.Version, con *connection.PGSQLConnection, pgIntegration *integration.Integration, ci connection.Info, collectBloat bool) {
 
-	tableDefinitions := generateTableDefinitions(schemaList, version)
+	tableDefinitions := generateTableDefinitions(schemaList, version, collectBloat)
 
 	// collect into model
 	for _, definition := range tableDefinitions {

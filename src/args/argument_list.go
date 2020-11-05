@@ -20,13 +20,14 @@ type ArgumentList struct {
 	EnableSSL              bool   `default:"false" help:"If true will use SSL encryption, false will not use encryption"`
 	TrustServerCertificate bool   `default:"false" help:"If true server certificate is not verified for SSL. If false certificate will be verified against supplied certificate"`
 	Pgbouncer              bool   `default:"false" help:"Collects metrics from PgBouncer instance. Assumes connection is through PgBouncer."`
-	CollectDbLockMetrics   bool   `default:"false" help:"If true, enables collection of lock metrics for the specified database. (Note: requires that the 'tablefunc' extension is installed)"`
 	SSLRootCertLocation    string `default:"" help:"Absolute path to PEM encoded root certificate file"`
 	SSLCertLocation        string `default:"" help:"Absolute path to PEM encoded client cert file"`
 	SSLKeyLocation         string `default:"" help:"Absolute path to PEM encoded client key file"`
 	Timeout                string `default:"10" help:"Maximum wait for connection, in seconds. Set 0 for no timeout"`
 	CustomMetricsQuery     string `default:"" help:"A SQL query to collect custom metrics. Must have the columns metric_name, metric_type, and metric_value. Additional columns are added as attributes"`
 	CustomMetricsConfig    string `default:"" help:"YAML configuration with one or more custom SQL queries to collect"`
+	CollectDbLockMetrics   bool   `default:"false" help:"If true, enables collection of lock metrics for the specified database. (Note: requires that the 'tablefunc' extension is installed)"`
+	CollectBloatMetrics    bool   `default:"true" help:"Enable collecting bloat metrics which can be performance intensive"`
 }
 
 // Validate validates PostgreSQl arguments
