@@ -251,7 +251,7 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 
 	ci := &connection.MockInfo{}
 	version := semver.MustParse("12.0.0")
-	populateTableMetricsForDatabase(dbList["db1"], &version, testConnection, testIntegration, ci)
+	populateTableMetricsForDatabase(dbList["db1"], &version, testConnection, testIntegration, ci, true)
 
 	expectedBase := map[string]interface{}{
 		"table.totalSizeInBytes":                   float64(1),
@@ -314,7 +314,7 @@ func Test_populateTableMetricsForDatabase_noTables(t *testing.T) {
 
 	ci := &connection.MockInfo{}
 	version := semver.MustParse("10.0.0")
-	populateTableMetricsForDatabase(dbList["db1"], &version, testConnection, testIntegration, ci)
+	populateTableMetricsForDatabase(dbList["db1"], &version, testConnection, testIntegration, ci, true)
 
 	tableEntity, err := testIntegration.Entity("table1", "table")
 	assert.Nil(t, err)
@@ -506,6 +506,6 @@ func TestPopulateMetrics(t *testing.T) {
 
 	instance, _ := testIntegration.Entity("testInstance", "instance")
 
-	PopulateMetrics(ci, dbList, instance, testIntegration, true, true, "")
+	PopulateMetrics(ci, dbList, instance, testIntegration, true, true, true, "")
 
 }
