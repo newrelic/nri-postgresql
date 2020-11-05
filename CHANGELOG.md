@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.6.0 (2020-11-05)
+### Added
+- Option `collect_bloat_metrics` which enables or disables the performance-intensive bloat query
+
 ## 2.5.3 (2020-09-25)
 ### Fixed
 - Issue with converting custom query results to strings
