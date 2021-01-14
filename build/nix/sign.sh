@@ -25,9 +25,9 @@ rpm --import /tmp/RPM-GPG-KEY-${GPG_MAIL}
 
 cd dist
 
-for rpm_file in $(find -regex ".*\.\(rpm\)");do
+find . -regex ".*\.\(rpm\)" | while read rpm_file; do
   echo "===> Signing $rpm_file"
-  rpm --addsign $rpm_file
+  rpm --addsign "$rpm_file"
   echo "===> Sign verification $rpm_file"
   rpm -v --checksig $rpm_file
 done
@@ -41,7 +41,7 @@ echo 'pinentry-mode loopback' >> "${GNUPGHOME}/gpg.conf"
 echo 'use-agent' >> "${GNUPGHOME}/gpg.conf"
 echo RELOADAGENT | gpg-connect-agent
 
-for deb_file in $(find -regex ".*\.\(deb\)");do
+find . -regex ".*\.\(deb\)" | while read deb_file; do
   echo "===> Signing $deb_file"
   debsigs --sign=origin --verify --check -v -k ${GPG_MAIL} $deb_file
 done
