@@ -7,9 +7,13 @@ set -e
 #
 PROJECT_PATH=$1
 
-for tarball_dirty in $(find dist -regex ".*_dirty\.\(tar.gz\)");do
-  tarball=${tarball_dirty:5:${#tarball_dirty}-(5+13)} # Strips begining and end chars
+find dist -regex ".*_dirty\.tar.gz" | while read tarball_dirty; do
+  echo "tarball_dirty: $tarball_dirty"
+  tarball=${tarball_dirty/_dirty.tar.gz} # strip trailing _dirty
+  tarball=${tarball/dist\/} # strip leading folder name
+  echo "tarball: $tarball"
   TARBALL_CLEAN="${tarball}.tar.gz"
+  echo "TARBALL_CLEAN: $TARBALL_CLEAN"
   TARBALL_TMP="dist/tarball_temp"
   TARBALL_CONTENT_PATH="${TARBALL_TMP}/${tarball}_content"
   mkdir -p ${TARBALL_CONTENT_PATH}/var/db/newrelic-infra/newrelic-integrations/bin/
