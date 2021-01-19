@@ -1,7 +1,7 @@
 package metrics
 
 import (
-	"github.com/blang/semver"
+	"github.com/blang/semver/v4"
 )
 
 func generateInstanceDefinitions(version *semver.Version) []*QueryDefinition {

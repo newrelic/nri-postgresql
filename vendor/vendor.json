@@ -3,10 +3,10 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "f423Rwr9K0TMRFwPgJgjojAmZd8=",
-			"path": "github.com/blang/semver",
-			"revision": "3c1074078d32d767e08ab2c8564867292da86926",
-			"revisionTime": "2018-07-15T01:52:53Z"
+			"checksumSHA1": "2wDGM/dPJaooHDv7F6ljeEIcy4Y=",
+			"path": "github.com/blang/semver/v4",
+			"revision": "4487282d78122a245e413d7515e7c516b70c33fd",
+			"revisionTime": "2020-05-24T15:35:40Z"
 		},
 		{
 			"checksumSHA1": "CSPbwbyzqA6sfORicn4HFtIhF/c=",

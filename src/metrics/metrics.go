@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"sync"
 
-	"github.com/blang/semver"
+	"github.com/blang/semver/v4"
 	"github.com/newrelic/infra-integrations-sdk/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/newrelic/infra-integrations-sdk/log"
