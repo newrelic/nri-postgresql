@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/blang/semver"
+	"github.com/blang/semver/v4"
 	"github.com/newrelic/nri-postgresql/src/collection"
 	"github.com/stretchr/testify/assert"
 )
