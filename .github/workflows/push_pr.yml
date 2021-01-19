@@ -11,7 +11,6 @@ env:
   TAG: "v0.0.0" # needed for goreleaser windows builds
   REPO_FULL_NAME: ${{ github.event.repository.full_name }}
   ORIGINAL_REPO_NAME: "newrelic/nri-postgresql"
-  SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
   GO_VERSION: '1.9.7'
 
 jobs:
@@ -31,6 +30,8 @@ jobs:
   snyk:
     name: Run security checks via snyk
     runs-on: ubuntu-20.04
+    env:
+      SNYK_TOKEN: ${{ secrets.COREINT_SNYK_TOKEN }}
     steps:
       - uses: actions/checkout@v2
       - name: Login to DockerHub
