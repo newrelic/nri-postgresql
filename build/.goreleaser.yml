@@ -45,13 +45,18 @@ nfpms:
     formats:
       - deb
     bindir: "/var/db/newrelic-infra/newrelic-integrations/bin"
-    files:
-      "postgresql-config.yml.sample": "/etc/newrelic-infra/integrations.d/postgresql-config.yml.sample"
-      "CHANGELOG.md": "/usr/share/doc/nri-postgresql/CHANGELOG.md"
-      "README.md":  "/usr/share/doc/nri-postgresql/README.md"
-      "LICENSE": "/usr/share/doc/nri-postgresql/LICENSE"
-    config_files:
-      "postgresql-definition.yml": "/var/db/newrelic-infra/newrelic-integrations/postgresql-definition.yml"
+    contents:
+      - src: postgresql-config.yml.sample
+        dst: /etc/newrelic-infra/integrations.d/postgresql-config.yml.sample
+      - src: CHANGELOG.md
+        dst: /usr/share/doc/nri-postgresql/CHANGELOG.md
+      - src: README.md
+        dst: /usr/share/doc/nri-postgresql/README.md
+      - src: LICENSE
+        dst: /usr/share/doc/nri-postgresql/LICENSE
+      - src: postgresql-definition.yml
+        dst: /var/db/newrelic-infra/newrelic-integrations/postgresql-definition.yml
+        type: config
     dependencies:
       - "newrelic-infra"
 
@@ -68,13 +73,18 @@ nfpms:
     formats:
       - rpm
     bindir: "/var/db/newrelic-infra/newrelic-integrations/bin"
-    files:
-      "postgresql-config.yml.sample": "/etc/newrelic-infra/integrations.d/postgresql-config.yml.sample"
-      "CHANGELOG.md": "/usr/share/doc/nri-postgresql/CHANGELOG.md"
-      "README.md":  "/usr/share/doc/nri-postgresql/README.md"
-      "LICENSE": "/usr/share/doc/nri-postgresql/LICENSE"
-    config_files:
-      "postgresql-definition.yml": "/var/db/newrelic-infra/newrelic-integrations/postgresql-definition.yml"
+    contents:
+      - src: postgresql-config.yml.sample
+        dst: /etc/newrelic-infra/integrations.d/postgresql-config.yml.sample
+      - src: CHANGELOG.md
+        dst: /usr/share/doc/nri-postgresql/CHANGELOG.md
+      - src: README.md
+        dst: /usr/share/doc/nri-postgresql/README.md
+      - src: LICENSE
+        dst: /usr/share/doc/nri-postgresql/LICENSE
+      - src: postgresql-definition.yml
+        dst: /var/db/newrelic-infra/newrelic-integrations/postgresql-definition.yml
+        type: config
     dependencies:
       - "newrelic-infra"
     overrides:
