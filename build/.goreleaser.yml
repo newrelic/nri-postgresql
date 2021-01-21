@@ -1,0 +1,116 @@
+builds:
+  - id: nri-nix
+    main: ./src
+    binary: nri-postgresql
+    gobinary: "go1.9.7"
+    ldflags:
+      - -s -w -X main.integrationVersion={{.Version}} -X main.gitCommit={{.Commit}} -X main.buildDate={{.Date}}
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - 386
+      - amd64
+      - arm
+      - arm64
+    ignore:
+      - goos: darwin
+        goarch: 386
+
+  - id: nri-win
+    main: ./src
+    binary: nri-postgresql
+    gobinary: "go1.9.7"
+    ldflags:
+      - -s -w -X main.integrationVersion={{.Version}} -X main.gitCommit={{.Commit}} -X main.buildDate={{.Date}}
+    goos:
+      - windows
+    goarch:
+      - 386
+      - amd64
+    hooks:
+      pre: build/windows/set_exe_properties.sh {{ .Env.TAG }} "postgresql"
+
+nfpms:
+  - id: nri-deb
+    builds:
+      - nri-nix
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
+    vendor: "New Relic, Inc."
+    homepage: "https://www.newrelic.com/infrastructure"
+    maintainer: "New Relic Infrastructure Team <infrastructure-eng@newrelic.com>"
+    description: "New Relic Infrastructure postgresql Integration extend the core New Relic\nInfrastructure agent's capabilities to allow you to collect metric and\nlive state data from postgresql components."
+    license: "https://newrelic.com/terms (also see LICENSE installed with this package)"
+    # Formats to be generated.
+    formats:
+      - deb
+    bindir: "/var/db/newrelic-infra/newrelic-integrations/bin"
+    contents:
+      - src: postgresql-config.yml.sample
+        dst: /etc/newrelic-infra/integrations.d/postgresql-config.yml.sample
+      - src: CHANGELOG.md
+        dst: /usr/share/doc/nri-postgresql/CHANGELOG.md
+      - src: README.md
+        dst: /usr/share/doc/nri-postgresql/README.md
+      - src: LICENSE
+        dst: /usr/share/doc/nri-postgresql/LICENSE
+      - src: postgresql-definition.yml
+        dst: /var/db/newrelic-infra/newrelic-integrations/postgresql-definition.yml
+        type: config
+    dependencies:
+      - "newrelic-infra"
+
+  - id: nri-rpm
+    builds:
+      - nri-nix
+    file_name_template: "{{ .ProjectName }}-{{ .Version }}-{{ .Arch }}"
+    vendor: "New Relic, Inc."
+    homepage: "https://www.newrelic.com/infrastructure"
+    maintainer: "New Relic Infrastructure Team <infrastructure-eng@newrelic.com>"
+    description: "New Relic Infrastructure postgresql Integration extend the core New Relic\nInfrastructure agent's capabilities to allow you to collect metric and\nlive state data from postgresql components."
+    license: "https://newrelic.com/terms (also see LICENSE installed with this package)"
+    # Formats to be generated.
+    formats:
+      - rpm
+    bindir: "/var/db/newrelic-infra/newrelic-integrations/bin"
+    contents:
+      - src: postgresql-config.yml.sample
+        dst: /etc/newrelic-infra/integrations.d/postgresql-config.yml.sample
+      - src: CHANGELOG.md
+        dst: /usr/share/doc/nri-postgresql/CHANGELOG.md
+      - src: README.md
+        dst: /usr/share/doc/nri-postgresql/README.md
+      - src: LICENSE
+        dst: /usr/share/doc/nri-postgresql/LICENSE
+      - src: postgresql-definition.yml
+        dst: /var/db/newrelic-infra/newrelic-integrations/postgresql-definition.yml
+        type: config
+    dependencies:
+      - "newrelic-infra"
+    overrides:
+      rpm:
+        replacements:
+          amd64: 1.x86_64
+
+archives:
+  - id: nri-nix
+    builds:
+      - nri-nix
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Version }}_{{ .Arch }}_dirty"
+    files:
+      - postgresql-config.yml.sample
+      - postgresql-definition.yml
+    format: tar.gz
+
+  - id: nri-win
+    builds:
+      - nri-win
+    name_template: "{{ .ProjectName }}-{{ .Arch }}.{{ .Version }}_dirty"
+    files:
+      - postgresql-win-config.yml.sample
+      - postgresql-win-definition.yml
+    format: zip
+
+# we use custom publisher for fixing archives and signing them
+release:
+  disable: true
