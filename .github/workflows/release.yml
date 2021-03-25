@@ -1,0 +1,59 @@
+name: Release pipeline
+
+on:
+  release:
+    types:
+      - released
+    tags:
+      - 'v*'
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  INTEGRATION: "postgresql"
+  ORIGINAL_REPO_NAME: ${{ github.event.repository.full_name }}
+  TAG: ${{ github.event.release.tag_name }}
+
+jobs:
+
+  publish-to-s3:
+    name: Send release assets to S3
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.OHAI_DOCKER_HUB_ID }}
+          password: ${{ secrets.OHAI_DOCKER_HUB_PASSWORD }}
+      - name: Publish to S3 action
+        uses: newrelic/infrastructure-publish-action@v1
+        env:
+          AWS_S3_BUCKET_NAME: "nr-downloads-main"
+          AWS_S3_LOCK_BUCKET_NAME: "onhost-ci-lock"
+          AWS_REGION: "us-east-1"
+        with:
+          # lock enabled
+          disable_lock: false
+          run_id: ${{ github.run_id }}
+          tag: ${{env.TAG}}
+          app_name: "nri-${{env.INTEGRATION}}"
+          repo_name: ${{ env.ORIGINAL_REPO_NAME }}
+          # 'ohi' is for integrations
+          schema: "ohi"
+          aws_region: ${{ env.AWS_REGION }}
+          aws_role_arn: ${{ secrets.OHAI_AWS_ROLE_ARN_PRODUCTION }}
+          aws_role_session_name: ${{ secrets.OHAI_AWS_ROLE_SESSION_NAME_PRODUCTION }}
+          aws_access_key_id: ${{ secrets.OHAI_AWS_ACCESS_KEY_ID_PRODUCTION }}
+          aws_secret_access_key: ${{ secrets.OHAI_AWS_SECRET_ACCESS_KEY_PRODUCTION }}
+          aws_s3_bucket_name: ${{ env.AWS_S3_BUCKET_NAME }}
+          # used for locking in case of concurrent releases
+          aws_s3_lock_bucket_name: ${{ env.AWS_S3_LOCK_BUCKET_NAME }}
+          # used for signing package stuff
+          gpg_passphrase: ${{ secrets.OHAI_GPG_PASSPHRASE }}
+          gpg_private_key_base64: ${{ secrets.OHAI_GPG_PRIVATE_KEY_BASE64 }}
+      - name: Test package from prod repo
+        uses: newrelic/integrations-pkg-test-action/linux@v1
+        with:
+          tag: ${{ env.TAG }}
+          integration: 'nri-${{ env.INTEGRATION }}' # Required, with nri- prefix
+          packageLocation: repo
+          upgrade: false

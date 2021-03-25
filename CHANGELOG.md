@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.6.2 (2021-03-25)
+### Fixed
+- Semver Library was updated
+- gopkg.in/yaml.v2 library has been updated due to a medium vulnerability
+- Release pipeline has been moved to Github Actions
+
 ## 2.6.1 (2020-11-24)
 ### Fixed
 - Removed ping from the database connection so it works with pgbouncer

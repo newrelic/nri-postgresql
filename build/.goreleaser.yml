@@ -107,7 +107,7 @@ archives:
       - nri-win
     name_template: "{{ .ProjectName }}-{{ .Arch }}.{{ .Version }}_dirty"
     files:
-      - postgresql-win-config.yml.sample
+      - postgresql-config.yml.sample
       - postgresql-win-definition.yml
     format: zip
 
