@@ -46,6 +46,7 @@ Makefile-deploy.mk
 
 bin/
 dist/
+vendor/
 
 # Local development tools/files
 .idea
@@ -56,3 +57,4 @@ dist/
 # build files
 src/versioninfo.json
 src/resource.syso
+
