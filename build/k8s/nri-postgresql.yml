@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nri-postgresql
+  name: nri-postgresql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nri-postgresql
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nri-postgresql
+    spec:
+      containers:
+        - image: newrelic/nri-postgresql:local
+          name: nri-postgresql-local
+          imagePullPolicy: IfNotPresent
+          resources: {}
+status: {}

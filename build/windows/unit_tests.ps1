@@ -1,6 +1,6 @@
 echo "--- Running tests"
 
-go test ./src/...
+go test ./...
 if (-not $?)
 {
     echo "Failed running tests"

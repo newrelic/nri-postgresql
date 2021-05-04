@@ -55,6 +55,6 @@ vendor/
 *.gpg
 
 # build files
-src/versioninfo.json
-src/resource.syso
+cmd/nri-postgresql/versioninfo.json
+cmd/nri-postgresql/resource.syso
 

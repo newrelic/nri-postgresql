@@ -81,6 +81,11 @@ func SetupLogging(verbose bool) {
 	}
 }
 
+// SetOutput sets output stream
+func SetOutput(w io.Writer) {
+	globalLogger.logger.SetOutput(w)
+}
+
 // Debug logs a formatted message at level Debug.
 func Debug(format string, args ...interface{}) {
 	globalLogger.Debugf(format, args...)
@@ -104,5 +109,5 @@ func Error(format string, args ...interface{}) {
 // Fatal logs an error at level Fatal, and makes the program exit with an error code.
 func Fatal(err error) {
 	globalLogger.prefixPrint("FATAL", "can't continue: %v", err)
-	panic(err)
+	os.Exit(1)
 }

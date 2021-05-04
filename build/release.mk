@@ -15,8 +15,8 @@ $(GORELEASER_BIN): bin
 .PHONY : release/clean
 release/clean:
 	@echo "===> $(INTEGRATION) === [release/clean] remove build metadata files"
-	rm -fv $(CURDIR)/src/versioninfo.json
-	rm -fv $(CURDIR)/src/resource.syso
+	rm -fv $(CURDIR)/cmd/nri-postgresql/versioninfo.json
+	rm -fv $(CURDIR)/cmd/nri-postgresql/resource.syso
 
 .PHONY : release/deps
 release/deps: $(GORELEASER_BIN)
