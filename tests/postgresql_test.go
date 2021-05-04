@@ -59,7 +59,7 @@ func TestSuccessConnection(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotEmpty(t, stdout)
 	response := string(stdout)
-	err:=validateJSONSchema(schema, response)
+	err=validateJSONSchema(schema, response)
 	if err!=nil{
 		fmt.Println(err.Error())
 	}
