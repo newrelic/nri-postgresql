@@ -94,7 +94,7 @@ func validateJSONSchema(fileName string, input string) error {
 		return err
 	}
 	schemaURI := fmt.Sprintf("file://%s", filepath.Join(pwd, "testdata", fileName))
-	log.Infof("loading schema from %s",schemaURI)
+	log.Info("loading schema from %s",schemaURI)
 	schemaLoader := gojsonschema.NewReferenceLoader(schemaURI)
 	documentLoader := gojsonschema.NewStringLoader(input)
 
