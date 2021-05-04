@@ -4,22 +4,23 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"github.com/tidwall/gjson"
-	"github.com/xeipuuv/gojsonschema"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/tidwall/gjson"
+	"github.com/xeipuuv/gojsonschema"
 )
 
 const (
 	containerName = "nri-postgresql"
-	schema = "jsonschema.json"
+	schema        = "jsonschema.json"
 )
 
-func executeDockerCompose(containerName string, envVars []string) (string,string, error) {
+func executeDockerCompose(containerName string, envVars []string) (string, string, error) {
 	cmdLine := []string{"run"}
 	for i := range envVars {
 		cmdLine = append(cmdLine, "-e")
@@ -34,7 +35,7 @@ func executeDockerCompose(containerName string, envVars []string) (string,string
 	err := cmd.Run()
 	stdout := outbuf.String()
 	stderr := errbuf.String()
-	return stdout,stderr,err
+	return stdout, stderr, err
 }
 
 func TestMain(m *testing.M) {
@@ -51,11 +52,11 @@ func TestSuccessConnection(t *testing.T) {
 		"PASSWORD=example",
 		"DATABASE=demo",
 	}
-	stdout,_, err := executeDockerCompose(containerName, envVars)
-	assert.Nil(t,err)
+	stdout, _, err := executeDockerCompose(containerName, envVars)
+	assert.Nil(t, err)
 	assert.NotEmpty(t, stdout)
 	response := string(stdout)
-	assert.Nil(t, validateJSONSchema(schema,response))
+	assert.Nil(t, validateJSONSchema(schema, response))
 	assert.Equal(t, "com.newrelic.postgresql", gjson.Get(response, "name").String())
 	assert.Equal(t, "3", gjson.Get(response, "protocol_version").String())
 	assert.Equal(t, fmt.Sprintf("%s:5432", hostname), gjson.Get(response, "data.0.entity.name").String())
@@ -72,18 +73,17 @@ func TestMissingRequiredVars(t *testing.T) {
 		fmt.Sprintf("HOSTNAME=%s", hostname),
 		"DATABASE=demo",
 	}
-	_,stderr, err := executeDockerCompose(containerName, envVars)
-	assert.NotNil(t,err)
+	_, stderr, err := executeDockerCompose(containerName, envVars)
+	assert.NotNil(t, err)
 	assert.Contains(t, stderr, "invalid configuration: must specify a username and password")
 }
 
 func validateJSONSchema(fileName string, input string) error {
-
 	pwd, err := os.Getwd()
 	if err != nil {
 		return err
 	}
-	schemaURI := fmt.Sprintf("file://%s", filepath.Join(pwd,"testdata", fileName))
+	schemaURI := fmt.Sprintf("file://%s", filepath.Join(pwd, "testdata", fileName))
 
 	schemaLoader := gojsonschema.NewReferenceLoader(schemaURI)
 	documentLoader := gojsonschema.NewStringLoader(input)
@@ -102,5 +102,4 @@ func validateJSONSchema(fileName string, input string) error {
 	}
 	fmt.Printf("\n")
 	return fmt.Errorf("The output of the integration doesn't have expected JSON format")
-
 }
