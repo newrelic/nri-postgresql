@@ -46,7 +46,7 @@ Makefile-deploy.mk
 
 bin/
 dist/
-vendor/
+vendor
 
 # Local development tools/files
 .idea
