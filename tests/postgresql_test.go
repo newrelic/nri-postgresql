@@ -84,7 +84,7 @@ func TestMissingRequiredVars(t *testing.T) {
 func validateJSONSchema(fileName string, input string) error {
 	pwd, err := os.Getwd()
 	if err != nil {
-		log.Error(err)
+		log.Error(err.Error())
 		return err
 	}
 	schemaURI := fmt.Sprintf("file://%s", filepath.Join(pwd, "testdata", fileName))
