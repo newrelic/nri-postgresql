@@ -59,7 +59,11 @@ func TestSuccessConnection(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotEmpty(t, stdout)
 	response := string(stdout)
-	assert.Nil(t, validateJSONSchema(schema, response))
+	err:=validateJSONSchema(schema, response)
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	assert.Nil(t, err)
 	assert.Equal(t, "com.newrelic.postgresql", gjson.Get(response, "name").String())
 	assert.Equal(t, "3", gjson.Get(response, "protocol_version").String())
 	assert.Equal(t, fmt.Sprintf("%s:5432", hostname), gjson.Get(response, "data.0.entity.name").String())
