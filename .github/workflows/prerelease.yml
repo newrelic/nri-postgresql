@@ -94,7 +94,7 @@ jobs:
         env:
           GOPATH: ${{ github.workspace }}
         run: make integration-test
-        
+
   prerelease:
     name: Build binary for *Nix/Win, create archives for *Nix/Win, create packages for *Nix, upload all artifacts into GH Release assets
     runs-on: ubuntu-20.04
