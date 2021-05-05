@@ -1,12 +1,11 @@
 export PATH := $(PATH):$(GOPATH)/bin
 
 INTEGRATION     := postgresql
-
+GOFLAGS          = -mod=readonly # ignore the vendor directory and to report an error if go.mod needs to be updated.
 BINARY_NAME      = nri-$(INTEGRATION)
 INTEGRATIONS_DIR = /var/db/newrelic-infra/newrelic-integrations/
 CONFIG_DIR       = /etc/newrelic-infra/integrations.d
 GO_FILES        := ./src/
-GOFLAGS			 = -mod=mod
 GOLANGCI_LINT	 = github.com/golangci/golangci-lint/cmd/golangci-lint
 GOCOV            = github.com/axw/gocov/gocov
 GOCOV_XML		 = github.com/AlekSi/gocov-xml
@@ -31,7 +30,7 @@ ifeq ($(strip $(GO_FILES)),)
 	@echo "=== $(INTEGRATION) === [ validate ]: no Go files found. Skipping validation."
 else
 	@printf "=== $(INTEGRATION) === [ validate ]: running golangci-lint & semgrep... "
-	go run  -mod=mod github.com/golangci/golangci-lint/cmd/golangci-lint run --verbose
+	go run  $(GOFLAGS) github.com/golangci/golangci-lint/cmd/golangci-lint run --verbose
 	docker run --rm -v "${PWD}:/src:ro" --workdir /src returntocorp/semgrep -c .semgrep.yml
 endif
 
