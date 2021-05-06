@@ -1,5 +1,6 @@
 export PATH := $(PATH):$(GOPATH)/bin
-
+NATIVEOS    := $(shell go version | awk -F '[ /]' '{print $$4}')
+NATIVEARCH  := $(shell go version | awk -F '[ /]' '{print $$5}')
 INTEGRATION     := postgresql
 GOFLAGS          = -mod=readonly # ignore the vendor directory and to report an error if go.mod needs to be updated.
 BINARY_NAME      = nri-$(INTEGRATION)
@@ -61,5 +62,18 @@ install: compile
 # Include thematic Makefiles
 include $(CURDIR)/build/ci.mk
 include $(CURDIR)/build/release.mk
+
+
+check-version:
+ifdef GOOS
+ifneq "$(GOOS)" "$(NATIVEOS)"
+	$(error GOOS is not $(NATIVEOS). Cross-compiling is only allowed for 'clean', 'deps-only' and 'compile-only' targets)
+endif
+endif
+ifdef GOARCH
+ifneq "$(GOARCH)" "$(NATIVEARCH)"
+	$(error GOARCH variable is not $(NATIVEARCH). Cross-compiling is only allowed for 'clean', 'deps-only' and 'compile-only' targets)
+endif
+endif
 
 .PHONY: all build clean validate compile test integration-test install
