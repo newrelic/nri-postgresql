@@ -49,7 +49,7 @@ var indexDefinition = &QueryDefinition{
 			FROM pg_tables t
 			LEFT OUTER JOIN pg_class c ON t.tablename=c.relname
 			LEFT OUTER JOIN
-					( SELECT c.relname AS ctablename, x.indrelid indexoid, ipg.relname AS indexname, x.indnatts AS number_of_columns, idx_scan, idx_tup_read, idx_tup_fetch, indexrelname, indisunique FROM pg_index x
+					( SELECT c.relname AS ctablename, x.indexrelid indexoid, ipg.relname AS indexname, x.indnatts AS number_of_columns, idx_scan, idx_tup_read, idx_tup_fetch, indexrelname, indisunique FROM pg_index x
 								 JOIN pg_class c ON c.oid = x.indrelid
 								 JOIN pg_class ipg ON ipg.oid = x.indexrelid
 								 JOIN pg_stat_all_indexes psai ON x.indexrelid = psai.indexrelid )
