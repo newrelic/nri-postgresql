@@ -98,7 +98,7 @@ jobs:
   prerelease:
     name: Build binary for *Nix/Win, create archives for *Nix/Win, create packages for *Nix, upload all artifacts into GH Release assets
     runs-on: ubuntu-20.04
-    needs: [validate, test-nix, test-windows, snyk]
+    needs: [golangci-lint, test-nix, test-windows, snyk, test-integration-nix]
     steps:
       - uses: actions/checkout@v2
       - name: Login to DockerHub
