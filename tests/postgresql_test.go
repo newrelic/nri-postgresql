@@ -14,7 +14,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/tidwall/gjson"
 	"github.com/xeipuuv/gojsonschema"
 )
 
@@ -58,17 +57,8 @@ func TestSuccessConnection(t *testing.T) {
 	stdout, _, err := executeDockerCompose(containerName, envVars)
 	assert.Nil(t, err)
 	assert.NotEmpty(t, stdout)
-	response := string(stdout)
-	err=validateJSONSchema(schema, response)
+	err = validateJSONSchema(schema, stdout)
 	assert.Nil(t, err)
-	assert.Equal(t, "com.newrelic.postgresql", gjson.Get(response, "name").String())
-	assert.Equal(t, "3", gjson.Get(response, "protocol_version").String())
-	assert.Equal(t, fmt.Sprintf("%s:5432", hostname), gjson.Get(response, "data.0.entity.name").String())
-	evt := gjson.Get(
-		response, "data.0.metrics.#(event_type==\"PostgresqlInstanceSample\")",
-	).Map()
-	assert.Equal(t, fmt.Sprintf("pg-instance:%s:5432", hostname), evt["entityName"].String())
-	assert.Equal(t, fmt.Sprintf("%s:5432", hostname), evt["displayName"].String())
 }
 
 func TestMissingRequiredVars(t *testing.T) {
@@ -89,7 +79,7 @@ func validateJSONSchema(fileName string, input string) error {
 		return err
 	}
 	schemaURI := fmt.Sprintf("file://%s", filepath.Join(pwd, "testdata", fileName))
-	log.Info("loading schema from %s",schemaURI)
+	log.Info("loading schema from %s", schemaURI)
 	schemaLoader := gojsonschema.NewReferenceLoader(schemaURI)
 	documentLoader := gojsonschema.NewStringLoader(input)
 

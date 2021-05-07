@@ -43,9 +43,6 @@
                 {
                   "type": "object",
                   "properties": {
-                    "bgwriter.backendFsyncCallsPerSecond": {
-                      "type": "integer"
-                    },
                     "bgwriter.backgroundWriterStopsPerSecond": {
                       "type": "integer"
                     },
@@ -59,12 +56,6 @@
                       "type": "integer"
                     },
                     "bgwriter.buffersWrittenForCheckpointsPerSecond": {
-                      "type": "integer"
-                    },
-                    "bgwriter.checkpointSyncTimeInMillisecondsPerSecond": {
-                      "type": "integer"
-                    },
-                    "bgwriter.checkpointWriteTimeInMillisecondsPerSecond": {
                       "type": "integer"
                     },
                     "bgwriter.checkpointsRequestedPerSecond": {
@@ -84,14 +75,11 @@
                     }
                   },
                   "required": [
-                    "bgwriter.backendFsyncCallsPerSecond",
                     "bgwriter.backgroundWriterStopsPerSecond",
                     "bgwriter.buffersAllocatedPerSecond",
                     "bgwriter.buffersWrittenByBackendPerSecond",
                     "bgwriter.buffersWrittenByBackgroundWriterPerSecond",
                     "bgwriter.buffersWrittenForCheckpointsPerSecond",
-                    "bgwriter.checkpointSyncTimeInMillisecondsPerSecond",
-                    "bgwriter.checkpointWriteTimeInMillisecondsPerSecond",
                     "bgwriter.checkpointsRequestedPerSecond",
                     "bgwriter.checkpointsScheduledPerSecond",
                     "displayName",
@@ -259,39 +247,6 @@
                   ]
                 },
                 "application_name/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "archive_cleanup_command/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "archive_cleanup_command/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "archive_cleanup_command/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -632,39 +587,6 @@
                     "value"
                   ]
                 },
-                "autovacuum_multixact_freeze_max_age/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "autovacuum_multixact_freeze_max_age/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "autovacuum_multixact_freeze_max_age/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "autovacuum_naptime/boot_val": {
                   "type": "object",
                   "properties": {
@@ -764,72 +686,6 @@
                     "value"
                   ]
                 },
-                "autovacuum_vacuum_insert_scale_factor/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "autovacuum_vacuum_insert_scale_factor/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "autovacuum_vacuum_insert_scale_factor/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "autovacuum_vacuum_insert_threshold/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "autovacuum_vacuum_insert_threshold/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "autovacuum_vacuum_insert_threshold/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "autovacuum_vacuum_scale_factor/boot_val": {
                   "type": "object",
                   "properties": {
@@ -896,72 +752,6 @@
                     "value"
                   ]
                 },
-                "autovacuum_work_mem/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "autovacuum_work_mem/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "autovacuum_work_mem/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "backend_flush_after/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "backend_flush_after/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "backend_flush_after/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "backslash_quote/boot_val": {
                   "type": "object",
                   "properties": {
@@ -995,39 +785,6 @@
                     "value"
                   ]
                 },
-                "backtrace_functions/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "backtrace_functions/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "backtrace_functions/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "bgwriter_delay/boot_val": {
                   "type": "object",
                   "properties": {
@@ -1051,39 +808,6 @@
                   ]
                 },
                 "bgwriter_delay/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "bgwriter_flush_after/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "bgwriter_flush_after/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "bgwriter_flush_after/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -1358,7 +1082,7 @@
                     "value"
                   ]
                 },
-                "checkpoint_flush_after/boot_val": {
+                "checkpoint_segments/boot_val": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -1369,7 +1093,7 @@
                     "value"
                   ]
                 },
-                "checkpoint_flush_after/reset_val": {
+                "checkpoint_segments/reset_val": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -1380,7 +1104,7 @@
                     "value"
                   ]
                 },
-                "checkpoint_flush_after/setting": {
+                "checkpoint_segments/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -1513,39 +1237,6 @@
                   ]
                 },
                 "client_min_messages/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "cluster_name/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "cluster_name/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "cluster_name/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -1820,29 +1511,29 @@
                     "value"
                   ]
                 },
-                "data_checksums/boot_val": {
+                "custom_variable_classes/boot_val": {
                   "type": "object",
                   "properties": {
                     "value": {
-                      "type": "string"
+                      "type": "null"
                     }
                   },
                   "required": [
                     "value"
                   ]
                 },
-                "data_checksums/reset_val": {
+                "custom_variable_classes/reset_val": {
                   "type": "object",
                   "properties": {
                     "value": {
-                      "type": "string"
+                      "type": "null"
                     }
                   },
                   "required": [
                     "value"
                   ]
                 },
-                "data_checksums/setting": {
+                "custom_variable_classes/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -1876,72 +1567,6 @@
                   ]
                 },
                 "data_directory/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "data_directory_mode/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "data_directory_mode/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "data_directory_mode/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "data_sync_retry/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "data_sync_retry/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "data_sync_retry/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -2216,39 +1841,6 @@
                     "value"
                   ]
                 },
-                "default_table_access_method/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "default_table_access_method/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "default_table_access_method/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "default_tablespace/boot_val": {
                   "type": "object",
                   "properties": {
@@ -2305,39 +1897,6 @@
                   ]
                 },
                 "default_text_search_config/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "default_transaction_deferrable/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "default_transaction_deferrable/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "default_transaction_deferrable/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -2414,6 +1973,39 @@
                     "value"
                   ]
                 },
+                "default_with_oids/boot_val": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
+                "default_with_oids/reset_val": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
+                "default_with_oids/setting": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
                 "dynamic_library_path/boot_val": {
                   "type": "object",
                   "properties": {
@@ -2437,39 +2029,6 @@
                   ]
                 },
                 "dynamic_library_path/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "dynamic_shared_memory_type/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "dynamic_shared_memory_type/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "dynamic_shared_memory_type/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -2579,39 +2138,6 @@
                     "value"
                   ]
                 },
-                "enable_gathermerge/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_gathermerge/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_gathermerge/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "enable_hashagg/boot_val": {
                   "type": "object",
                   "properties": {
@@ -2668,72 +2194,6 @@
                   ]
                 },
                 "enable_hashjoin/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_incremental_sort/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_incremental_sort/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_incremental_sort/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_indexonlyscan/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_indexonlyscan/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_indexonlyscan/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -2876,171 +2336,6 @@
                     "value"
                   ]
                 },
-                "enable_parallel_append/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_parallel_append/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_parallel_append/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_parallel_hash/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_parallel_hash/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_parallel_hash/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_partition_pruning/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_partition_pruning/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_partition_pruning/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_partitionwise_aggregate/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_partitionwise_aggregate/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_partitionwise_aggregate/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_partitionwise_join/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_partitionwise_join/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "enable_partitionwise_join/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "enable_seqscan/boot_val": {
                   "type": "object",
                   "properties": {
@@ -3173,105 +2468,6 @@
                     "value"
                   ]
                 },
-                "event_source/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "event_source/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "event_source/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "exit_on_error/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "exit_on_error/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "exit_on_error/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "extension_destdir/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "extension_destdir/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "extension_destdir/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "external_pid_file/boot_val": {
                   "type": "object",
                   "properties": {
@@ -3328,39 +2524,6 @@
                   ]
                 },
                 "extra_float_digits/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "force_parallel_mode/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "force_parallel_mode/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "force_parallel_mode/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -3734,72 +2897,6 @@
                     "value"
                   ]
                 },
-                "gin_pending_list_limit/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "gin_pending_list_limit/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "gin_pending_list_limit/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "hash_mem_multiplier/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "hash_mem_multiplier/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "hash_mem_multiplier/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "hba_file/boot_val": {
                   "type": "object",
                   "properties": {
@@ -3866,72 +2963,6 @@
                     "value"
                   ]
                 },
-                "hot_standby_feedback/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "hot_standby_feedback/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "hot_standby_feedback/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "huge_pages/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "huge_pages/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "huge_pages/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "ident_file/boot_val": {
                   "type": "object",
                   "properties": {
@@ -3955,105 +2986,6 @@
                   ]
                 },
                 "ident_file/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "idle_in_transaction_session_timeout/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "idle_in_transaction_session_timeout/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "idle_in_transaction_session_timeout/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ignore_checksum_failure/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ignore_checksum_failure/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ignore_checksum_failure/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ignore_invalid_pages/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ignore_invalid_pages/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ignore_invalid_pages/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -4120,336 +3052,6 @@
                   ]
                 },
                 "integer_datetimes/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_above_cost/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_above_cost/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_above_cost/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_debugging_support/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_debugging_support/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_debugging_support/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_dump_bitcode/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_dump_bitcode/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_dump_bitcode/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_expressions/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_expressions/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_expressions/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_inline_above_cost/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_inline_above_cost/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_inline_above_cost/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_optimize_above_cost/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_optimize_above_cost/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_optimize_above_cost/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_profiling_support/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_profiling_support/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_profiling_support/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_provider/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_provider/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_provider/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_tuple_deforming/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_tuple_deforming/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "jit_tuple_deforming/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -4549,6 +3151,39 @@
                   ]
                 },
                 "krb_server_keyfile/setting": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
+                "krb_srvname/boot_val": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
+                "krb_srvname/reset_val": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
+                "krb_srvname/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -4856,39 +3491,6 @@
                     "value"
                   ]
                 },
-                "lock_timeout/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "lock_timeout/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "lock_timeout/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "log_autovacuum_min_duration/boot_val": {
                   "type": "object",
                   "properties": {
@@ -5186,39 +3788,6 @@
                     "value"
                   ]
                 },
-                "log_file_mode/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_file_mode/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_file_mode/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "log_filename/boot_val": {
                   "type": "object",
                   "properties": {
@@ -5351,39 +3920,6 @@
                     "value"
                   ]
                 },
-                "log_min_duration_sample/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_min_duration_sample/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_min_duration_sample/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "log_min_duration_statement/boot_val": {
                   "type": "object",
                   "properties": {
@@ -5483,72 +4019,6 @@
                     "value"
                   ]
                 },
-                "log_parameter_max_length/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_parameter_max_length/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_parameter_max_length/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_parameter_max_length_on_error/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_parameter_max_length_on_error/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_parameter_max_length_on_error/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "log_parser_stats/boot_val": {
                   "type": "object",
                   "properties": {
@@ -5605,39 +4075,6 @@
                   ]
                 },
                 "log_planner_stats/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_replication_commands/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_replication_commands/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_replication_commands/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -5747,39 +4184,6 @@
                     "value"
                   ]
                 },
-                "log_statement_sample_rate/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_statement_sample_rate/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_statement_sample_rate/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "log_statement_stats/boot_val": {
                   "type": "object",
                   "properties": {
@@ -5879,39 +4283,6 @@
                     "value"
                   ]
                 },
-                "log_transaction_sample_rate/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_transaction_sample_rate/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "log_transaction_sample_rate/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "log_truncate_on_rotation/boot_val": {
                   "type": "object",
                   "properties": {
@@ -5968,72 +4339,6 @@
                   ]
                 },
                 "logging_collector/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "logical_decoding_work_mem/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "logical_decoding_work_mem/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "logical_decoding_work_mem/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "maintenance_io_concurrency/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "maintenance_io_concurrency/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "maintenance_io_concurrency/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -6275,237 +4580,6 @@
                     "value"
                   ]
                 },
-                "max_logical_replication_workers/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_logical_replication_workers/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_logical_replication_workers/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_parallel_maintenance_workers/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_parallel_maintenance_workers/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_parallel_maintenance_workers/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_parallel_workers/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_parallel_workers/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_parallel_workers/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_parallel_workers_per_gather/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_parallel_workers_per_gather/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_parallel_workers_per_gather/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_pred_locks_per_page/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_pred_locks_per_page/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_pred_locks_per_page/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_pred_locks_per_relation/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_pred_locks_per_relation/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_pred_locks_per_relation/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_pred_locks_per_transaction/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_pred_locks_per_transaction/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_pred_locks_per_transaction/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "max_prepared_transactions/boot_val": {
                   "type": "object",
                   "properties": {
@@ -6529,72 +4603,6 @@
                   ]
                 },
                 "max_prepared_transactions/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_replication_slots/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_replication_slots/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_replication_slots/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_slot_wal_keep_size/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_slot_wal_keep_size/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_slot_wal_keep_size/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -6704,39 +4712,6 @@
                     "value"
                   ]
                 },
-                "max_sync_workers_per_subscription/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_sync_workers_per_subscription/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_sync_workers_per_subscription/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "max_wal_senders/boot_val": {
                   "type": "object",
                   "properties": {
@@ -6770,336 +4745,6 @@
                     "value"
                   ]
                 },
-                "max_wal_size/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_wal_size/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_wal_size/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_worker_processes/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_worker_processes/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "max_worker_processes/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "min_parallel_index_scan_size/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "min_parallel_index_scan_size/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "min_parallel_index_scan_size/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "min_parallel_table_scan_size/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "min_parallel_table_scan_size/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "min_parallel_table_scan_size/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "min_wal_size/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "min_wal_size/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "min_wal_size/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "old_snapshot_threshold/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "old_snapshot_threshold/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "old_snapshot_threshold/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "operator_precedence_warning/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "operator_precedence_warning/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "operator_precedence_warning/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "parallel_leader_participation/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "parallel_leader_participation/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "parallel_leader_participation/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "parallel_setup_cost/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "parallel_setup_cost/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "parallel_setup_cost/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "parallel_tuple_cost/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "parallel_tuple_cost/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "parallel_tuple_cost/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "password_encryption/boot_val": {
                   "type": "object",
                   "properties": {
@@ -7123,39 +4768,6 @@
                   ]
                 },
                 "password_encryption/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "plan_cache_mode/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "plan_cache_mode/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "plan_cache_mode/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -7265,138 +4877,6 @@
                     "value"
                   ]
                 },
-                "primary_conninfo/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "primary_conninfo/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "primary_conninfo/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "primary_slot_name/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "primary_slot_name/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "primary_slot_name/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "promote_trigger_file/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "promote_trigger_file/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "promote_trigger_file/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "quote_all_identifiers/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "quote_all_identifiers/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "quote_all_identifiers/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "random_page_cost/boot_val": {
                   "type": "object",
                   "properties": {
@@ -7420,435 +4900,6 @@
                   ]
                 },
                 "random_page_cost/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_end_command/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_end_command/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_end_command/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_min_apply_delay/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_min_apply_delay/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_min_apply_delay/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_action/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_action/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_action/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_inclusive/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_inclusive/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_inclusive/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_lsn/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_lsn/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_lsn/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_name/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_name/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_name/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_time/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_time/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_time/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_timeline/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_timeline/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_timeline/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_xid/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_xid/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "recovery_target_xid/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "restart_after_crash/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "restart_after_crash/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "restart_after_crash/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "restore_command/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "restore_command/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "restore_command/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "row_security/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "row_security/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "row_security/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -8057,39 +5108,6 @@
                     "value"
                   ]
                 },
-                "session_preload_libraries/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "session_preload_libraries/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "session_preload_libraries/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "session_replication_role/boot_val": {
                   "type": "object",
                   "properties": {
@@ -8156,39 +5174,6 @@
                     "value"
                   ]
                 },
-                "shared_memory_type/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "shared_memory_type/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "shared_memory_type/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "shared_preload_libraries/boot_val": {
                   "type": "object",
                   "properties": {
@@ -8212,6 +5197,72 @@
                   ]
                 },
                 "shared_preload_libraries/setting": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
+                "silent_mode/boot_val": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
+                "silent_mode/reset_val": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
+                "silent_mode/setting": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
+                "sql_inheritance/boot_val": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
+                "sql_inheritance/reset_val": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "value"
+                  ]
+                },
+                "sql_inheritance/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -8255,72 +5306,6 @@
                     "value"
                   ]
                 },
-                "ssl_ca_file/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_ca_file/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_ca_file/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_cert_file/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_cert_file/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_cert_file/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "ssl_ciphers/boot_val": {
                   "type": "object",
                   "properties": {
@@ -8354,7 +5339,7 @@
                     "value"
                   ]
                 },
-                "ssl_crl_file/boot_val": {
+                "ssl_renegotiation_limit/boot_val": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -8365,7 +5350,7 @@
                     "value"
                   ]
                 },
-                "ssl_crl_file/reset_val": {
+                "ssl_renegotiation_limit/reset_val": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -8376,304 +5361,7 @@
                     "value"
                   ]
                 },
-                "ssl_crl_file/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_dh_params_file/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_dh_params_file/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_dh_params_file/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_ecdh_curve/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_ecdh_curve/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_ecdh_curve/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_key_file/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_key_file/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_key_file/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_library/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_library/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_library/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_max_protocol_version/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_max_protocol_version/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_max_protocol_version/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_min_protocol_version/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_min_protocol_version/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_min_protocol_version/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_passphrase_command/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_passphrase_command/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_passphrase_command/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_passphrase_command_supports_reload/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_passphrase_command_supports_reload/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_passphrase_command_supports_reload/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_prefer_server_ciphers/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_prefer_server_ciphers/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "ssl_prefer_server_ciphers/setting": {
+                "ssl_renegotiation_limit/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -8882,39 +5570,6 @@
                     "value"
                   ]
                 },
-                "synchronous_standby_names/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "synchronous_standby_names/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "synchronous_standby_names/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "syslog_facility/boot_val": {
                   "type": "object",
                   "properties": {
@@ -8971,72 +5626,6 @@
                   ]
                 },
                 "syslog_ident/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "syslog_sequence_numbers/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "syslog_sequence_numbers/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "syslog_sequence_numbers/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "syslog_split_messages/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "syslog_split_messages/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "syslog_split_messages/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -9146,39 +5735,6 @@
                     "value"
                   ]
                 },
-                "tcp_user_timeout/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "tcp_user_timeout/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "tcp_user_timeout/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "temp_buffers/boot_val": {
                   "type": "object",
                   "properties": {
@@ -9202,39 +5758,6 @@
                   ]
                 },
                 "temp_buffers/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "temp_file_limit/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "temp_file_limit/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "temp_file_limit/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -9282,7 +5805,7 @@
                   "type": "object",
                   "properties": {
                     "value": {
-                      "type": "null"
+                      "type": "string"
                     }
                   },
                   "required": [
@@ -9476,39 +5999,6 @@
                     "value"
                   ]
                 },
-                "track_commit_timestamp/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "track_commit_timestamp/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "track_commit_timestamp/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "track_counts/boot_val": {
                   "type": "object",
                   "properties": {
@@ -9575,77 +6065,11 @@
                     "value"
                   ]
                 },
-                "track_io_timing/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "track_io_timing/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "track_io_timing/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "transaction_deferrable/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "transaction_deferrable/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "transaction_deferrable/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "transaction_isolation/boot_val": {
                   "type": "object",
                   "properties": {
                     "value": {
-                      "type": "string"
+                      "type": "null"
                     }
                   },
                   "required": [
@@ -9740,7 +6164,7 @@
                     "value"
                   ]
                 },
-                "unix_socket_directories/boot_val": {
+                "unix_socket_directory/boot_val": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -9751,7 +6175,7 @@
                     "value"
                   ]
                 },
-                "unix_socket_directories/reset_val": {
+                "unix_socket_directory/reset_val": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -9762,7 +6186,7 @@
                     "value"
                   ]
                 },
-                "unix_socket_directories/setting": {
+                "unix_socket_directory/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -9862,39 +6286,6 @@
                   ]
                 },
                 "update_process_title/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "vacuum_cleanup_index_scale_factor/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "vacuum_cleanup_index_scale_factor/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "vacuum_cleanup_index_scale_factor/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -10169,72 +6560,6 @@
                     "value"
                   ]
                 },
-                "vacuum_multixact_freeze_min_age/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "vacuum_multixact_freeze_min_age/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "vacuum_multixact_freeze_min_age/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "vacuum_multixact_freeze_table_age/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "vacuum_multixact_freeze_table_age/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "vacuum_multixact_freeze_table_age/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "wal_block_size/boot_val": {
                   "type": "object",
                   "properties": {
@@ -10301,7 +6626,7 @@
                     "value"
                   ]
                 },
-                "wal_compression/boot_val": {
+                "wal_keep_segments/boot_val": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -10312,7 +6637,7 @@
                     "value"
                   ]
                 },
-                "wal_compression/reset_val": {
+                "wal_keep_segments/reset_val": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -10323,106 +6648,7 @@
                     "value"
                   ]
                 },
-                "wal_compression/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_consistency_checking/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_consistency_checking/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_consistency_checking/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_init_zero/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_init_zero/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_init_zero/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_keep_size/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_keep_size/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_keep_size/setting": {
+                "wal_keep_segments/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -10466,204 +6692,6 @@
                     "value"
                   ]
                 },
-                "wal_log_hints/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_log_hints/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_log_hints/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_receiver_create_temp_slot/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_receiver_create_temp_slot/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_receiver_create_temp_slot/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_receiver_status_interval/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_receiver_status_interval/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_receiver_status_interval/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_receiver_timeout/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_receiver_timeout/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_receiver_timeout/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_recycle/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_recycle/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_recycle/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_retrieve_retry_interval/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_retrieve_retry_interval/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_retrieve_retry_interval/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
                 "wal_segment_size/boot_val": {
                   "type": "object",
                   "properties": {
@@ -10697,7 +6725,7 @@
                     "value"
                   ]
                 },
-                "wal_sender_timeout/boot_val": {
+                "wal_sender_delay/boot_val": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -10708,7 +6736,7 @@
                     "value"
                   ]
                 },
-                "wal_sender_timeout/reset_val": {
+                "wal_sender_delay/reset_val": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -10719,40 +6747,7 @@
                     "value"
                   ]
                 },
-                "wal_sender_timeout/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_skip_threshold/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_skip_threshold/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_skip_threshold/setting": {
+                "wal_sender_delay/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -10819,39 +6814,6 @@
                   ]
                 },
                 "wal_writer_delay/setting": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_writer_flush_after/boot_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_writer_flush_after/reset_val": {
-                  "type": "object",
-                  "properties": {
-                    "value": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "value"
-                  ]
-                },
-                "wal_writer_flush_after/setting": {
                   "type": "object",
                   "properties": {
                     "value": {
@@ -11011,9 +6973,6 @@
                 "application_name/boot_val",
                 "application_name/reset_val",
                 "application_name/setting",
-                "archive_cleanup_command/boot_val",
-                "archive_cleanup_command/reset_val",
-                "archive_cleanup_command/setting",
                 "archive_command/boot_val",
                 "archive_command/reset_val",
                 "archive_command/setting",
@@ -11044,9 +7003,6 @@
                 "autovacuum_max_workers/boot_val",
                 "autovacuum_max_workers/reset_val",
                 "autovacuum_max_workers/setting",
-                "autovacuum_multixact_freeze_max_age/boot_val",
-                "autovacuum_multixact_freeze_max_age/reset_val",
-                "autovacuum_multixact_freeze_max_age/setting",
                 "autovacuum_naptime/boot_val",
                 "autovacuum_naptime/reset_val",
                 "autovacuum_naptime/setting",
@@ -11056,36 +7012,18 @@
                 "autovacuum_vacuum_cost_limit/boot_val",
                 "autovacuum_vacuum_cost_limit/reset_val",
                 "autovacuum_vacuum_cost_limit/setting",
-                "autovacuum_vacuum_insert_scale_factor/boot_val",
-                "autovacuum_vacuum_insert_scale_factor/reset_val",
-                "autovacuum_vacuum_insert_scale_factor/setting",
-                "autovacuum_vacuum_insert_threshold/boot_val",
-                "autovacuum_vacuum_insert_threshold/reset_val",
-                "autovacuum_vacuum_insert_threshold/setting",
                 "autovacuum_vacuum_scale_factor/boot_val",
                 "autovacuum_vacuum_scale_factor/reset_val",
                 "autovacuum_vacuum_scale_factor/setting",
                 "autovacuum_vacuum_threshold/boot_val",
                 "autovacuum_vacuum_threshold/reset_val",
                 "autovacuum_vacuum_threshold/setting",
-                "autovacuum_work_mem/boot_val",
-                "autovacuum_work_mem/reset_val",
-                "autovacuum_work_mem/setting",
-                "backend_flush_after/boot_val",
-                "backend_flush_after/reset_val",
-                "backend_flush_after/setting",
                 "backslash_quote/boot_val",
                 "backslash_quote/reset_val",
                 "backslash_quote/setting",
-                "backtrace_functions/boot_val",
-                "backtrace_functions/reset_val",
-                "backtrace_functions/setting",
                 "bgwriter_delay/boot_val",
                 "bgwriter_delay/reset_val",
                 "bgwriter_delay/setting",
-                "bgwriter_flush_after/boot_val",
-                "bgwriter_flush_after/reset_val",
-                "bgwriter_flush_after/setting",
                 "bgwriter_lru_maxpages/boot_val",
                 "bgwriter_lru_maxpages/reset_val",
                 "bgwriter_lru_maxpages/setting",
@@ -11110,9 +7048,9 @@
                 "checkpoint_completion_target/boot_val",
                 "checkpoint_completion_target/reset_val",
                 "checkpoint_completion_target/setting",
-                "checkpoint_flush_after/boot_val",
-                "checkpoint_flush_after/reset_val",
-                "checkpoint_flush_after/setting",
+                "checkpoint_segments/boot_val",
+                "checkpoint_segments/reset_val",
+                "checkpoint_segments/setting",
                 "checkpoint_timeout/boot_val",
                 "checkpoint_timeout/reset_val",
                 "checkpoint_timeout/setting",
@@ -11125,9 +7063,6 @@
                 "client_min_messages/boot_val",
                 "client_min_messages/reset_val",
                 "client_min_messages/setting",
-                "cluster_name/boot_val",
-                "cluster_name/reset_val",
-                "cluster_name/setting",
                 "commit_delay/boot_val",
                 "commit_delay/reset_val",
                 "commit_delay/setting",
@@ -11152,18 +7087,12 @@
                 "cursor_tuple_fraction/boot_val",
                 "cursor_tuple_fraction/reset_val",
                 "cursor_tuple_fraction/setting",
-                "data_checksums/boot_val",
-                "data_checksums/reset_val",
-                "data_checksums/setting",
+                "custom_variable_classes/boot_val",
+                "custom_variable_classes/reset_val",
+                "custom_variable_classes/setting",
                 "data_directory/boot_val",
                 "data_directory/reset_val",
                 "data_directory/setting",
-                "data_directory_mode/boot_val",
-                "data_directory_mode/reset_val",
-                "data_directory_mode/setting",
-                "data_sync_retry/boot_val",
-                "data_sync_retry/reset_val",
-                "data_sync_retry/setting",
                 "db_user_namespace/boot_val",
                 "db_user_namespace/reset_val",
                 "db_user_namespace/setting",
@@ -11188,30 +7117,24 @@
                 "default_statistics_target/boot_val",
                 "default_statistics_target/reset_val",
                 "default_statistics_target/setting",
-                "default_table_access_method/boot_val",
-                "default_table_access_method/reset_val",
-                "default_table_access_method/setting",
                 "default_tablespace/boot_val",
                 "default_tablespace/reset_val",
                 "default_tablespace/setting",
                 "default_text_search_config/boot_val",
                 "default_text_search_config/reset_val",
                 "default_text_search_config/setting",
-                "default_transaction_deferrable/boot_val",
-                "default_transaction_deferrable/reset_val",
-                "default_transaction_deferrable/setting",
                 "default_transaction_isolation/boot_val",
                 "default_transaction_isolation/reset_val",
                 "default_transaction_isolation/setting",
                 "default_transaction_read_only/boot_val",
                 "default_transaction_read_only/reset_val",
                 "default_transaction_read_only/setting",
+                "default_with_oids/boot_val",
+                "default_with_oids/reset_val",
+                "default_with_oids/setting",
                 "dynamic_library_path/boot_val",
                 "dynamic_library_path/reset_val",
                 "dynamic_library_path/setting",
-                "dynamic_shared_memory_type/boot_val",
-                "dynamic_shared_memory_type/reset_val",
-                "dynamic_shared_memory_type/setting",
                 "effective_cache_size/boot_val",
                 "effective_cache_size/reset_val",
                 "effective_cache_size/setting",
@@ -11221,21 +7144,12 @@
                 "enable_bitmapscan/boot_val",
                 "enable_bitmapscan/reset_val",
                 "enable_bitmapscan/setting",
-                "enable_gathermerge/boot_val",
-                "enable_gathermerge/reset_val",
-                "enable_gathermerge/setting",
                 "enable_hashagg/boot_val",
                 "enable_hashagg/reset_val",
                 "enable_hashagg/setting",
                 "enable_hashjoin/boot_val",
                 "enable_hashjoin/reset_val",
                 "enable_hashjoin/setting",
-                "enable_incremental_sort/boot_val",
-                "enable_incremental_sort/reset_val",
-                "enable_incremental_sort/setting",
-                "enable_indexonlyscan/boot_val",
-                "enable_indexonlyscan/reset_val",
-                "enable_indexonlyscan/setting",
                 "enable_indexscan/boot_val",
                 "enable_indexscan/reset_val",
                 "enable_indexscan/setting",
@@ -11248,21 +7162,6 @@
                 "enable_nestloop/boot_val",
                 "enable_nestloop/reset_val",
                 "enable_nestloop/setting",
-                "enable_parallel_append/boot_val",
-                "enable_parallel_append/reset_val",
-                "enable_parallel_append/setting",
-                "enable_parallel_hash/boot_val",
-                "enable_parallel_hash/reset_val",
-                "enable_parallel_hash/setting",
-                "enable_partition_pruning/boot_val",
-                "enable_partition_pruning/reset_val",
-                "enable_partition_pruning/setting",
-                "enable_partitionwise_aggregate/boot_val",
-                "enable_partitionwise_aggregate/reset_val",
-                "enable_partitionwise_aggregate/setting",
-                "enable_partitionwise_join/boot_val",
-                "enable_partitionwise_join/reset_val",
-                "enable_partitionwise_join/setting",
                 "enable_seqscan/boot_val",
                 "enable_seqscan/reset_val",
                 "enable_seqscan/setting",
@@ -11275,24 +7174,12 @@
                 "escape_string_warning/boot_val",
                 "escape_string_warning/reset_val",
                 "escape_string_warning/setting",
-                "event_source/boot_val",
-                "event_source/reset_val",
-                "event_source/setting",
-                "exit_on_error/boot_val",
-                "exit_on_error/reset_val",
-                "exit_on_error/setting",
-                "extension_destdir/boot_val",
-                "extension_destdir/reset_val",
-                "extension_destdir/setting",
                 "external_pid_file/boot_val",
                 "external_pid_file/reset_val",
                 "external_pid_file/setting",
                 "extra_float_digits/boot_val",
                 "extra_float_digits/reset_val",
                 "extra_float_digits/setting",
-                "force_parallel_mode/boot_val",
-                "force_parallel_mode/reset_val",
-                "force_parallel_mode/setting",
                 "from_collapse_limit/boot_val",
                 "from_collapse_limit/reset_val",
                 "from_collapse_limit/setting",
@@ -11326,72 +7213,21 @@
                 "gin_fuzzy_search_limit/boot_val",
                 "gin_fuzzy_search_limit/reset_val",
                 "gin_fuzzy_search_limit/setting",
-                "gin_pending_list_limit/boot_val",
-                "gin_pending_list_limit/reset_val",
-                "gin_pending_list_limit/setting",
-                "hash_mem_multiplier/boot_val",
-                "hash_mem_multiplier/reset_val",
-                "hash_mem_multiplier/setting",
                 "hba_file/boot_val",
                 "hba_file/reset_val",
                 "hba_file/setting",
                 "hot_standby/boot_val",
                 "hot_standby/reset_val",
                 "hot_standby/setting",
-                "hot_standby_feedback/boot_val",
-                "hot_standby_feedback/reset_val",
-                "hot_standby_feedback/setting",
-                "huge_pages/boot_val",
-                "huge_pages/reset_val",
-                "huge_pages/setting",
                 "ident_file/boot_val",
                 "ident_file/reset_val",
                 "ident_file/setting",
-                "idle_in_transaction_session_timeout/boot_val",
-                "idle_in_transaction_session_timeout/reset_val",
-                "idle_in_transaction_session_timeout/setting",
-                "ignore_checksum_failure/boot_val",
-                "ignore_checksum_failure/reset_val",
-                "ignore_checksum_failure/setting",
-                "ignore_invalid_pages/boot_val",
-                "ignore_invalid_pages/reset_val",
-                "ignore_invalid_pages/setting",
                 "ignore_system_indexes/boot_val",
                 "ignore_system_indexes/reset_val",
                 "ignore_system_indexes/setting",
                 "integer_datetimes/boot_val",
                 "integer_datetimes/reset_val",
                 "integer_datetimes/setting",
-                "jit/boot_val",
-                "jit/reset_val",
-                "jit/setting",
-                "jit_above_cost/boot_val",
-                "jit_above_cost/reset_val",
-                "jit_above_cost/setting",
-                "jit_debugging_support/boot_val",
-                "jit_debugging_support/reset_val",
-                "jit_debugging_support/setting",
-                "jit_dump_bitcode/boot_val",
-                "jit_dump_bitcode/reset_val",
-                "jit_dump_bitcode/setting",
-                "jit_expressions/boot_val",
-                "jit_expressions/reset_val",
-                "jit_expressions/setting",
-                "jit_inline_above_cost/boot_val",
-                "jit_inline_above_cost/reset_val",
-                "jit_inline_above_cost/setting",
-                "jit_optimize_above_cost/boot_val",
-                "jit_optimize_above_cost/reset_val",
-                "jit_optimize_above_cost/setting",
-                "jit_profiling_support/boot_val",
-                "jit_profiling_support/reset_val",
-                "jit_profiling_support/setting",
-                "jit_provider/boot_val",
-                "jit_provider/reset_val",
-                "jit_provider/setting",
-                "jit_tuple_deforming/boot_val",
-                "jit_tuple_deforming/reset_val",
-                "jit_tuple_deforming/setting",
                 "join_collapse_limit/boot_val",
                 "join_collapse_limit/reset_val",
                 "join_collapse_limit/setting",
@@ -11401,6 +7237,9 @@
                 "krb_server_keyfile/boot_val",
                 "krb_server_keyfile/reset_val",
                 "krb_server_keyfile/setting",
+                "krb_srvname/boot_val",
+                "krb_srvname/reset_val",
+                "krb_srvname/setting",
                 "lc_collate/boot_val",
                 "lc_collate/reset_val",
                 "lc_collate/setting",
@@ -11428,9 +7267,6 @@
                 "local_preload_libraries/boot_val",
                 "local_preload_libraries/reset_val",
                 "local_preload_libraries/setting",
-                "lock_timeout/boot_val",
-                "lock_timeout/reset_val",
-                "lock_timeout/setting",
                 "log_autovacuum_min_duration/boot_val",
                 "log_autovacuum_min_duration/reset_val",
                 "log_autovacuum_min_duration/setting",
@@ -11458,9 +7294,6 @@
                 "log_executor_stats/boot_val",
                 "log_executor_stats/reset_val",
                 "log_executor_stats/setting",
-                "log_file_mode/boot_val",
-                "log_file_mode/reset_val",
-                "log_file_mode/setting",
                 "log_filename/boot_val",
                 "log_filename/reset_val",
                 "log_filename/setting",
@@ -11473,9 +7306,6 @@
                 "log_lock_waits/boot_val",
                 "log_lock_waits/reset_val",
                 "log_lock_waits/setting",
-                "log_min_duration_sample/boot_val",
-                "log_min_duration_sample/reset_val",
-                "log_min_duration_sample/setting",
                 "log_min_duration_statement/boot_val",
                 "log_min_duration_statement/reset_val",
                 "log_min_duration_statement/setting",
@@ -11485,21 +7315,12 @@
                 "log_min_messages/boot_val",
                 "log_min_messages/reset_val",
                 "log_min_messages/setting",
-                "log_parameter_max_length/boot_val",
-                "log_parameter_max_length/reset_val",
-                "log_parameter_max_length/setting",
-                "log_parameter_max_length_on_error/boot_val",
-                "log_parameter_max_length_on_error/reset_val",
-                "log_parameter_max_length_on_error/setting",
                 "log_parser_stats/boot_val",
                 "log_parser_stats/reset_val",
                 "log_parser_stats/setting",
                 "log_planner_stats/boot_val",
                 "log_planner_stats/reset_val",
                 "log_planner_stats/setting",
-                "log_replication_commands/boot_val",
-                "log_replication_commands/reset_val",
-                "log_replication_commands/setting",
                 "log_rotation_age/boot_val",
                 "log_rotation_age/reset_val",
                 "log_rotation_age/setting",
@@ -11509,9 +7330,6 @@
                 "log_statement/boot_val",
                 "log_statement/reset_val",
                 "log_statement/setting",
-                "log_statement_sample_rate/boot_val",
-                "log_statement_sample_rate/reset_val",
-                "log_statement_sample_rate/setting",
                 "log_statement_stats/boot_val",
                 "log_statement_stats/reset_val",
                 "log_statement_stats/setting",
@@ -11521,21 +7339,12 @@
                 "log_timezone/boot_val",
                 "log_timezone/reset_val",
                 "log_timezone/setting",
-                "log_transaction_sample_rate/boot_val",
-                "log_transaction_sample_rate/reset_val",
-                "log_transaction_sample_rate/setting",
                 "log_truncate_on_rotation/boot_val",
                 "log_truncate_on_rotation/reset_val",
                 "log_truncate_on_rotation/setting",
                 "logging_collector/boot_val",
                 "logging_collector/reset_val",
                 "logging_collector/setting",
-                "logical_decoding_work_mem/boot_val",
-                "logical_decoding_work_mem/reset_val",
-                "logical_decoding_work_mem/setting",
-                "maintenance_io_concurrency/boot_val",
-                "maintenance_io_concurrency/reset_val",
-                "maintenance_io_concurrency/setting",
                 "maintenance_work_mem/boot_val",
                 "maintenance_work_mem/reset_val",
                 "maintenance_work_mem/setting",
@@ -11557,36 +7366,9 @@
                 "max_locks_per_transaction/boot_val",
                 "max_locks_per_transaction/reset_val",
                 "max_locks_per_transaction/setting",
-                "max_logical_replication_workers/boot_val",
-                "max_logical_replication_workers/reset_val",
-                "max_logical_replication_workers/setting",
-                "max_parallel_maintenance_workers/boot_val",
-                "max_parallel_maintenance_workers/reset_val",
-                "max_parallel_maintenance_workers/setting",
-                "max_parallel_workers/boot_val",
-                "max_parallel_workers/reset_val",
-                "max_parallel_workers/setting",
-                "max_parallel_workers_per_gather/boot_val",
-                "max_parallel_workers_per_gather/reset_val",
-                "max_parallel_workers_per_gather/setting",
-                "max_pred_locks_per_page/boot_val",
-                "max_pred_locks_per_page/reset_val",
-                "max_pred_locks_per_page/setting",
-                "max_pred_locks_per_relation/boot_val",
-                "max_pred_locks_per_relation/reset_val",
-                "max_pred_locks_per_relation/setting",
-                "max_pred_locks_per_transaction/boot_val",
-                "max_pred_locks_per_transaction/reset_val",
-                "max_pred_locks_per_transaction/setting",
                 "max_prepared_transactions/boot_val",
                 "max_prepared_transactions/reset_val",
                 "max_prepared_transactions/setting",
-                "max_replication_slots/boot_val",
-                "max_replication_slots/reset_val",
-                "max_replication_slots/setting",
-                "max_slot_wal_keep_size/boot_val",
-                "max_slot_wal_keep_size/reset_val",
-                "max_slot_wal_keep_size/setting",
                 "max_stack_depth/boot_val",
                 "max_stack_depth/reset_val",
                 "max_stack_depth/setting",
@@ -11596,48 +7378,12 @@
                 "max_standby_streaming_delay/boot_val",
                 "max_standby_streaming_delay/reset_val",
                 "max_standby_streaming_delay/setting",
-                "max_sync_workers_per_subscription/boot_val",
-                "max_sync_workers_per_subscription/reset_val",
-                "max_sync_workers_per_subscription/setting",
                 "max_wal_senders/boot_val",
                 "max_wal_senders/reset_val",
                 "max_wal_senders/setting",
-                "max_wal_size/boot_val",
-                "max_wal_size/reset_val",
-                "max_wal_size/setting",
-                "max_worker_processes/boot_val",
-                "max_worker_processes/reset_val",
-                "max_worker_processes/setting",
-                "min_parallel_index_scan_size/boot_val",
-                "min_parallel_index_scan_size/reset_val",
-                "min_parallel_index_scan_size/setting",
-                "min_parallel_table_scan_size/boot_val",
-                "min_parallel_table_scan_size/reset_val",
-                "min_parallel_table_scan_size/setting",
-                "min_wal_size/boot_val",
-                "min_wal_size/reset_val",
-                "min_wal_size/setting",
-                "old_snapshot_threshold/boot_val",
-                "old_snapshot_threshold/reset_val",
-                "old_snapshot_threshold/setting",
-                "operator_precedence_warning/boot_val",
-                "operator_precedence_warning/reset_val",
-                "operator_precedence_warning/setting",
-                "parallel_leader_participation/boot_val",
-                "parallel_leader_participation/reset_val",
-                "parallel_leader_participation/setting",
-                "parallel_setup_cost/boot_val",
-                "parallel_setup_cost/reset_val",
-                "parallel_setup_cost/setting",
-                "parallel_tuple_cost/boot_val",
-                "parallel_tuple_cost/reset_val",
-                "parallel_tuple_cost/setting",
                 "password_encryption/boot_val",
                 "password_encryption/reset_val",
                 "password_encryption/setting",
-                "plan_cache_mode/boot_val",
-                "plan_cache_mode/reset_val",
-                "plan_cache_mode/setting",
                 "port/boot_val",
                 "port/reset_val",
                 "port/setting",
@@ -11647,60 +7393,9 @@
                 "pre_auth_delay/boot_val",
                 "pre_auth_delay/reset_val",
                 "pre_auth_delay/setting",
-                "primary_conninfo/boot_val",
-                "primary_conninfo/reset_val",
-                "primary_conninfo/setting",
-                "primary_slot_name/boot_val",
-                "primary_slot_name/reset_val",
-                "primary_slot_name/setting",
-                "promote_trigger_file/boot_val",
-                "promote_trigger_file/reset_val",
-                "promote_trigger_file/setting",
-                "quote_all_identifiers/boot_val",
-                "quote_all_identifiers/reset_val",
-                "quote_all_identifiers/setting",
                 "random_page_cost/boot_val",
                 "random_page_cost/reset_val",
                 "random_page_cost/setting",
-                "recovery_end_command/boot_val",
-                "recovery_end_command/reset_val",
-                "recovery_end_command/setting",
-                "recovery_min_apply_delay/boot_val",
-                "recovery_min_apply_delay/reset_val",
-                "recovery_min_apply_delay/setting",
-                "recovery_target/boot_val",
-                "recovery_target/reset_val",
-                "recovery_target/setting",
-                "recovery_target_action/boot_val",
-                "recovery_target_action/reset_val",
-                "recovery_target_action/setting",
-                "recovery_target_inclusive/boot_val",
-                "recovery_target_inclusive/reset_val",
-                "recovery_target_inclusive/setting",
-                "recovery_target_lsn/boot_val",
-                "recovery_target_lsn/reset_val",
-                "recovery_target_lsn/setting",
-                "recovery_target_name/boot_val",
-                "recovery_target_name/reset_val",
-                "recovery_target_name/setting",
-                "recovery_target_time/boot_val",
-                "recovery_target_time/reset_val",
-                "recovery_target_time/setting",
-                "recovery_target_timeline/boot_val",
-                "recovery_target_timeline/reset_val",
-                "recovery_target_timeline/setting",
-                "recovery_target_xid/boot_val",
-                "recovery_target_xid/reset_val",
-                "recovery_target_xid/setting",
-                "restart_after_crash/boot_val",
-                "restart_after_crash/reset_val",
-                "restart_after_crash/setting",
-                "restore_command/boot_val",
-                "restore_command/reset_val",
-                "restore_command/setting",
-                "row_security/boot_val",
-                "row_security/reset_val",
-                "row_security/setting",
                 "search_path/boot_val",
                 "search_path/reset_val",
                 "search_path/setting",
@@ -11719,63 +7414,30 @@
                 "server_version_num/boot_val",
                 "server_version_num/reset_val",
                 "server_version_num/setting",
-                "session_preload_libraries/boot_val",
-                "session_preload_libraries/reset_val",
-                "session_preload_libraries/setting",
                 "session_replication_role/boot_val",
                 "session_replication_role/reset_val",
                 "session_replication_role/setting",
                 "shared_buffers/boot_val",
                 "shared_buffers/reset_val",
                 "shared_buffers/setting",
-                "shared_memory_type/boot_val",
-                "shared_memory_type/reset_val",
-                "shared_memory_type/setting",
                 "shared_preload_libraries/boot_val",
                 "shared_preload_libraries/reset_val",
                 "shared_preload_libraries/setting",
+                "silent_mode/boot_val",
+                "silent_mode/reset_val",
+                "silent_mode/setting",
+                "sql_inheritance/boot_val",
+                "sql_inheritance/reset_val",
+                "sql_inheritance/setting",
                 "ssl/boot_val",
                 "ssl/reset_val",
                 "ssl/setting",
-                "ssl_ca_file/boot_val",
-                "ssl_ca_file/reset_val",
-                "ssl_ca_file/setting",
-                "ssl_cert_file/boot_val",
-                "ssl_cert_file/reset_val",
-                "ssl_cert_file/setting",
                 "ssl_ciphers/boot_val",
                 "ssl_ciphers/reset_val",
                 "ssl_ciphers/setting",
-                "ssl_crl_file/boot_val",
-                "ssl_crl_file/reset_val",
-                "ssl_crl_file/setting",
-                "ssl_dh_params_file/boot_val",
-                "ssl_dh_params_file/reset_val",
-                "ssl_dh_params_file/setting",
-                "ssl_ecdh_curve/boot_val",
-                "ssl_ecdh_curve/reset_val",
-                "ssl_ecdh_curve/setting",
-                "ssl_key_file/boot_val",
-                "ssl_key_file/reset_val",
-                "ssl_key_file/setting",
-                "ssl_library/boot_val",
-                "ssl_library/reset_val",
-                "ssl_library/setting",
-                "ssl_max_protocol_version/boot_val",
-                "ssl_max_protocol_version/reset_val",
-                "ssl_max_protocol_version/setting",
-                "ssl_min_protocol_version/boot_val",
-                "ssl_min_protocol_version/reset_val",
-                "ssl_min_protocol_version/setting",
-                "ssl_passphrase_command/boot_val",
-                "ssl_passphrase_command/reset_val",
-                "ssl_passphrase_command/setting",
-                "ssl_passphrase_command_supports_reload/boot_val",
-                "ssl_passphrase_command_supports_reload/reset_val",
-                "ssl_passphrase_command_supports_reload/setting",
-                "ssl_prefer_server_ciphers/boot_val",
-                "ssl_prefer_server_ciphers/reset_val",
-                "ssl_prefer_server_ciphers/setting",
+                "ssl_renegotiation_limit/boot_val",
+                "ssl_renegotiation_limit/reset_val",
+                "ssl_renegotiation_limit/setting",
                 "standard_conforming_strings/boot_val",
                 "standard_conforming_strings/reset_val",
                 "standard_conforming_strings/setting",
@@ -11794,21 +7456,12 @@
                 "synchronous_commit/boot_val",
                 "synchronous_commit/reset_val",
                 "synchronous_commit/setting",
-                "synchronous_standby_names/boot_val",
-                "synchronous_standby_names/reset_val",
-                "synchronous_standby_names/setting",
                 "syslog_facility/boot_val",
                 "syslog_facility/reset_val",
                 "syslog_facility/setting",
                 "syslog_ident/boot_val",
                 "syslog_ident/reset_val",
                 "syslog_ident/setting",
-                "syslog_sequence_numbers/boot_val",
-                "syslog_sequence_numbers/reset_val",
-                "syslog_sequence_numbers/setting",
-                "syslog_split_messages/boot_val",
-                "syslog_split_messages/reset_val",
-                "syslog_split_messages/setting",
                 "tcp_keepalives_count/boot_val",
                 "tcp_keepalives_count/reset_val",
                 "tcp_keepalives_count/setting",
@@ -11818,15 +7471,9 @@
                 "tcp_keepalives_interval/boot_val",
                 "tcp_keepalives_interval/reset_val",
                 "tcp_keepalives_interval/setting",
-                "tcp_user_timeout/boot_val",
-                "tcp_user_timeout/reset_val",
-                "tcp_user_timeout/setting",
                 "temp_buffers/boot_val",
                 "temp_buffers/reset_val",
                 "temp_buffers/setting",
-                "temp_file_limit/boot_val",
-                "temp_file_limit/reset_val",
-                "temp_file_limit/setting",
                 "temp_tablespaces/boot_val",
                 "temp_tablespaces/reset_val",
                 "temp_tablespaces/setting",
@@ -11848,21 +7495,12 @@
                 "track_activity_query_size/boot_val",
                 "track_activity_query_size/reset_val",
                 "track_activity_query_size/setting",
-                "track_commit_timestamp/boot_val",
-                "track_commit_timestamp/reset_val",
-                "track_commit_timestamp/setting",
                 "track_counts/boot_val",
                 "track_counts/reset_val",
                 "track_counts/setting",
                 "track_functions/boot_val",
                 "track_functions/reset_val",
                 "track_functions/setting",
-                "track_io_timing/boot_val",
-                "track_io_timing/reset_val",
-                "track_io_timing/setting",
-                "transaction_deferrable/boot_val",
-                "transaction_deferrable/reset_val",
-                "transaction_deferrable/setting",
                 "transaction_isolation/boot_val",
                 "transaction_isolation/reset_val",
                 "transaction_isolation/setting",
@@ -11872,9 +7510,9 @@
                 "transform_null_equals/boot_val",
                 "transform_null_equals/reset_val",
                 "transform_null_equals/setting",
-                "unix_socket_directories/boot_val",
-                "unix_socket_directories/reset_val",
-                "unix_socket_directories/setting",
+                "unix_socket_directory/boot_val",
+                "unix_socket_directory/reset_val",
+                "unix_socket_directory/setting",
                 "unix_socket_group/boot_val",
                 "unix_socket_group/reset_val",
                 "unix_socket_group/setting",
@@ -11884,9 +7522,6 @@
                 "update_process_title/boot_val",
                 "update_process_title/reset_val",
                 "update_process_title/setting",
-                "vacuum_cleanup_index_scale_factor/boot_val",
-                "vacuum_cleanup_index_scale_factor/reset_val",
-                "vacuum_cleanup_index_scale_factor/setting",
                 "vacuum_cost_delay/boot_val",
                 "vacuum_cost_delay/reset_val",
                 "vacuum_cost_delay/setting",
@@ -11911,69 +7546,30 @@
                 "vacuum_freeze_table_age/boot_val",
                 "vacuum_freeze_table_age/reset_val",
                 "vacuum_freeze_table_age/setting",
-                "vacuum_multixact_freeze_min_age/boot_val",
-                "vacuum_multixact_freeze_min_age/reset_val",
-                "vacuum_multixact_freeze_min_age/setting",
-                "vacuum_multixact_freeze_table_age/boot_val",
-                "vacuum_multixact_freeze_table_age/reset_val",
-                "vacuum_multixact_freeze_table_age/setting",
                 "wal_block_size/boot_val",
                 "wal_block_size/reset_val",
                 "wal_block_size/setting",
                 "wal_buffers/boot_val",
                 "wal_buffers/reset_val",
                 "wal_buffers/setting",
-                "wal_compression/boot_val",
-                "wal_compression/reset_val",
-                "wal_compression/setting",
-                "wal_consistency_checking/boot_val",
-                "wal_consistency_checking/reset_val",
-                "wal_consistency_checking/setting",
-                "wal_init_zero/boot_val",
-                "wal_init_zero/reset_val",
-                "wal_init_zero/setting",
-                "wal_keep_size/boot_val",
-                "wal_keep_size/reset_val",
-                "wal_keep_size/setting",
+                "wal_keep_segments/boot_val",
+                "wal_keep_segments/reset_val",
+                "wal_keep_segments/setting",
                 "wal_level/boot_val",
                 "wal_level/reset_val",
                 "wal_level/setting",
-                "wal_log_hints/boot_val",
-                "wal_log_hints/reset_val",
-                "wal_log_hints/setting",
-                "wal_receiver_create_temp_slot/boot_val",
-                "wal_receiver_create_temp_slot/reset_val",
-                "wal_receiver_create_temp_slot/setting",
-                "wal_receiver_status_interval/boot_val",
-                "wal_receiver_status_interval/reset_val",
-                "wal_receiver_status_interval/setting",
-                "wal_receiver_timeout/boot_val",
-                "wal_receiver_timeout/reset_val",
-                "wal_receiver_timeout/setting",
-                "wal_recycle/boot_val",
-                "wal_recycle/reset_val",
-                "wal_recycle/setting",
-                "wal_retrieve_retry_interval/boot_val",
-                "wal_retrieve_retry_interval/reset_val",
-                "wal_retrieve_retry_interval/setting",
                 "wal_segment_size/boot_val",
                 "wal_segment_size/reset_val",
                 "wal_segment_size/setting",
-                "wal_sender_timeout/boot_val",
-                "wal_sender_timeout/reset_val",
-                "wal_sender_timeout/setting",
-                "wal_skip_threshold/boot_val",
-                "wal_skip_threshold/reset_val",
-                "wal_skip_threshold/setting",
+                "wal_sender_delay/boot_val",
+                "wal_sender_delay/reset_val",
+                "wal_sender_delay/setting",
                 "wal_sync_method/boot_val",
                 "wal_sync_method/reset_val",
                 "wal_sync_method/setting",
                 "wal_writer_delay/boot_val",
                 "wal_writer_delay/reset_val",
                 "wal_writer_delay/setting",
-                "wal_writer_flush_after/boot_val",
-                "wal_writer_flush_after/reset_val",
-                "wal_writer_flush_after/setting",
                 "work_mem/boot_val",
                 "work_mem/reset_val",
                 "work_mem/setting",
