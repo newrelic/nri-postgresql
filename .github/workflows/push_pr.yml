@@ -20,8 +20,6 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-        with:
-          semgrep-append: true
       - uses: newrelic/newrelic-infra-checkers@v1
       - name: Semgrep
         uses: returntocorp/semgrep-action@v1
