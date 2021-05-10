@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/newrelic/nri-postgresql/internal/collection"
+	"github.com/newrelic/nri-postgresql/src/collection"
 )
 
 func generateIndexDefinitions(schemaList collection.SchemaList) []*QueryDefinition {

@@ -9,7 +9,7 @@ import (
 	// pq is required for postgreSQL driver but isn't used in code
 	_ "github.com/lib/pq"
 	"github.com/newrelic/infra-integrations-sdk/log"
-	"github.com/newrelic/nri-postgresql/internal/args"
+	"github.com/newrelic/nri-postgresql/src/args"
 )
 
 const (

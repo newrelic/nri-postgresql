@@ -6,8 +6,8 @@ import (
 	"errors"
 
 	"github.com/newrelic/infra-integrations-sdk/log"
-	"github.com/newrelic/nri-postgresql/internal/args"
-	"github.com/newrelic/nri-postgresql/internal/connection"
+	"github.com/newrelic/nri-postgresql/src/args"
+	"github.com/newrelic/nri-postgresql/src/connection"
 )
 
 // DatabaseList is a map from database name to SchemaLists to collect

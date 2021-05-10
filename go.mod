@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/AlekSi/gocov-xml v0.0.0-20190121064608-3a14fb1c4737
+	github.com/Masterminds/semver v1.5.0
 	github.com/axw/gocov v1.0.0
 	github.com/blang/semver/v4 v4.0.0
 	github.com/go-sql-driver/mysql v1.6.0 // indirect

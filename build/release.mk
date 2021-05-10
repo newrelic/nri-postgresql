@@ -15,13 +15,13 @@ $(GORELEASER_BIN): bin
 .PHONY : release/clean
 release/clean:
 	@echo "===> $(INTEGRATION) === [release/clean] remove build metadata files"
-	rm -fv $(CURDIR)/cmd/nri-postgresql/versioninfo.json
-	rm -fv $(CURDIR)/cmd/nri-postgresql/resource.syso
+	rm -fv $(CURDIR)/src/versioninfo.json
+	rm -fv $(CURDIR)/src/resource.syso
 
 .PHONY : release/deps
 release/deps: $(GORELEASER_BIN)
 	@echo "===> $(INTEGRATION) === [release/deps] install goversioninfo"
-	@go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
+	@GO111MODULE=off go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
 
 .PHONY : release/build
 release/build: release/deps release/clean

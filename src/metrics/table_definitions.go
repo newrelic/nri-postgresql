@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/blang/semver/v4"
-	"github.com/newrelic/nri-postgresql/internal/collection"
+	"github.com/newrelic/nri-postgresql/src/collection"
 )
 
 func generateTableDefinitions(schemaList collection.SchemaList, version *semver.Version, collectBloat bool) []*QueryDefinition {

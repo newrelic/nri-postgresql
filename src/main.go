@@ -9,11 +9,11 @@ import (
 
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/newrelic/infra-integrations-sdk/log"
-	"github.com/newrelic/nri-postgresql/internal/args"
-	"github.com/newrelic/nri-postgresql/internal/collection"
-	"github.com/newrelic/nri-postgresql/internal/connection"
-	"github.com/newrelic/nri-postgresql/internal/inventory"
-	"github.com/newrelic/nri-postgresql/internal/metrics"
+	"github.com/newrelic/nri-postgresql/src/args"
+	"github.com/newrelic/nri-postgresql/src/collection"
+	"github.com/newrelic/nri-postgresql/src/connection"
+	"github.com/newrelic/nri-postgresql/src/inventory"
+	"github.com/newrelic/nri-postgresql/src/metrics"
 )
 
 const (

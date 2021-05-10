@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/newrelic/nri-postgresql/internal/args"
+	"github.com/newrelic/nri-postgresql/src/args"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
