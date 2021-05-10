@@ -46,6 +46,7 @@ Makefile-deploy.mk
 
 bin/
 dist/
+vendor
 
 # Local development tools/files
 .idea
@@ -54,5 +55,6 @@ dist/
 *.gpg
 
 # build files
-src/versioninfo.json
-src/resource.syso
+cmd/nri-postgresql/versioninfo.json
+cmd/nri-postgresql/resource.syso
+

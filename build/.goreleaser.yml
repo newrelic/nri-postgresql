@@ -1,8 +1,7 @@
 builds:
   - id: nri-nix
-    main: ./src
+    main: ./cmd/nri-postgresql/main.go
     binary: nri-postgresql
-    gobinary: "go1.9.7"
     ldflags:
       - -s -w -X main.integrationVersion={{.Version}} -X main.gitCommit={{.Commit}} -X main.buildDate={{.Date}}
     goos:
@@ -18,9 +17,8 @@ builds:
         goarch: 386
 
   - id: nri-win
-    main: ./src
+    main: ./cmd/nri-postgresql/main.go
     binary: nri-postgresql
-    gobinary: "go1.9.7"
     ldflags:
       - -s -w -X main.integrationVersion={{.Version}} -X main.gitCommit={{.Commit}} -X main.buildDate={{.Date}}
     goos:

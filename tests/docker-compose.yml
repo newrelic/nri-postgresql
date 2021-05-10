@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: postgres:9.0
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: demo
+
+  nri-postgresql:
+    image: golang:1.16
+    container_name: nri_postgresql
+    working_dir: /code
+    depends_on:
+      - db
+    volumes:
+      - ../:/code
+    entrypoint: go run /code/cmd/nri-postgresql/main.go
