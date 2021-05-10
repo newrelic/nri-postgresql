@@ -16,11 +16,16 @@ env:
   TAG: ${{ github.event.release.tag_name }}
 
 jobs:
-  golangci-lint:
-    name: Validate code via golangci
+  static-analysis:
+    name: Run all static analysis checks
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+        with:
+          semgrep-append: true
+      - uses: newrelic/newrelic-infra-checkers@v1
+      - name: Semgrep
+        uses: returntocorp/semgrep-action@v1
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v2
         with:
