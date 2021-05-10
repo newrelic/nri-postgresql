@@ -5,8 +5,8 @@ import (
 
 	"github.com/blang/semver/v4"
 	"github.com/newrelic/infra-integrations-sdk/integration"
-	"github.com/newrelic/nri-postgresql/internal/collection"
-	"github.com/newrelic/nri-postgresql/internal/connection"
+	"github.com/newrelic/nri-postgresql/src/collection"
+	"github.com/newrelic/nri-postgresql/src/connection"
 	"github.com/stretchr/testify/assert"
 	tmock "github.com/stretchr/testify/mock"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"

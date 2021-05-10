@@ -5,7 +5,7 @@ import (
 
 	"github.com/newrelic/infra-integrations-sdk/data/inventory"
 	"github.com/newrelic/infra-integrations-sdk/integration"
-	"github.com/newrelic/nri-postgresql/internal/connection"
+	"github.com/newrelic/nri-postgresql/src/connection"
 	"github.com/stretchr/testify/assert"
 
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"

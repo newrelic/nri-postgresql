@@ -1,7 +1,7 @@
 package metrics
 
 import (
-	"github.com/newrelic/nri-postgresql/internal/collection"
+	"github.com/newrelic/nri-postgresql/src/collection"
 )
 
 func generateLockDefinitions(databases collection.DatabaseList) []*QueryDefinition {
