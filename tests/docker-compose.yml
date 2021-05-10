@@ -18,4 +18,4 @@ services:
       - db
     volumes:
       - ../:/code
-    entrypoint: go run /code/cmd/nri-postgresql/main.go
+    entrypoint: go run /code/src/main.go

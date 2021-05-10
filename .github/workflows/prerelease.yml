@@ -23,6 +23,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v2
+        with:
+          only-new-issues: true
 
   snyk:
     name: Run security checks via snyk
@@ -73,7 +75,7 @@ jobs:
         shell: pwsh
         run: |
           .\build\windows\unit_tests.ps1
-  # can't run this step inside of container because of tests specific
+
   test-integration-nix:
     name: Run integration tests on *Nix
     runs-on: ubuntu-20.04
@@ -117,7 +119,7 @@ jobs:
         uses: archive/github-actions-slack@master
         with:
           slack-bot-user-oauth-access-token: ${{ secrets.COREINT_SLACK_TOKEN }}
-          slack-channel: ${{ secrets.COREINT_SLACK_TOKEN }}
+          slack-channel: ${{ secrets.COREINT_SLACK_CHANNEL }}
           slack-text: "❌ `${{ env.REPO_FULL_NAME }}`: prerelease pipeline failed."
       - name: Test package installability
         uses: newrelic/integrations-pkg-test-action/linux@v1
@@ -174,7 +176,7 @@ jobs:
         uses: archive/github-actions-slack@master
         with:
           slack-bot-user-oauth-access-token: ${{ secrets.COREINT_SLACK_TOKEN }}
-          slack-channel: ${{ secrets.COREINT_SLACK_TOKEN }}
+          slack-channel: ${{ secrets.COREINT_SLACK_CHANNEL }}
           slack-text: "❌ `${{ env.REPO_FULL_NAME }}`: prerelease pipeline failed."
 
 

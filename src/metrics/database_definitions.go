@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"github.com/Masterminds/semver"
 	"strings"
 
 	"github.com/blang/semver/v4"
