@@ -3,10 +3,8 @@
 package tools
 
 import (
-	_ "github.com/axw/gocov/gocov"
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
-	_ "github.com/AlekSi/gocov-xml"
+	_ "github.com/josephspurrier/goversioninfo"
 	_ "golang.org/x/tools/cmd/goimports"
 	_ "mvdan.cc/gofumpt"
-	_ "github.com/josephspurrier/goversioninfo"
 )

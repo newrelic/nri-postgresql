@@ -16,16 +16,6 @@ env:
   TAG: ${{ github.event.release.tag_name }}
 
 jobs:
-  golangci-lint:
-    name: Validate code via golangci
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
-        with:
-          only-new-issues: true
-
   snyk:
     name: Run security checks via snyk
     runs-on: ubuntu-20.04
@@ -100,7 +90,7 @@ jobs:
   prerelease:
     name: Build binary for *Nix/Win, create archives for *Nix/Win, create packages for *Nix, upload all artifacts into GH Release assets
     runs-on: ubuntu-20.04
-    needs: [golangci-lint, test-nix, test-windows, snyk, test-integration-nix]
+    needs: [test-nix, test-windows, snyk, test-integration-nix]
     steps:
       - uses: actions/checkout@v2
       - name: Login to DockerHub

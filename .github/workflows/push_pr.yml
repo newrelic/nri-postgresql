@@ -15,13 +15,19 @@ env:
   DOCKER_LOGIN_AVAILABLE: ${{ secrets.OHAI_DOCKER_HUB_ID }}
 
 jobs:
-  golangci-lint:
-    name: Validate code via golangci
+  static-analysis:
+    name: Run all static analysis checks
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - uses: newrelic/newrelic-infra-checkers@v1
+      - name: Semgrep
+        uses: returntocorp/semgrep-action@v1
+        with:
+          auditOn: push
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v2
+        continue-on-error: ${{ github.event_name != 'pull_request' }}
         with:
           only-new-issues: true
 
