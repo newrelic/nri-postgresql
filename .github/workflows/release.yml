@@ -37,6 +37,7 @@ jobs:
           tag: ${{env.TAG}}
           app_name: "nri-${{env.INTEGRATION}}"
           repo_name: ${{ env.ORIGINAL_REPO_NAME }}
+          access_point_host: "production"
           # 'ohi' is for integrations
           schema: "ohi"
           aws_region: ${{ env.AWS_REGION }}
