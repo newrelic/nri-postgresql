@@ -7,19 +7,22 @@ import (
 	"flag"
 	"fmt"
 	"github.com/newrelic/infra-integrations-sdk/log"
+	"github.com/stretchr/testify/assert"
+	"github.com/xeipuuv/gojsonschema"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/xeipuuv/gojsonschema"
 )
 
 const (
 	containerName = "nri-postgresql"
-	schema        = "jsonschema.json"
+	// Different schemas files for testing different version of postgres v9.0.x, v9.1.x and 9.2.x or above
+	schemav90       = "jsonschema90.json"
+	schemav91       = "jsonschema91.json"
+	schemav92       = "jsonschema92.json"
+	schemaInventory = "jsonschema92.json"
 )
 
 func executeDockerCompose(containerName string, envVars []string) (string, string, error) {
@@ -27,6 +30,7 @@ func executeDockerCompose(containerName string, envVars []string) (string, strin
 	for i := range envVars {
 		cmdLine = append(cmdLine, "-e")
 		cmdLine = append(cmdLine, envVars[i])
+
 	}
 	cmdLine = append(cmdLine, containerName)
 	fmt.Printf("executing: docker-compose %s\n", strings.Join(cmdLine, " "))
@@ -35,6 +39,7 @@ func executeDockerCompose(containerName string, envVars []string) (string, strin
 	cmd.Stdout = &outbuf
 	cmd.Stderr = &errbuf
 	err := cmd.Run()
+
 	stdout := outbuf.String()
 	stderr := errbuf.String()
 	return stdout, stderr, err
@@ -46,23 +51,76 @@ func TestMain(m *testing.M) {
 	os.Exit(result)
 }
 
-func TestSuccessConnection(t *testing.T) {
-	hostname := "db"
+func TestSuccessConnection90(t *testing.T) {
+	hostname := "db90"
 	envVars := []string{
 		fmt.Sprintf("HOSTNAME=%s", hostname),
 		"USERNAME=postgres",
 		"PASSWORD=example",
 		"DATABASE=demo",
+		"COLLECTION_LIST=ALL",
+		"METRIC=true",
 	}
 	stdout, _, err := executeDockerCompose(containerName, envVars)
 	assert.Nil(t, err)
 	assert.NotEmpty(t, stdout)
-	err = validateJSONSchema(schema, stdout)
+	err = validateJSONSchema(schemav90, stdout)
+	assert.Nil(t, err)
+}
+
+func TestSuccessConnection91(t *testing.T) {
+	hostname := "db91"
+	envVars := []string{
+		fmt.Sprintf("HOSTNAME=%s", hostname),
+		"USERNAME=postgres",
+		"PASSWORD=example",
+		"DATABASE=demo",
+		"COLLECTION_LIST=ALL",
+		"METRIC=true",
+	}
+	stdout, _, err := executeDockerCompose(containerName, envVars)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, stdout)
+	err = validateJSONSchema(schemav91, stdout)
+	assert.Nil(t, err)
+}
+
+func TestSuccessConnection92(t *testing.T) {
+	hostname := "db92"
+	envVars := []string{
+		fmt.Sprintf("HOSTNAME=%s", hostname),
+		"USERNAME=postgres",
+		"PASSWORD=example",
+		"DATABASE=demo",
+		"COLLECTION_LIST=ALL",
+		"METRIC=true",
+	}
+	stdout, _, err := executeDockerCompose(containerName, envVars)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, stdout)
+	err = validateJSONSchema(schemav92, stdout)
+	assert.Nil(t, err)
+}
+
+func TestSuccessConnectionInventory(t *testing.T) {
+	hostname := "db92"
+	envVars := []string{
+		fmt.Sprintf("HOSTNAME=%s", hostname),
+		"USERNAME=postgres",
+		"PASSWORD=example",
+		"DATABASE=demo",
+		"COLLECTION_LIST=ALL",
+		"INVENTORY=true",
+	}
+	stdout, _, err := executeDockerCompose(containerName, envVars)
+	assert.Nil(t, err)
+	assert.NotEmpty(t, stdout)
+	err = validateJSONSchema(schemaInventory, stdout)
 	assert.Nil(t, err)
 }
 
 func TestMissingRequiredVars(t *testing.T) {
-	hostname := "db"
+	hostname := "db92"
 	envVars := []string{
 		fmt.Sprintf("HOSTNAME=%s", hostname),
 		"DATABASE=demo",
