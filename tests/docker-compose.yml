@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
 
-  db90:
+  postgres-9-0:
     image: postgres:9.0.22
     restart: always
     environment:
@@ -10,21 +10,17 @@ services:
       POSTGRES_PASSWORD: example
       POSTGRES_DB: demo
 
-  db91:
+  postgres-9-1:
     image: postgres:9.1.24
     restart: always
-    depends_on:
-      - db90
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
       POSTGRES_DB: demo
 
-  db92:
+  postgres-9-2:
     image: postgres:13.3
     restart: always
-    depends_on:
-      - db91
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
@@ -35,7 +31,9 @@ services:
     container_name: nri_postgresql
     working_dir: /code
     depends_on:
-      - db92
+      - postgres-9-0
+      - postgres-9-1
+      - postgres-9-2
     volumes:
       - ../:/code
     entrypoint: go run /code/src/main.go

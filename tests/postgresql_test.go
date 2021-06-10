@@ -18,11 +18,6 @@ import (
 
 const (
 	containerName = "nri-postgresql"
-	// Different schemas files for testing different version of postgres v9.0.x, v9.1.x and 9.2.x or above
-	schemav90       = "jsonschema90.json"
-	schemav91       = "jsonschema91.json"
-	schemav92       = "jsonschema92.json"
-	schemaInventory = "jsonschema92.json"
 )
 
 func executeDockerCompose(containerName string, envVars []string) (string, string, error) {
@@ -30,7 +25,6 @@ func executeDockerCompose(containerName string, envVars []string) (string, strin
 	for i := range envVars {
 		cmdLine = append(cmdLine, "-e")
 		cmdLine = append(cmdLine, envVars[i])
-
 	}
 	cmdLine = append(cmdLine, containerName)
 	fmt.Printf("executing: docker-compose %s\n", strings.Join(cmdLine, " "))
@@ -51,76 +45,66 @@ func TestMain(m *testing.M) {
 	os.Exit(result)
 }
 
-func TestSuccessConnection90(t *testing.T) {
-	hostname := "db90"
-	envVars := []string{
-		fmt.Sprintf("HOSTNAME=%s", hostname),
+func TestSuccessConnection(t *testing.T) {
+	t.Parallel()
+	defaultEnvVars := []string{
 		"USERNAME=postgres",
 		"PASSWORD=example",
 		"DATABASE=demo",
 		"COLLECTION_LIST=ALL",
-		"METRIC=true",
 	}
-	stdout, _, err := executeDockerCompose(containerName, envVars)
-	assert.Nil(t, err)
-	assert.NotEmpty(t, stdout)
-	err = validateJSONSchema(schemav90, stdout)
-	assert.Nil(t, err)
-}
+	testCases := []struct {
+		Name     string
+		Hostname string
+		Schema   string
+		EnvVars  []string
+	}{
+		{
+			Name:     "Testing Metrics for Postgres v9.0x",
+			Hostname: "postgres-9-0",
+			Schema:   "jsonschema90.json",
+			EnvVars:  []string{"METRIC=true"},
+		},
+		{
+			Name:     "Testing Metrics for Postgres v9.1x",
+			Hostname: "postgres-9-1",
+			Schema:   "jsonschema91.json",
+			EnvVars:  []string{"METRIC=true"},
+		},
+		{
+			Name:     "Testing Metrics for Postgres v9.2x +",
+			Hostname: "postgres-9-2",
+			Schema:   "jsonschema92.json",
+			EnvVars:  []string{"METRIC=true"},
+		},
+		{
+			Name:     "Testing Postgres Inventory",
+			Hostname: "postgres-9-2",
+			Schema:   "jsonschema-inventory.json",
+			EnvVars:  []string{"INVENTORY=true"},
+		},
+	}
 
-func TestSuccessConnection91(t *testing.T) {
-	hostname := "db91"
-	envVars := []string{
-		fmt.Sprintf("HOSTNAME=%s", hostname),
-		"USERNAME=postgres",
-		"PASSWORD=example",
-		"DATABASE=demo",
-		"COLLECTION_LIST=ALL",
-		"METRIC=true",
+	for _, tc := range testCases {
+		tc := tc
+		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
+			envVars := []string{
+				fmt.Sprintf("HOSTNAME=%s", tc.Hostname),
+			}
+			envVars = append(envVars, defaultEnvVars...)
+			envVars = append(envVars, tc.EnvVars...)
+			stdout, _, err := executeDockerCompose(containerName, envVars)
+			assert.Nil(t, err)
+			assert.NotEmpty(t, stdout)
+			err = validateJSONSchema(tc.Schema, stdout)
+			assert.Nil(t, err)
+		})
 	}
-	stdout, _, err := executeDockerCompose(containerName, envVars)
-	assert.Nil(t, err)
-	assert.NotEmpty(t, stdout)
-	err = validateJSONSchema(schemav91, stdout)
-	assert.Nil(t, err)
-}
-
-func TestSuccessConnection92(t *testing.T) {
-	hostname := "db92"
-	envVars := []string{
-		fmt.Sprintf("HOSTNAME=%s", hostname),
-		"USERNAME=postgres",
-		"PASSWORD=example",
-		"DATABASE=demo",
-		"COLLECTION_LIST=ALL",
-		"METRIC=true",
-	}
-	stdout, _, err := executeDockerCompose(containerName, envVars)
-	assert.Nil(t, err)
-	assert.NotEmpty(t, stdout)
-	err = validateJSONSchema(schemav92, stdout)
-	assert.Nil(t, err)
-}
-
-func TestSuccessConnectionInventory(t *testing.T) {
-	hostname := "db92"
-	envVars := []string{
-		fmt.Sprintf("HOSTNAME=%s", hostname),
-		"USERNAME=postgres",
-		"PASSWORD=example",
-		"DATABASE=demo",
-		"COLLECTION_LIST=ALL",
-		"INVENTORY=true",
-	}
-	stdout, _, err := executeDockerCompose(containerName, envVars)
-	assert.Nil(t, err)
-	assert.NotEmpty(t, stdout)
-	err = validateJSONSchema(schemaInventory, stdout)
-	assert.Nil(t, err)
 }
 
 func TestMissingRequiredVars(t *testing.T) {
-	hostname := "db92"
+	hostname := "postgres-9-2"
 	envVars := []string{
 		fmt.Sprintf("HOSTNAME=%s", hostname),
 		"DATABASE=demo",
