@@ -3,7 +3,7 @@ version: '3.1'
 services:
 
   postgres-9-0:
-    image: postgres:9.0.22
+    image: postgres:9.0
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -11,7 +11,7 @@ services:
       POSTGRES_DB: demo
 
   postgres-9-1:
-    image: postgres:9.1.24
+    image: postgres:9.1
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -19,7 +19,9 @@ services:
       POSTGRES_DB: demo
 
   postgres-9-2:
-    image: postgres:13.3
+    image: postgres:13
+    ports:
+      - 5432:5432
     restart: always
     environment:
       POSTGRES_USER: postgres
