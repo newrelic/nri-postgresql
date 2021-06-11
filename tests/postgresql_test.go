@@ -73,13 +73,13 @@ func TestSuccessConnection(t *testing.T) {
 		},
 		{
 			Name:     "Testing Metrics for Postgres v9.2x +",
-			Hostname: "postgres-9-2",
+			Hostname: "postgres-9-2-onwards",
 			Schema:   "jsonschema92.json",
 			EnvVars:  []string{"METRIC=true"},
 		},
 		{
 			Name:     "Testing Postgres Inventory",
-			Hostname: "postgres-9-2",
+			Hostname: "postgres-9-2-onwards",
 			Schema:   "jsonschema-inventory.json",
 			EnvVars:  []string{"INVENTORY=true"},
 		},
@@ -104,7 +104,7 @@ func TestSuccessConnection(t *testing.T) {
 }
 
 func TestMissingRequiredVars(t *testing.T) {
-	hostname := "postgres-9-2"
+	hostname := "postgres-9-2-onwards"
 	envVars := []string{
 		fmt.Sprintf("HOSTNAME=%s", hostname),
 		"DATABASE=demo",
