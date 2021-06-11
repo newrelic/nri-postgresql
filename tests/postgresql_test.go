@@ -7,19 +7,17 @@ import (
 	"flag"
 	"fmt"
 	"github.com/newrelic/infra-integrations-sdk/log"
+	"github.com/stretchr/testify/assert"
+	"github.com/xeipuuv/gojsonschema"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/xeipuuv/gojsonschema"
 )
 
 const (
 	containerName = "nri-postgresql"
-	schema        = "jsonschema.json"
 )
 
 func executeDockerCompose(containerName string, envVars []string) (string, string, error) {
@@ -35,6 +33,7 @@ func executeDockerCompose(containerName string, envVars []string) (string, strin
 	cmd.Stdout = &outbuf
 	cmd.Stderr = &errbuf
 	err := cmd.Run()
+
 	stdout := outbuf.String()
 	stderr := errbuf.String()
 	return stdout, stderr, err
@@ -47,22 +46,65 @@ func TestMain(m *testing.M) {
 }
 
 func TestSuccessConnection(t *testing.T) {
-	hostname := "db"
-	envVars := []string{
-		fmt.Sprintf("HOSTNAME=%s", hostname),
+	t.Parallel()
+	defaultEnvVars := []string{
 		"USERNAME=postgres",
 		"PASSWORD=example",
 		"DATABASE=demo",
+		"COLLECTION_LIST=ALL",
 	}
-	stdout, _, err := executeDockerCompose(containerName, envVars)
-	assert.Nil(t, err)
-	assert.NotEmpty(t, stdout)
-	err = validateJSONSchema(schema, stdout)
-	assert.Nil(t, err)
+	testCases := []struct {
+		Name     string
+		Hostname string
+		Schema   string
+		EnvVars  []string
+	}{
+		{
+			Name:     "Testing Metrics for Postgres v9.0x",
+			Hostname: "postgres-9-0",
+			Schema:   "jsonschema90.json",
+			EnvVars:  []string{"METRIC=true"},
+		},
+		{
+			Name:     "Testing Metrics for Postgres v9.1x",
+			Hostname: "postgres-9-1",
+			Schema:   "jsonschema91.json",
+			EnvVars:  []string{"METRIC=true"},
+		},
+		{
+			Name:     "Testing Metrics for Postgres v9.2x +",
+			Hostname: "postgres-9-2-onwards",
+			Schema:   "jsonschema92.json",
+			EnvVars:  []string{"METRIC=true"},
+		},
+		{
+			Name:     "Testing Postgres Inventory",
+			Hostname: "postgres-9-2-onwards",
+			Schema:   "jsonschema-inventory.json",
+			EnvVars:  []string{"INVENTORY=true"},
+		},
+	}
+
+	for _, tc := range testCases {
+		tc := tc
+		t.Run(tc.Name, func(t *testing.T) {
+			t.Parallel()
+			envVars := []string{
+				fmt.Sprintf("HOSTNAME=%s", tc.Hostname),
+			}
+			envVars = append(envVars, defaultEnvVars...)
+			envVars = append(envVars, tc.EnvVars...)
+			stdout, _, err := executeDockerCompose(containerName, envVars)
+			assert.Nil(t, err)
+			assert.NotEmpty(t, stdout)
+			err = validateJSONSchema(tc.Schema, stdout)
+			assert.Nil(t, err)
+		})
+	}
 }
 
 func TestMissingRequiredVars(t *testing.T) {
-	hostname := "db"
+	hostname := "postgres-9-2-onwards"
 	envVars := []string{
 		fmt.Sprintf("HOSTNAME=%s", hostname),
 		"DATABASE=demo",
