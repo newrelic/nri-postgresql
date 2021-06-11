@@ -45,6 +45,7 @@ func (q *QueryDefinition) insertDatabaseNames(databases collection.DatabaseList)
 var databaseDefinitionUnder91 = &QueryDefinition{
 	query: `SELECT -- UNDER91
 		D.datname AS database,
+		(SELECT setting::INTEGER FROM pg_settings WHERE  name = 'max_connections')max_connections,
 		SD.numbackends AS active_connections,
 		SD.xact_commit AS transactions_committed,
 		SD.xact_rollback AS transactions_rolled_back,
@@ -64,6 +65,7 @@ var databaseDefinitionUnder91 = &QueryDefinition{
 
 	dataModels: []struct {
 		databaseBase
+		MaxConnections         *int `db:"max_connections"          metric_name:"db.maxconnections"        source_type:"gauge"`
 		ActiveConnections      *int `db:"active_connections"       metric_name:"db.connections"           source_type:"gauge"`
 		TransactionsCommitted  *int `db:"transactions_committed"   metric_name:"db.commitsPerSecond"      source_type:"rate"`
 		TransactionsRolledBack *int `db:"transactions_rolled_back" metric_name:"db.rollbacksPerSecond"    source_type:"rate"`
@@ -80,6 +82,7 @@ var databaseDefinitionUnder91 = &QueryDefinition{
 var databaseDefinitionOver91 = &QueryDefinition{
 	query: `SELECT 
 		D.datname AS database,
+		(SELECT setting::INTEGER FROM pg_settings WHERE  name = 'max_connections')max_connections,
 		SD.numbackends AS active_connections,
 		SD.xact_commit AS transactions_committed,
 		SD.xact_rollback AS transactions_rolled_back,
@@ -105,6 +108,7 @@ var databaseDefinitionOver91 = &QueryDefinition{
 
 	dataModels: []struct {
 		databaseBase
+		MaxConnections                    *int `db:"max_connections"                             metric_name:"db.maxconnections"                source_type:"gauge"`
 		ActiveConnections                 *int `db:"active_connections"                          metric_name:"db.connections"                   source_type:"gauge"`
 		TransactionsCommitted             *int `db:"transactions_committed"                      metric_name:"db.commitsPerSecond"              source_type:"rate"`
 		TransactionsRolledBack            *int `db:"transactions_rolled_back"                    metric_name:"db.rollbacksPerSecond"            source_type:"rate"`
