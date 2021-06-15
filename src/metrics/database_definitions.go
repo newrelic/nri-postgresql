@@ -45,7 +45,8 @@ func (q *QueryDefinition) insertDatabaseNames(databases collection.DatabaseList)
 var databaseDefinitionUnder91 = &QueryDefinition{
 	query: `SELECT -- UNDER91
 		D.datname AS database,
-		(SELECT setting::INTEGER FROM pg_settings WHERE  name = 'max_connections')max_connections,
+		/* This query retrieves max_connections from Postgres configuration settings to facilitate calculation of connections percentage (db.connections/db.maxconnections*100). */
+		(SELECT setting::INTEGER FROM pg_settings WHERE  name = 'max_connections') AS max_connections,
 		SD.numbackends AS active_connections,
 		SD.xact_commit AS transactions_committed,
 		SD.xact_rollback AS transactions_rolled_back,
@@ -82,7 +83,8 @@ var databaseDefinitionUnder91 = &QueryDefinition{
 var databaseDefinitionOver91 = &QueryDefinition{
 	query: `SELECT 
 		D.datname AS database,
-		(SELECT setting::INTEGER FROM pg_settings WHERE  name = 'max_connections')max_connections,
+		/* This query retrieves max_connections from Postgres configuration settings to facilitate calculation of connections percentage (db.connections/db.maxconnections*100). */
+		(SELECT setting::INTEGER FROM pg_settings WHERE  name = 'max_connections') AS max_connections,
 		SD.numbackends AS active_connections,
 		SD.xact_commit AS transactions_committed,
 		SD.xact_rollback AS transactions_rolled_back,
