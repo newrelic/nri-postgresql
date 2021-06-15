@@ -42,10 +42,11 @@ func (q *QueryDefinition) insertDatabaseNames(databases collection.DatabaseList)
 	return q
 }
 
+// databaseDefinitionUnder91 is the query used to fetch metrics from Postgres below version 9.1.
+// As a special case, max_connections is obtained from the pg_settings table rather than from pg_stat_database
 var databaseDefinitionUnder91 = &QueryDefinition{
 	query: `SELECT -- UNDER91
 		D.datname AS database,
-		/* This query retrieves max_connections from Postgres configuration settings to facilitate calculation of connections percentage (db.connections/db.maxconnections*100). */
 		(SELECT setting::INTEGER FROM pg_settings WHERE  name = 'max_connections') AS max_connections,
 		SD.numbackends AS active_connections,
 		SD.xact_commit AS transactions_committed,
@@ -80,10 +81,11 @@ var databaseDefinitionUnder91 = &QueryDefinition{
 	}{},
 }
 
+// databaseDefinitionOver91 is the query used to fetch metrics from Postgres version 9.1 and above.
+// As a special case, max_connections is obtained from the pg_settings table rather than from pg_stat_database
 var databaseDefinitionOver91 = &QueryDefinition{
 	query: `SELECT 
 		D.datname AS database,
-		/* This query retrieves max_connections from Postgres configuration settings to facilitate calculation of connections percentage (db.connections/db.maxconnections*100). */
 		(SELECT setting::INTEGER FROM pg_settings WHERE  name = 'max_connections') AS max_connections,
 		SD.numbackends AS active_connections,
 		SD.xact_commit AS transactions_committed,
@@ -129,6 +131,7 @@ var databaseDefinitionOver91 = &QueryDefinition{
 	}{},
 }
 
+// databaseDefinitionOver92 is the query used to fetch extra metrics from Postgres version 9.2 and above.
 var databaseDefinitionOver92 = &QueryDefinition{
 	query: `SELECT 
 		D.datname AS database,
