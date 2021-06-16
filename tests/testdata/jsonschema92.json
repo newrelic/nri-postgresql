@@ -12084,6 +12084,9 @@
                     "db.connections": {
                       "type": "integer"
                     },
+                    "db.maxconnections": {
+                      "type": "integer"
+                    },
                     "db.readsPerSecond": {
                       "type": "integer"
                     },
@@ -12124,6 +12127,7 @@
                     "db.conflicts.snapshotPerSecond",
                     "db.conflicts.tablespacePerSecond",
                     "db.connections",
+                    "db.maxconnections",
                     "db.readsPerSecond",
                     "db.rollbacksPerSecond",
                     "db.rowsDeletedPerSecond",
@@ -12276,6 +12280,9 @@
                     "db.connections": {
                       "type": "integer"
                     },
+                    "db.maxconnections": {
+                      "type": "integer"
+                    },
                     "db.readsPerSecond": {
                       "type": "integer"
                     },
@@ -12316,6 +12323,7 @@
                     "db.conflicts.snapshotPerSecond",
                     "db.conflicts.tablespacePerSecond",
                     "db.connections",
+                    "db.maxconnections",
                     "db.readsPerSecond",
                     "db.rollbacksPerSecond",
                     "db.rowsDeletedPerSecond",
