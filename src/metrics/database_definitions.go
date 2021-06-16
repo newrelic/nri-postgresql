@@ -42,7 +42,6 @@ func (q *QueryDefinition) insertDatabaseNames(databases collection.DatabaseList)
 	return q
 }
 
-
 // databaseDefinitionUnder91 is the query used to fetch metrics from Postgres below version 9.1.
 // As a special case, max_connections is obtained from the pg_settings table rather than from pg_stat_database
 var databaseDefinitionUnder91 = &QueryDefinition{
