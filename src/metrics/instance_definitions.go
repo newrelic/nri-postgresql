@@ -34,13 +34,13 @@ var instanceDefinitionBase = &QueryDefinition{
 		FROM pg_stat_bgwriter BG;`,
 
 	dataModels: []struct {
-		ScheduledCheckpointsPerformed    *int `db:"scheduled_checkpoints_performed"      metric_name:"bgwriter.checkpointsScheduledPerSecond"             source_type:"rate"`
-		RequestedCheckpointsPerformed    *int `db:"requested_checkpoints_performed"      metric_name:"bgwriter.checkpointsRequestedPerSecond"             source_type:"rate"`
-		BuffersWrittenDuringCheckpoint   *int `db:"buffers_written_during_checkpoint"    metric_name:"bgwriter.buffersWrittenForCheckpointsPerSecond"     source_type:"rate"`
-		BuffersWrittenByBackgroundWriter *int `db:"buffers_written_by_background_writer" metric_name:"bgwriter.buffersWrittenByBackgroundWriterPerSecond" source_type:"rate"`
-		BackgroundWriterStops            *int `db:"background_writer_stops"              metric_name:"bgwriter.backgroundWriterStopsPerSecond"            source_type:"rate"`
-		BuffersWrittenByBackend          *int `db:"buffers_written_by_backend"           metric_name:"bgwriter.buffersWrittenByBackendPerSecond"          source_type:"rate"`
-		BuffersAllocated                 *int `db:"buffers_allocated"                    metric_name:"bgwriter.buffersAllocatedPerSecond"                 source_type:"rate"`
+		ScheduledCheckpointsPerformed    *int64 `db:"scheduled_checkpoints_performed"      metric_name:"bgwriter.checkpointsScheduledPerSecond"             source_type:"rate"`
+		RequestedCheckpointsPerformed    *int64 `db:"requested_checkpoints_performed"      metric_name:"bgwriter.checkpointsRequestedPerSecond"             source_type:"rate"`
+		BuffersWrittenDuringCheckpoint   *int64 `db:"buffers_written_during_checkpoint"    metric_name:"bgwriter.buffersWrittenForCheckpointsPerSecond"     source_type:"rate"`
+		BuffersWrittenByBackgroundWriter *int64 `db:"buffers_written_by_background_writer" metric_name:"bgwriter.buffersWrittenByBackgroundWriterPerSecond" source_type:"rate"`
+		BackgroundWriterStops            *int64 `db:"background_writer_stops"              metric_name:"bgwriter.backgroundWriterStopsPerSecond"            source_type:"rate"`
+		BuffersWrittenByBackend          *int64 `db:"buffers_written_by_backend"           metric_name:"bgwriter.buffersWrittenByBackendPerSecond"          source_type:"rate"`
+		BuffersAllocated                 *int64 `db:"buffers_allocated"                    metric_name:"bgwriter.buffersAllocatedPerSecond"                 source_type:"rate"`
 	}{},
 }
 
@@ -50,7 +50,7 @@ var instanceDefinition91 = &QueryDefinition{
 		FROM pg_stat_bgwriter BG;`,
 
 	dataModels: []struct {
-		BackendExecutedOwnFsync *int `db:"times_backend_executed_own_fsync" metric_name:"bgwriter.backendFsyncCallsPerSecond" source_type:"rate"`
+		BackendExecutedOwnFsync *int64 `db:"times_backend_executed_own_fsync" metric_name:"bgwriter.backendFsyncCallsPerSecond" source_type:"rate"`
 	}{},
 }
 
@@ -61,7 +61,7 @@ var instanceDefinition92 = &QueryDefinition{
 		FROM pg_stat_bgwriter BG;`,
 
 	dataModels: []struct {
-		CheckpointWriteTime *int `db:"time_writing_checkpoint_files_to_disk"       metric_name:"bgwriter.checkpointWriteTimeInMillisecondsPerSecond" source_type:"rate"`
-		CheckpointSynTime   *int `db:"time_synchronizing_checkpoint_files_to_disk" metric_name:"bgwriter.checkpointSyncTimeInMillisecondsPerSecond"  source_type:"rate"`
+		CheckpointWriteTime *int64 `db:"time_writing_checkpoint_files_to_disk"       metric_name:"bgwriter.checkpointWriteTimeInMillisecondsPerSecond" source_type:"rate"`
+		CheckpointSynTime   *int64 `db:"time_synchronizing_checkpoint_files_to_disk" metric_name:"bgwriter.checkpointSyncTimeInMillisecondsPerSecond"  source_type:"rate"`
 	}{},
 }

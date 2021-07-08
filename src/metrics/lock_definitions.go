@@ -56,13 +56,13 @@ var lockDefinitions = &QueryDefinition{
           );`,
 	dataModels: []struct {
 		databaseBase
-		AccessExclusiveLock      *int `db:"access_exclusive_lock" metric_name:"db.locks.accessExclusiveLock" source_type:"gauge"`
-		AccessShareLock          *int `db:"access_share_lock" metric_name:"db.locks.accessShareLock" source_type:"gauge"`
-		ExclusiveLock            *int `db:"exclusive_lock" metric_name:"db.locks.exclusiveLock" source_type:"gauge"`
-		RowExclusiveLock         *int `db:"row_exclusive_lock" metric_name:"db.locks.rowExclusiveLock" source_type:"gauge"`
-		RowShareLock             *int `db:"row_share_lock" metric_name:"db.locks.rowShareLock" source_type:"gauge"`
-		ShareLock                *int `db:"share_lock" metric_name:"db.locks.shareLock" source_type:"gauge"`
-		ShareRowExclusiveLock    *int `db:"share_row_exclusive_lock" metric_name:"db.locks.shareRowExclusiveLock" source_type:"gauge"`
-		ShareUpdateExclusiveLock *int `db:"share_update_exclusive_lock" metric_name:"db.locks.shareUpdateExclusiveLock" source_type:"gauge"`
+		AccessExclusiveLock      *int64 `db:"access_exclusive_lock" metric_name:"db.locks.accessExclusiveLock" source_type:"gauge"`
+		AccessShareLock          *int64 `db:"access_share_lock" metric_name:"db.locks.accessShareLock" source_type:"gauge"`
+		ExclusiveLock            *int64 `db:"exclusive_lock" metric_name:"db.locks.exclusiveLock" source_type:"gauge"`
+		RowExclusiveLock         *int64 `db:"row_exclusive_lock" metric_name:"db.locks.rowExclusiveLock" source_type:"gauge"`
+		RowShareLock             *int64 `db:"row_share_lock" metric_name:"db.locks.rowShareLock" source_type:"gauge"`
+		ShareLock                *int64 `db:"share_lock" metric_name:"db.locks.shareLock" source_type:"gauge"`
+		ShareRowExclusiveLock    *int64 `db:"share_row_exclusive_lock" metric_name:"db.locks.shareRowExclusiveLock" source_type:"gauge"`
+		ShareUpdateExclusiveLock *int64 `db:"share_update_exclusive_lock" metric_name:"db.locks.shareUpdateExclusiveLock" source_type:"gauge"`
 	}{},
 }
