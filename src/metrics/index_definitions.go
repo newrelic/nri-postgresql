@@ -63,8 +63,8 @@ var indexDefinition = &QueryDefinition{
 		schemaBase
 		tableBase
 		indexBase
-		IndexSize   *int `db:"index_size"     metric_name:"index.sizeInBytes"          source_type:"gauge"`
-		RowsRead    *int `db:"tuples_read"    metric_name:"index.rowsReadPerSecond"    source_type:"rate"`
-		RowsFetched *int `db:"tuples_fetched" metric_name:"index.rowsFetchedPerSecond" source_type:"rate"`
+		IndexSize   *int64 `db:"index_size"     metric_name:"index.sizeInBytes"          source_type:"gauge"`
+		RowsRead    *int64 `db:"tuples_read"    metric_name:"index.rowsReadPerSecond"    source_type:"rate"`
+		RowsFetched *int64 `db:"tuples_fetched" metric_name:"index.rowsFetchedPerSecond" source_type:"rate"`
 	}{},
 }

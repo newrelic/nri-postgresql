@@ -67,17 +67,17 @@ var databaseDefinitionUnder91 = &QueryDefinition{
 
 	dataModels: []struct {
 		databaseBase
-		MaxConnections         *int `db:"max_connections"          metric_name:"db.maxconnections"        source_type:"gauge"`
-		ActiveConnections      *int `db:"active_connections"       metric_name:"db.connections"           source_type:"gauge"`
-		TransactionsCommitted  *int `db:"transactions_committed"   metric_name:"db.commitsPerSecond"      source_type:"rate"`
-		TransactionsRolledBack *int `db:"transactions_rolled_back" metric_name:"db.rollbacksPerSecond"    source_type:"rate"`
-		BlockReads             *int `db:"block_reads"              metric_name:"db.readsPerSecond"        source_type:"rate"`
-		BufferHits             *int `db:"buffer_hits"              metric_name:"db.bufferHitsPerSecond"   source_type:"rate"`
-		RowsReturned           *int `db:"rows_returned"            metric_name:"db.rowsReturnedPerSecond" source_type:"rate"`
-		RowsFetched            *int `db:"rows_fetched"             metric_name:"db.rowsFetchedPerSecond"  source_type:"rate"`
-		RowsInserted           *int `db:"rows_inserted"            metric_name:"db.rowsInsertedPerSecond" source_type:"rate"`
-		RowsUpdated            *int `db:"rows_updated"             metric_name:"db.rowsUpdatedPerSecond"  source_type:"rate"`
-		RowsDeleted            *int `db:"rows_deleted"             metric_name:"db.rowsDeletedPerSecond"  source_type:"rate"`
+		MaxConnections         *int64 `db:"max_connections"          metric_name:"db.maxconnections"        source_type:"gauge"`
+		ActiveConnections      *int64 `db:"active_connections"       metric_name:"db.connections"           source_type:"gauge"`
+		TransactionsCommitted  *int64 `db:"transactions_committed"   metric_name:"db.commitsPerSecond"      source_type:"rate"`
+		TransactionsRolledBack *int64 `db:"transactions_rolled_back" metric_name:"db.rollbacksPerSecond"    source_type:"rate"`
+		BlockReads             *int64 `db:"block_reads"              metric_name:"db.readsPerSecond"        source_type:"rate"`
+		BufferHits             *int64 `db:"buffer_hits"              metric_name:"db.bufferHitsPerSecond"   source_type:"rate"`
+		RowsReturned           *int64 `db:"rows_returned"            metric_name:"db.rowsReturnedPerSecond" source_type:"rate"`
+		RowsFetched            *int64 `db:"rows_fetched"             metric_name:"db.rowsFetchedPerSecond"  source_type:"rate"`
+		RowsInserted           *int64 `db:"rows_inserted"            metric_name:"db.rowsInsertedPerSecond" source_type:"rate"`
+		RowsUpdated            *int64 `db:"rows_updated"             metric_name:"db.rowsUpdatedPerSecond"  source_type:"rate"`
+		RowsDeleted            *int64 `db:"rows_deleted"             metric_name:"db.rowsDeletedPerSecond"  source_type:"rate"`
 	}{},
 }
 
@@ -112,22 +112,22 @@ var databaseDefinitionOver91 = &QueryDefinition{
 
 	dataModels: []struct {
 		databaseBase
-		MaxConnections                    *int `db:"max_connections"                             metric_name:"db.maxconnections"                source_type:"gauge"`
-		ActiveConnections                 *int `db:"active_connections"                          metric_name:"db.connections"                   source_type:"gauge"`
-		TransactionsCommitted             *int `db:"transactions_committed"                      metric_name:"db.commitsPerSecond"              source_type:"rate"`
-		TransactionsRolledBack            *int `db:"transactions_rolled_back"                    metric_name:"db.rollbacksPerSecond"            source_type:"rate"`
-		BlockReads                        *int `db:"block_reads"                                 metric_name:"db.readsPerSecond"                source_type:"rate"`
-		BufferHits                        *int `db:"buffer_hits"                                 metric_name:"db.bufferHitsPerSecond"           source_type:"rate"`
-		RowsReturned                      *int `db:"rows_returned"                               metric_name:"db.rowsReturnedPerSecond"         source_type:"rate"`
-		RowsFetched                       *int `db:"rows_fetched"                                metric_name:"db.rowsFetchedPerSecond"          source_type:"rate"`
-		RowsInserted                      *int `db:"rows_inserted"                               metric_name:"db.rowsInsertedPerSecond"         source_type:"rate"`
-		RowsUpdated                       *int `db:"rows_updated"                                metric_name:"db.rowsUpdatedPerSecond"          source_type:"rate"`
-		RowsDeleted                       *int `db:"rows_deleted"                                metric_name:"db.rowsDeletedPerSecond"          source_type:"rate"`
-		CanceledQueriesDroppedTablespaces *int `db:"queries_canceled_due_to_dropped_tablespaces" metric_name:"db.conflicts.tablespacePerSecond" source_type:"rate"`
-		CanceledQueriesLockTimeouts       *int `db:"queries_canceled_due_to_lock_timeouts"       metric_name:"db.conflicts.locksPerSecond"      source_type:"rate"`
-		CanceledQueriesOldSnapshots       *int `db:"queries_canceled_due_to_old_snapshots"       metric_name:"db.conflicts.snapshotPerSecond"   source_type:"rate"`
-		CanceledQueriesPinnedBuffers      *int `db:"queries_canceled_due_to_pinned_buffers"      metric_name:"db.conflicts.bufferpinPerSecond"  source_type:"rate"`
-		CanceledQueriesDeadlocks          *int `db:"queries_canceled_due_to_deadlocks"           metric_name:"db.conflicts.deadlockPerSecond"   source_type:"rate"`
+		MaxConnections                    *int64 `db:"max_connections"                             metric_name:"db.maxconnections"                source_type:"gauge"`
+		ActiveConnections                 *int64 `db:"active_connections"                          metric_name:"db.connections"                   source_type:"gauge"`
+		TransactionsCommitted             *int64 `db:"transactions_committed"                      metric_name:"db.commitsPerSecond"              source_type:"rate"`
+		TransactionsRolledBack            *int64 `db:"transactions_rolled_back"                    metric_name:"db.rollbacksPerSecond"            source_type:"rate"`
+		BlockReads                        *int64 `db:"block_reads"                                 metric_name:"db.readsPerSecond"                source_type:"rate"`
+		BufferHits                        *int64 `db:"buffer_hits"                                 metric_name:"db.bufferHitsPerSecond"           source_type:"rate"`
+		RowsReturned                      *int64 `db:"rows_returned"                               metric_name:"db.rowsReturnedPerSecond"         source_type:"rate"`
+		RowsFetched                       *int64 `db:"rows_fetched"                                metric_name:"db.rowsFetchedPerSecond"          source_type:"rate"`
+		RowsInserted                      *int64 `db:"rows_inserted"                               metric_name:"db.rowsInsertedPerSecond"         source_type:"rate"`
+		RowsUpdated                       *int64 `db:"rows_updated"                                metric_name:"db.rowsUpdatedPerSecond"          source_type:"rate"`
+		RowsDeleted                       *int64 `db:"rows_deleted"                                metric_name:"db.rowsDeletedPerSecond"          source_type:"rate"`
+		CanceledQueriesDroppedTablespaces *int64 `db:"queries_canceled_due_to_dropped_tablespaces" metric_name:"db.conflicts.tablespacePerSecond" source_type:"rate"`
+		CanceledQueriesLockTimeouts       *int64 `db:"queries_canceled_due_to_lock_timeouts"       metric_name:"db.conflicts.locksPerSecond"      source_type:"rate"`
+		CanceledQueriesOldSnapshots       *int64 `db:"queries_canceled_due_to_old_snapshots"       metric_name:"db.conflicts.snapshotPerSecond"   source_type:"rate"`
+		CanceledQueriesPinnedBuffers      *int64 `db:"queries_canceled_due_to_pinned_buffers"      metric_name:"db.conflicts.bufferpinPerSecond"  source_type:"rate"`
+		CanceledQueriesDeadlocks          *int64 `db:"queries_canceled_due_to_deadlocks"           metric_name:"db.conflicts.deadlockPerSecond"   source_type:"rate"`
 	}{},
 }
 
@@ -150,10 +150,10 @@ var databaseDefinitionOver92 = &QueryDefinition{
 
 	dataModels: []struct {
 		databaseBase
-		TempFilesCreated   *int `db:"temporary_files_created" metric_name:"db.tempFilesCreatedPerSecond"        source_type:"rate"`
-		TempWrittenInBytes *int `db:"temporary_bytes_written" metric_name:"db.tempWrittenInBytesPerSecond"      source_type:"rate"`
-		Deadlocks          *int `db:"deadlocks"               metric_name:"db.deadlocksPerSecond"               source_type:"rate"`
-		TimeSpentReading   *int `db:"time_spent_reading_data" metric_name:"db.readTimeInMillisecondsPerSecond"  source_type:"rate"`
-		TimeSpentWriting   *int `db:"time_spent_writing_data" metric_name:"db.writeTimeInMillisecondsPerSecond" source_type:"rate"`
+		TempFilesCreated   *int64 `db:"temporary_files_created" metric_name:"db.tempFilesCreatedPerSecond"        source_type:"rate"`
+		TempWrittenInBytes *int64 `db:"temporary_bytes_written" metric_name:"db.tempWrittenInBytesPerSecond"      source_type:"rate"`
+		Deadlocks          *int64 `db:"deadlocks"               metric_name:"db.deadlocksPerSecond"               source_type:"rate"`
+		TimeSpentReading   *int64 `db:"time_spent_reading_data" metric_name:"db.readTimeInMillisecondsPerSecond"  source_type:"rate"`
+		TimeSpentWriting   *int64 `db:"time_spent_writing_data" metric_name:"db.writeTimeInMillisecondsPerSecond" source_type:"rate"`
 	}{},
 }

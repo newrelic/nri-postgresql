@@ -88,18 +88,18 @@ var tableDefinition = &QueryDefinition{
 		databaseBase
 		schemaBase
 		tableBase
-		TotalSize                *int     `db:"pg_total_relation_size" metric_name:"table.totalSizeInBytes"                   source_type:"gauge"`
-		IndexSize                *int     `db:"pg_indexes_size"        metric_name:"table.indexSizeInBytes"                   source_type:"gauge"`
-		LiveRows                 *int     `db:"n_live_tup"             metric_name:"table.liveRows"                           source_type:"gauge"`
-		DeadRows                 *int     `db:"n_dead_tup"             metric_name:"table.deadRows"                           source_type:"gauge"`
+		TotalSize                *int64   `db:"pg_total_relation_size" metric_name:"table.totalSizeInBytes"                   source_type:"gauge"`
+		IndexSize                *int64   `db:"pg_indexes_size"        metric_name:"table.indexSizeInBytes"                   source_type:"gauge"`
+		LiveRows                 *int64   `db:"n_live_tup"             metric_name:"table.liveRows"                           source_type:"gauge"`
+		DeadRows                 *int64   `db:"n_dead_tup"             metric_name:"table.deadRows"                           source_type:"gauge"`
 		IndexBlocksReadPerSecond *float32 `db:"idx_blks_read"          metric_name:"table.indexBlocksReadPerSecond"           source_type:"rate"`
 		IndexBlocksHitPerSecond  *float32 `db:"idx_blks_hit"           metric_name:"table.indexBlocksHitPerSecond"            source_type:"rate"`
 		ToastBlocksReadPerSecond *float32 `db:"toast_blks_read"        metric_name:"table.indexToastBlocksReadPerSecond"      source_type:"rate"`
 		ToastBlocksHitPerSecond  *float32 `db:"toast_blks_hit"         metric_name:"table.indexToastBlocksHitPerSecond"       source_type:"rate"`
-		LastVacuum               *int     `db:"last_vacuum"            metric_name:"table.lastVacuum"                         source_type:"gauge"`
-		LastAutoVacuum           *int     `db:"last_autovacuum"        metric_name:"table.lastAutoVacuum"                     source_type:"gauge"`
-		LastAnalyze              *int     `db:"last_analyze"           metric_name:"table.lastAnalyze"                        source_type:"gauge"`
-		LastAutoAnalyze          *int     `db:"last_autoanalyze"       metric_name:"table.lastAutoAnalyze"                    source_type:"gauge"`
+		LastVacuum               *int64   `db:"last_vacuum"            metric_name:"table.lastVacuum"                         source_type:"gauge"`
+		LastAutoVacuum           *int64   `db:"last_autovacuum"        metric_name:"table.lastAutoVacuum"                     source_type:"gauge"`
+		LastAnalyze              *int64   `db:"last_analyze"           metric_name:"table.lastAnalyze"                        source_type:"gauge"`
+		LastAutoAnalyze          *int64   `db:"last_autoanalyze"       metric_name:"table.lastAutoAnalyze"                    source_type:"gauge"`
 		SeqScans                 *float32 `db:"seq_scan"               metric_name:"table.sequentialScansPerSecond"           source_type:"rate"`
 		SeqReads                 *float32 `db:"seq_tup_read"           metric_name:"table.sequentialScanRowsFetchedPerSecond" source_type:"rate"`
 		IndexScans               *float32 `db:"idx_scan"               metric_name:"table.indexScansPerSecond"                source_type:"rate"`
