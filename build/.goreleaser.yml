@@ -54,7 +54,7 @@ nfpms:
         dst: "/usr/share/doc/nri-postgresql/README.md"
       - src: "LICENSE"
         dst: "/usr/share/doc/nri-postgresql/LICENSE"
-      - src: "postgresql-definition.yml"
+      - src: "legacy/postgresql-definition.yml"
         dst: "/var/db/newrelic-infra/newrelic-integrations/postgresql-definition.yml"
         type: config
 
@@ -76,7 +76,9 @@ archives:
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Version }}_{{ .Arch }}_dirty"
     files:
       - postgresql-config.yml.sample
-      - postgresql-definition.yml
+      - src: 'legacy/postgresql-definition.yml'
+        dst: .
+        strip_parent: true
     format: tar.gz
 
   - id: nri-win
@@ -85,7 +87,9 @@ archives:
     name_template: "{{ .ProjectName }}-{{ .Arch }}.{{ .Version }}_dirty"
     files:
       - postgresql-config.yml.sample
-      - postgresql-win-definition.yml
+      - src: 'legacy/postgresql-win-definition.yml'
+        dst: .
+        strip_parent: true
     format: zip
 
 # we use custom publisher for fixing archives and signing them

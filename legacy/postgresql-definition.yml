@@ -1,23 +1,23 @@
 name: com.newrelic.postgresql
-description: Reports status and metrics for postgresql service
+description: Reports status and metrics for postgresql service. Legacy file kept for compatibility.
 protocol_version: 2
-os: windows
+os: linux
 
 commands:
   all_data:
     command:
-      - .\bin\nri-postgresql.exe
+      - ./bin/nri-postgresql
     prefix: config/postgresql
     interval: 15
   metrics:
     command:
-      - .\bin\nri-postgresql.exe
+      - ./bin/nri-postgresql
       - --metrics
     prefix: config/postgresql
     interval: 15
   inventory:
     command:
-      - .\bin\nri-postgresql.exe
+      - ./bin/nri-postgresql
       - --inventory
     prefix: config/postgresql
     interval: 15
