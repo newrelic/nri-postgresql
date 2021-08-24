@@ -2,19 +2,19 @@ integrations:
 - name: nri-postgresql
   env:
     # The username for the postgres instance. Required.
-    username: postgres
+    USERNAME: postgres
     # The password for the postgres instance. Required.
-    password: pass
+    PASSWORD: pass
 
     # The hostname for the postgres instance. Defaults to localhost.
-    hostname: psql-sample.localnet
+    HOSTNAME: psql-sample.localnet
 
     # The database to connect to on the postgres instance. Defaults to postgres.
-    # database: postgres
+    # DATABASE: postgres
 
     # The port of the postgres instance. If PgBouncer is being used,
     # use the port it is running on. Defaults to 5432
-    port: "6432"
+    PORT: "6432"
  
 
     # Collection List can be either a JSON array, a JSON object, or the string literal 'ALL'.
@@ -23,31 +23,31 @@ integrations:
     # collect all related metrics from. This will collect metrics for each database
     # specified, as well as all tables and indexes that belong to that database.
     # Example:
-    # collection_list: '["postgres"]'
+    # COLLECTION_LIST: '["postgres"]'
     # If it is the string literal 'ALL', it will collect metrics for all databases, schemas, tables, and indexes
     # Example:
-    # collection_list: 'ALL'
-    collection_list: '["postgres"]'
+    # COLLECTION_LIST: 'ALL'
+    COLLECTION_LIST: '["postgres"]'
 
     # True if database lock metrics should be collected
     # Note: requires that the `tablefunc` extension be installed on the public schema
     # of the database where lock metrics will be collected.
-    collect_db_lock_metrics: "false"
+    COLLECT_DB_LOCK_METRICS: "false"
     
     # True if SSL is to be used. Defaults to false.
-    enable_ssl: "true"
+    ENABLE_SSL: "true"
     # True if the SSL certificate should be trusted without validating.
     # Setting this to true may open up the monitoring service to MITM attacks.
     # Defaults to false.
-    trust_server_certificate: "false"
+    TRUST_SERVER_CERTIFICATE: "false"
 
 
-    ssl_cert_location: /etc/newrelic-infra/postgresql.crt
-    ssl_key_location: /etc/newrelic-infra/postgresql.key
-    ssl_root_cert_location: /etc/newrelic-infra/root_cert.crt
-    timeout: "10"
+    SSL_CERT_LOCATION: /etc/newrelic-infra/postgresql.crt
+    SSL_KEY_LOCATION: /etc/newrelic-infra/postgresql.key
+    SSL_ROOT_CERT_LOCATION: /etc/newrelic-infra/root_cert.crt
+    TIMEOUT: "10"
 
-    # custom_metrics_query: >-
+    # CUSTOM_METRICS_QUERY: >-
     #   select
     #     'rows_inserted' as "metric_name",
     #     'delta' as "metric_type",
