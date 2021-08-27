@@ -16,7 +16,6 @@ integrations:
     # use the port it is running on. Defaults to 5432
     PORT: "6432"
  
-
     # Collection List can be either a JSON array, a JSON object, or the string literal 'ALL'.
     #
     # If it is a JSON array, it will be interpreted as a list of database names to
@@ -33,20 +32,24 @@ integrations:
     # Note: requires that the `tablefunc` extension be installed on the public schema
     # of the database where lock metrics will be collected.
     COLLECT_DB_LOCK_METRICS: "false"
+
+    # Enable collecting bloat metrics which can be performance intensive
+    COLLECT_BLOAT_METRICS: "true"
     
     # True if SSL is to be used. Defaults to false.
     ENABLE_SSL: "true"
+
     # True if the SSL certificate should be trusted without validating.
     # Setting this to true may open up the monitoring service to MITM attacks.
     # Defaults to false.
     TRUST_SERVER_CERTIFICATE: "false"
-
 
     SSL_CERT_LOCATION: /etc/newrelic-infra/postgresql.crt
     SSL_KEY_LOCATION: /etc/newrelic-infra/postgresql.key
     SSL_ROOT_CERT_LOCATION: /etc/newrelic-infra/root_cert.crt
     TIMEOUT: "10"
 
+    # A SQL query to collect custom metrics. Must have the columns metric_name, metric_type, and metric_value. Additional columns are added as attributes
     # CUSTOM_METRICS_QUERY: >-
     #   select
     #     'rows_inserted' as "metric_name",
@@ -54,6 +57,11 @@ integrations:
     #     sd.tup_inserted as "metric_value",
     #     sd.datid as "database_id"
     #   from pg_stat_database sd;
+
+    # Can be use instead of CUSTOM_METRICS_QUERY to specify the path to a
+    # YAML configuration with one or more custom SQL queries to collect
+    # For more information check https://docs.newrelic.com/docs/integrations/host-integrations/host-integrations-list/postgresql-monitoring-integration/#example-postgresSQL-config
+    # CUSTOM_METRICS_CONFIG: /path/to/custom-metrics.yml
     
   interval: 15s
   labels:
