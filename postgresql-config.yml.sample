@@ -1,64 +1,70 @@
----
-integration_name: com.newrelic.postgresql
+integrations:
+- name: nri-postgresql
+  env:
+    # The username for the postgres instance. Required.
+    USERNAME: postgres
+    # The password for the postgres instance. Required.
+    PASSWORD: pass
 
-instances:
-  # A name for the collection
-  - name: sample_postgres
-    # The only supported command is all_data
-    command: all_data
-    arguments:
-      # The username for the postgres instance. Required.
-      username: postgres
-      # The password for the postgres instance. Required.
-      password: pass
-      # The hostname for the postgres instance. Defaults to localhost.
-      hostname: psql-sample.localnet
-      # The database to connect to on the postgres instance. Defaults to postgres.
-      # database: postgres
-      # The port of the postgres instance. If PgBouncer is being used,
-      # use the port it is running on. Defaults to 5432
-      port: 6432
-      # Collection List can be either a JSON array, a JSON object, or the string literal 'ALL'.
-      #
-      # If it is a JSON array, it will be interpreted as a list of database names to
-      # collect all related metrics from. This will collect metrics for each database
-      # specified, as well as all tables and indexes that belong to that database.
-      # Example:
-      # collection_list: '["postgres"]'
-      #
-      # If it is a JSON object, you can more finely tune the entities that are collected.
-      # Only the entities that are specified in the object will be collected. No automatic
-      # discovery will be performed.
-      # The levels of JSON are database name -> schema name -> table name -> index name
-      # Example:
-      # collection_list: '{"postgres":{"public":{"pg_table1":["pg_index1","pg_index2"],"pg_table2":[]}}}'
-      #
-      # If it is the string literal 'ALL', it will collect metrics for all databases, schemas, tables, and indexes
-      # Example:
-      # collection_list: 'ALL'
-      collection_list: '["postgres"]'
-      # True if database lock metrics should be collected
-      # Note: requires that the `tablefunc` extension be installed on the public schema
-      # of the database where lock metrics will be collected.
-      collect_db_lock_metrics: false
-      # True if SSL is to be used. Defaults to false.
-      enable_ssl: true
-      # True if the SSL certificate should be trusted without validating.
-      # Setting this to true may open up the monitoring service to MITM attacks.
-      # Defaults to false.
-      trust_server_certificate: false
-      ssl_root_cert_location: /etc/newrelic-infra/root_cert.crt
-      ssl_cert_location: /etc/newrelic-infra/postgresql.crt
-      ssl_key_location: /etc/newrelic-infra/postgresql.key
-      timeout: 10
+    # The hostname for the postgres instance. Defaults to localhost.
+    HOSTNAME: psql-sample.localnet
 
-      # custom_metrics_query: >-
-      #   select
-      #     'rows_inserted' as "metric_name",
-      #     'delta' as "metric_type",
-      #     sd.tup_inserted as "metric_value",
-      #     sd.datid as "database_id"
-      #   from pg_stat_database sd;
-    labels:
-      env: production
-      role: postgresql
+    # The database to connect to on the postgres instance. Defaults to postgres.
+    # DATABASE: postgres
+
+    # The port of the postgres instance. If PgBouncer is being used,
+    # use the port it is running on. Defaults to 5432
+    PORT: "6432"
+ 
+    # Collection List can be either a JSON array, a JSON object, or the string literal 'ALL'.
+    #
+    # If it is a JSON array, it will be interpreted as a list of database names to
+    # collect all related metrics from. This will collect metrics for each database
+    # specified, as well as all tables and indexes that belong to that database.
+    # Example:
+    # COLLECTION_LIST: '["postgres"]'
+    # If it is the string literal 'ALL', it will collect metrics for all databases, schemas, tables, and indexes
+    # Example:
+    # COLLECTION_LIST: 'ALL'
+    COLLECTION_LIST: '["postgres"]'
+
+    # True if database lock metrics should be collected
+    # Note: requires that the `tablefunc` extension be installed on the public schema
+    # of the database where lock metrics will be collected.
+    COLLECT_DB_LOCK_METRICS: "false"
+
+    # Enable collecting bloat metrics which can be performance intensive
+    COLLECT_BLOAT_METRICS: "true"
+    
+    # True if SSL is to be used. Defaults to false.
+    ENABLE_SSL: "true"
+
+    # True if the SSL certificate should be trusted without validating.
+    # Setting this to true may open up the monitoring service to MITM attacks.
+    # Defaults to false.
+    TRUST_SERVER_CERTIFICATE: "false"
+
+    SSL_CERT_LOCATION: /etc/newrelic-infra/postgresql.crt
+    SSL_KEY_LOCATION: /etc/newrelic-infra/postgresql.key
+    SSL_ROOT_CERT_LOCATION: /etc/newrelic-infra/root_cert.crt
+    TIMEOUT: "10"
+
+    # A SQL query to collect custom metrics. Must have the columns metric_name, metric_type, and metric_value. Additional columns are added as attributes
+    # CUSTOM_METRICS_QUERY: >-
+    #   select
+    #     'rows_inserted' as "metric_name",
+    #     'delta' as "metric_type",
+    #     sd.tup_inserted as "metric_value",
+    #     sd.datid as "database_id"
+    #   from pg_stat_database sd;
+
+    # Can be use instead of CUSTOM_METRICS_QUERY to specify the path to a
+    # YAML configuration with one or more custom SQL queries to collect
+    # For more information check https://docs.newrelic.com/docs/integrations/host-integrations/host-integrations-list/postgresql-monitoring-integration/#example-postgresSQL-config
+    # CUSTOM_METRICS_CONFIG: /path/to/custom-metrics.yml
+    
+  interval: 15s
+  labels:
+    env: production
+    role: postgresql
+  inventory_source: config/postgresql
