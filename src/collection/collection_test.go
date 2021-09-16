@@ -17,7 +17,7 @@ func Test_buildSchemaListForDatabase(t *testing.T) {
 		"index_name",
 	}).AddRow("schema1", "table1", "index1")
 
-	mock.ExpectQuery(".*").WillReturnRows(instanceRows)
+	mock.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
 
 	schemaList, err := buildSchemaListForDatabase("database1", testConnection)
 	assert.Nil(t, err)
@@ -39,7 +39,7 @@ func Test_buildSchemaListForDatabase_TableOnly(t *testing.T) {
 		"index_name",
 	}).AddRow("schema1", "table1", "index1").AddRow("schema2", "table2", nil)
 
-	mock.ExpectQuery(".*").WillReturnRows(instanceRows)
+	mock.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
 
 	schemaList, err := buildSchemaListForDatabase("database1", testConnection)
 	assert.Nil(t, err)
@@ -79,8 +79,8 @@ func TestBuildCollectionList_DatabaseList(t *testing.T) {
 		"index_name",
 	}).AddRow("schema2", "table2", nil)
 
-	mock1.ExpectQuery(".*").WillReturnRows(instanceRows1)
-	mock2.ExpectQuery(".*").WillReturnRows(instanceRows2)
+	mock1.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows1)
+	mock2.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows2)
 
 	expected := DatabaseList{
 		"database1": SchemaList{

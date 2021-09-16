@@ -10,6 +10,15 @@ import (
 	"github.com/newrelic/nri-postgresql/src/connection"
 )
 
+const (
+	allDBQuery    = `SELECT datname FROM pg_database WHERE datistemplate = false;`
+	dbSchemaQuery = `SELECT table_schema AS schema_name, t1.table_name AS table_name, t2.indexname AS index_name 
+                     FROM information_schema.tables AS t1
+                     FULL OUTER JOIN pg_indexes t2
+                     ON t2.tablename = t1.table_name
+                     AND t2.schemaname = t1.table_schema;`
+)
+
 // DatabaseList is a map from database name to SchemaLists to collect
 type DatabaseList map[string]SchemaList
 
@@ -46,10 +55,6 @@ func BuildCollectionList(al args.ArgumentList, ci connection.Info) (DatabaseList
 }
 
 func getAllDatabaseNames(ci connection.Info) ([]string, error) {
-	query := `
-    SELECT datname FROM pg_database
-    WHERE datistemplate = false;`
-
 	con, err := ci.NewConnection(ci.DatabaseName())
 	if err != nil {
 		return nil, err
@@ -59,7 +64,7 @@ func getAllDatabaseNames(ci connection.Info) ([]string, error) {
 	var dataModel []struct {
 		DatabaseName sql.NullString `db:"datname"`
 	}
-	err = con.Query(&dataModel, query)
+	err = con.Query(&dataModel, allDBQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -101,21 +106,12 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ci connection.Info) 
 func buildSchemaListForDatabase(dbname string, con *connection.PGSQLConnection) (SchemaList, error) {
 	schemaList := make(SchemaList)
 
-	query := `select
-      table_schema as schema_name,
-      t1.table_name as table_name,
-      t2.indexname as index_name
-    from information_schema.tables as t1
-    full outer join pg_indexes t2
-      on t2.tablename = t1.table_name
-      and t2.schemaname = t1.table_schema`
-
 	var dataModel []struct {
 		SchemaName sql.NullString `db:"schema_name"`
 		TableName  sql.NullString `db:"table_name"`
 		IndexName  sql.NullString `db:"index_name"`
 	}
-	err := con.Query(&dataModel, query)
+	err := con.Query(&dataModel, dbSchemaQuery)
 	if err != nil {
 		return nil, err
 	}
