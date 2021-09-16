@@ -65,7 +65,8 @@ func Test_buildSchemaListForDatabase_TableOnly(t *testing.T) {
 
 func TestBuildCollectionList_DatabaseList(t *testing.T) {
 	al := args.ArgumentList{
-		CollectionList: `["database1", "database2"]`,
+		CollectionList:               `["database1", "database2", "ignored_database"]`,
+		CollectionIgnoreDatabaseList: `["ignored_database"]`,
 	}
 
 	ci := connection.MockInfo{}
@@ -114,21 +115,48 @@ func TestBuildCollectionList_DatabaseList(t *testing.T) {
 
 func TestBuildCollectionList_DetailedList(t *testing.T) {
 	al := args.ArgumentList{
-		CollectionList: `{"database1": {"schema1": { "table1": ["index1"] }}}`,
+		CollectionList: `{"database1": {"schema1": { "table1": ["index1"] }},
+                          "ignored_database": {"schema1": { "table1": ["index1"] }}
+                         }`,
+		CollectionIgnoreDatabaseList: `["ignored_database"]`,
+	}
+
+	expected := DatabaseList{
+		"database1": SchemaList{
+			"schema1": TableList{
+				"table1": []string{"index1"},
+			},
+		},
+	}
+
+	dl, err := BuildCollectionList(al, nil)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, dl)
+}
+
+func TestBuildCollectionList_All(t *testing.T) {
+	al := args.ArgumentList{
+		CollectionList:               `all`,
+		CollectionIgnoreDatabaseList: `["ignored_database"]`,
 	}
 
 	ci := connection.MockInfo{}
-	testConnection, mock := connection.CreateMockSQL(t)
 
-	ci.On("NewConnection", "database1").Return(testConnection, nil)
+	testConnection1, mock1 := connection.CreateMockSQL(t)
+	ci.On("NewConnection", "postgres").Return(testConnection1, nil)
+	dbRows := sqlmock.NewRows([]string{"datname"}).AddRow("database1").AddRow("ignored_database")
+	mock1.ExpectQuery(allDBQuery).WillReturnRows(dbRows)
+	mock1.ExpectClose()
 
-	instanceRows := sqlmock.NewRows([]string{
+	testConnection2, mock2 := connection.CreateMockSQL(t)
+	ci.On("NewConnection", "database1").Return(testConnection2, nil)
+	instanceRows1 := sqlmock.NewRows([]string{
 		"schema_name",
 		"table_name",
 		"index_name",
 	}).AddRow("schema1", "table1", "index1")
-
-	mock.ExpectQuery(".*").WillReturnRows(instanceRows)
+	mock2.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows1)
+	mock2.ExpectClose()
 
 	expected := DatabaseList{
 		"database1": SchemaList{
@@ -141,4 +169,10 @@ func TestBuildCollectionList_DetailedList(t *testing.T) {
 	dl, err := BuildCollectionList(al, &ci)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, dl)
+
+	assert.NoError(t, mock1.ExpectationsWereMet())
+	assert.NoError(t, mock2.ExpectationsWereMet())
+
+	ci.AssertNotCalled(t, "NewConnection", "ignored_database")
+	ci.AssertExpectations(t)
 }

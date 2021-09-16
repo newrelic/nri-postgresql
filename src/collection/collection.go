@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/newrelic/infra-integrations-sdk/log"
 	"github.com/newrelic/nri-postgresql/src/args"
@@ -28,30 +30,64 @@ type SchemaList map[string]TableList
 // TableList is a map from table name to an array of indexes to collect
 type TableList map[string][]string
 
+type databaseIgnoreList map[string]struct{}
+
 // BuildCollectionList unmarshals the collection_list from the args and builds the list of
 // objects to be collected. If collection_list is a JSON array, it collects every object in
 // each of the databases listed in the array. If it is a hash, it collects only the objects
 // listed
 func BuildCollectionList(al args.ArgumentList, ci connection.Info) (DatabaseList, error) {
-	if al.CollectionList == "ALL" {
-		dbNames, err := getAllDatabaseNames(ci)
-		if err != nil {
+	var dbList DatabaseList
+	var dbNames []string
+	var err error
+
+	ignoreDBList, err := parseIgnoreList(al.CollectionIgnoreDatabaseList)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse ignore db list: %w", err)
+	}
+
+	switch {
+	case strings.ToLower(al.CollectionList) == "all":
+		if dbNames, err = getAllDatabaseNames(ci); err != nil {
+			return nil, fmt.Errorf("failed to get all databases names: %w", err)
+		}
+
+	case nil == json.Unmarshal([]byte(al.CollectionList), &dbList):
+		for ignoredDB := range ignoreDBList {
+			delete(dbList, ignoredDB)
+		}
+
+	case nil == json.Unmarshal([]byte(al.CollectionList), &dbNames):
+	default:
+		return nil, errors.New("failed to parse collection list")
+	}
+
+	if len(dbNames) != 0 {
+		if dbList, err = buildCollectionListFromDatabaseNames(dbNames, ignoreDBList, ci); err != nil {
 			return nil, err
 		}
-		return buildCollectionListFromDatabaseNames(dbNames, ci)
 	}
 
-	var dl DatabaseList
-	if err := json.Unmarshal([]byte(al.CollectionList), &dl); err == nil {
-		return dl, nil
+	return dbList, nil
+}
+
+func parseIgnoreList(list string) (databaseIgnoreList, error) {
+	ignoreDBList := []string{}
+	ignoreDBMap := databaseIgnoreList{}
+
+	if list == "" {
+		return ignoreDBMap, nil
 	}
 
-	var dbnames []string
-	if err := json.Unmarshal([]byte(al.CollectionList), &dbnames); err == nil {
-		return buildCollectionListFromDatabaseNames(dbnames, ci)
+	if err := json.Unmarshal([]byte(list), &ignoreDBList); err != nil {
+		return nil, fmt.Errorf("failed to unmarshal list arg '%s': %w", list, err)
 	}
 
-	return nil, errors.New("failed to parse collection list")
+	for _, db := range ignoreDBList {
+		ignoreDBMap[db] = struct{}{}
+	}
+
+	return ignoreDBMap, nil
 }
 
 func getAllDatabaseNames(ci connection.Info) ([]string, error) {
@@ -79,9 +115,13 @@ func getAllDatabaseNames(ci connection.Info) ([]string, error) {
 	return databaseNames, nil
 }
 
-func buildCollectionListFromDatabaseNames(dbnames []string, ci connection.Info) (DatabaseList, error) {
-	databaseList := make(DatabaseList)
+func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList databaseIgnoreList, ci connection.Info) (DatabaseList, error) {
+	databaseList := DatabaseList{}
 	for _, db := range dbnames {
+		if _, ok := ignoreDBList[db]; ok {
+			continue
+		}
+
 		con, err := ci.NewConnection(db)
 		if err != nil {
 			if err != nil {
@@ -98,6 +138,9 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ci connection.Info) 
 		}
 
 		databaseList[db] = schemaList
+	}
+	if len(databaseList) == 0 {
+		return nil, fmt.Errorf("no database to collect data")
 	}
 
 	return databaseList, nil
