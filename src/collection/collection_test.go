@@ -18,9 +18,11 @@ func Test_buildSchemaListForDatabase(t *testing.T) {
 	}).AddRow("schema1", "table1", "index1")
 
 	mock.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
+	mock.ExpectClose()
 
 	schemaList, err := buildSchemaListForDatabase(testConnection)
 	assert.Nil(t, err)
+	testConnection.Close()
 
 	expected := SchemaList{
 		"schema1": TableList{
@@ -29,6 +31,7 @@ func Test_buildSchemaListForDatabase(t *testing.T) {
 	}
 
 	assert.Equal(t, expected, schemaList)
+	assert.NoError(t, mock.ExpectationsWereMet())
 }
 
 func Test_buildSchemaListForDatabase_TableOnly(t *testing.T) {
@@ -40,9 +43,12 @@ func Test_buildSchemaListForDatabase_TableOnly(t *testing.T) {
 	}).AddRow("schema1", "table1", "index1").AddRow("schema2", "table2", nil)
 
 	mock.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
+	mock.ExpectClose()
 
 	schemaList, err := buildSchemaListForDatabase(testConnection)
 	assert.Nil(t, err)
+
+	testConnection.Close()
 
 	expected := SchemaList{
 		"schema1": TableList{
@@ -54,6 +60,7 @@ func Test_buildSchemaListForDatabase_TableOnly(t *testing.T) {
 	}
 
 	assert.Equal(t, expected, schemaList)
+	assert.NoError(t, mock.ExpectationsWereMet())
 }
 
 func TestBuildCollectionList_DatabaseList(t *testing.T) {
@@ -80,7 +87,9 @@ func TestBuildCollectionList_DatabaseList(t *testing.T) {
 	}).AddRow("schema2", "table2", nil)
 
 	mock1.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows1)
+	mock1.ExpectClose()
 	mock2.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows2)
+	mock2.ExpectClose()
 
 	expected := DatabaseList{
 		"database1": SchemaList{
@@ -98,6 +107,9 @@ func TestBuildCollectionList_DatabaseList(t *testing.T) {
 	dl, err := BuildCollectionList(al, &ci)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, dl)
+	assert.NoError(t, mock1.ExpectationsWereMet())
+	assert.NoError(t, mock2.ExpectationsWereMet())
+	ci.AssertExpectations(t)
 }
 
 func TestBuildCollectionList_DetailedList(t *testing.T) {
