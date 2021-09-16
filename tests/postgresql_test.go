@@ -1,3 +1,4 @@
+//go:build integration
 // +build integration
 
 package tests
@@ -6,27 +7,32 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"github.com/newrelic/infra-integrations-sdk/log"
-	"github.com/stretchr/testify/assert"
-	"github.com/xeipuuv/gojsonschema"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/newrelic/infra-integrations-sdk/log"
+	"github.com/stretchr/testify/assert"
+	"github.com/xeipuuv/gojsonschema"
 )
 
 const (
-	containerName = "nri-postgresql"
+	// docker-compose service names
+	serviceNameNRI               = "nri-postgresql"
+	serviceNamePostgres90        = "postgres-9-0"
+	serviceNamePostgres91        = "postgres-9-1"
+	serviceNamePostgres92Onwards = "postgres-9-2-onwards"
 )
 
-func executeDockerCompose(containerName string, envVars []string) (string, string, error) {
+func executeDockerCompose(serviceName string, envVars []string) (string, string, error) {
 	cmdLine := []string{"run"}
 	for i := range envVars {
 		cmdLine = append(cmdLine, "-e")
 		cmdLine = append(cmdLine, envVars[i])
 	}
-	cmdLine = append(cmdLine, containerName)
+	cmdLine = append(cmdLine, serviceName)
 	fmt.Printf("executing: docker-compose %s\n", strings.Join(cmdLine, " "))
 	cmd := exec.Command("docker-compose", cmdLine...)
 	var outbuf, errbuf bytes.Buffer
@@ -61,25 +67,25 @@ func TestSuccessConnection(t *testing.T) {
 	}{
 		{
 			Name:     "Testing Metrics for Postgres v9.0x",
-			Hostname: "postgres-9-0",
+			Hostname: serviceNamePostgres90,
 			Schema:   "jsonschema90.json",
 			EnvVars:  []string{"METRIC=true"},
 		},
 		{
 			Name:     "Testing Metrics for Postgres v9.1x",
-			Hostname: "postgres-9-1",
+			Hostname: serviceNamePostgres91,
 			Schema:   "jsonschema91.json",
 			EnvVars:  []string{"METRIC=true"},
 		},
 		{
 			Name:     "Testing Metrics for Postgres v9.2x +",
-			Hostname: "postgres-9-2-onwards",
+			Hostname: serviceNamePostgres92Onwards,
 			Schema:   "jsonschema92.json",
 			EnvVars:  []string{"METRIC=true"},
 		},
 		{
 			Name:     "Testing Postgres Inventory",
-			Hostname: "postgres-9-2-onwards",
+			Hostname: serviceNamePostgres92Onwards,
 			Schema:   "jsonschema-inventory.json",
 			EnvVars:  []string{"INVENTORY=true"},
 		},
@@ -94,7 +100,7 @@ func TestSuccessConnection(t *testing.T) {
 			}
 			envVars = append(envVars, defaultEnvVars...)
 			envVars = append(envVars, tc.EnvVars...)
-			stdout, _, err := executeDockerCompose(containerName, envVars)
+			stdout, _, err := executeDockerCompose(serviceNameNRI, envVars)
 			assert.Nil(t, err)
 			assert.NotEmpty(t, stdout)
 			err = validateJSONSchema(tc.Schema, stdout)
@@ -104,14 +110,28 @@ func TestSuccessConnection(t *testing.T) {
 }
 
 func TestMissingRequiredVars(t *testing.T) {
-	hostname := "postgres-9-2-onwards"
 	envVars := []string{
-		fmt.Sprintf("HOSTNAME=%s", hostname),
+		"HOSTNAME=" + serviceNamePostgres92Onwards,
 		"DATABASE=demo",
 	}
-	_, stderr, err := executeDockerCompose(containerName, envVars)
+	_, stderr, err := executeDockerCompose(serviceNameNRI, envVars)
 	assert.NotNil(t, err)
 	assert.Contains(t, stderr, "invalid configuration: must specify a username and password")
+}
+
+func TestIgnoringDB(t *testing.T) {
+	envVars := []string{
+		"HOSTNAME=" + serviceNamePostgres92Onwards,
+		"USERNAME=postgres",
+		"PASSWORD=example",
+		"DATABASE=demo",
+		"COLLECTION_LIST=ALL", // The instance has 2 DB: 'demo' and 'postgres'
+		`COLLECTION_IGNORE_DATABASE_LIST=["demo"]`,
+	}
+	stdout, _, err := executeDockerCompose(serviceNameNRI, envVars)
+	assert.Nil(t, err)
+	assert.Contains(t, stdout, `"database:postgres"`)
+	assert.NotContains(t, stdout, `"database:demo"`)
 }
 
 func validateJSONSchema(fileName string, input string) error {
