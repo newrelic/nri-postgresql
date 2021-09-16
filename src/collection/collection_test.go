@@ -19,7 +19,7 @@ func Test_buildSchemaListForDatabase(t *testing.T) {
 
 	mock.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
 
-	schemaList, err := buildSchemaListForDatabase("database1", testConnection)
+	schemaList, err := buildSchemaListForDatabase(testConnection)
 	assert.Nil(t, err)
 
 	expected := SchemaList{
@@ -41,7 +41,7 @@ func Test_buildSchemaListForDatabase_TableOnly(t *testing.T) {
 
 	mock.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
 
-	schemaList, err := buildSchemaListForDatabase("database1", testConnection)
+	schemaList, err := buildSchemaListForDatabase(testConnection)
 	assert.Nil(t, err)
 
 	expected := SchemaList{

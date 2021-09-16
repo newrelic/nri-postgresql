@@ -91,7 +91,7 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ci connection.Info) 
 		}
 		defer con.Close()
 
-		schemaList, err := buildSchemaListForDatabase(db, con)
+		schemaList, err := buildSchemaListForDatabase(con)
 		if err != nil {
 			log.Error("Failed to build schema list for database '%s': %s", db, err)
 			continue
@@ -103,7 +103,7 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ci connection.Info) 
 	return databaseList, nil
 }
 
-func buildSchemaListForDatabase(dbname string, con *connection.PGSQLConnection) (SchemaList, error) {
+func buildSchemaListForDatabase(con *connection.PGSQLConnection) (SchemaList, error) {
 	schemaList := make(SchemaList)
 
 	var dataModel []struct {
