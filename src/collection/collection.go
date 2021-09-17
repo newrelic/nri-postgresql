@@ -124,10 +124,8 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList databas
 
 		con, err := ci.NewConnection(db)
 		if err != nil {
-			if err != nil {
-				log.Error("Failed to open connection to database '%s' to build collection list: %s", db, err)
-				continue
-			}
+			log.Error("Failed to open connection to database '%s' to build collection list: %s", db, err)
+			continue
 		}
 		defer con.Close()
 
