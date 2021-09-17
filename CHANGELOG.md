@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.9.0 (2021-09-17)
+### Added
+- Adds `COLLECTION_IGNORE_DATABASE_LIST` configuration, that allows to exclude a list of database names for metrics collection.
+
 ## 2.8.0 (2021-08-27)
 ### Added
 
