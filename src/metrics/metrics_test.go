@@ -1,6 +1,8 @@
 package metrics
 
 import (
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/blang/semver/v4"
@@ -506,4 +508,43 @@ func TestPopulateMetrics(t *testing.T) {
 	instance, _ := testIntegration.Entity("testInstance", "instance")
 
 	PopulateMetrics(ci, dbList, instance, testIntegration, true, true, true, "")
+}
+
+func TestPopulateCustomMetricsFromFile(t *testing.T) {
+	t.Parallel()
+
+	testIntegration, _ := integration.New("test", "test")
+
+	ci := &connection.MockInfo{}
+
+	testConnection, mock := connection.CreateMockSQL(t)
+
+	ci.On("NewConnection", tmock.Anything).Return(testConnection, nil)
+
+	instanceRows := sqlmock.NewRows([]string{
+		"int_metric",
+		"float_metric",
+		"string_metric",
+	}).AddRow(25, 0.064, "test-string")
+
+	mock.ExpectQuery(".*testTable.*").
+		WillReturnRows(instanceRows)
+
+	dir := t.TempDir()
+	customQueryCfg := []byte(`---
+queries:
+  - query: >-
+      SELECT test FROM testTable;
+`)
+	assert.NoError(t, os.WriteFile(filepath.Join(dir, "customQueryConfig.yaml"), customQueryCfg, 0600))
+
+	PopulateCustomMetricsFromFile(ci, filepath.Join(dir, "customQueryConfig.yaml"), testIntegration)
+
+	assert.Len(t, testIntegration.Entities, 1)
+	assert.Len(t, testIntegration.Entities[0].Metrics, 1)
+	metricSet := testIntegration.Entities[0].Metrics[0].Metrics
+
+	assert.Equal(t, float64(25), metricSet["int_metric"])
+	assert.Equal(t, float64(0.064), metricSet["float_metric"])
+	assert.Equal(t, "test-string", metricSet["string_metric"])
 }
