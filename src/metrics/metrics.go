@@ -171,7 +171,7 @@ func CollectCustomConfig(ci connection.Info, cfg customMetricsConfig, pgIntegrat
 
 func sanitizeValue(val interface{}) interface{} {
 	switch v := val.(type) {
-	case string, float32, int, int32, int64:
+	case string, float32, float64, int, int32, int64:
 		return v
 	case []byte:
 		return string(v)

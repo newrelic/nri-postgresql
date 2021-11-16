@@ -12641,2152 +12641,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
-                    },
-                    "table.bloatSizeInBytes": {
-                      "type": "integer"
-                    },
-                    "table.dataSizeInBytes": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "database",
-                    "displayName",
-                    "entityName",
-                    "event_type",
-                    "schema",
-                    "table.bloatRatio",
-                    "table.bloatSizeInBytes",
-                    "table.dataSizeInBytes"
-                  ]
-                }
-              ]
-            },
-            "inventory": {
-              "type": "object"
-            },
-            "events": {
-              "type": "array",
-              "items": {}
-            }
-          },
-          "required": [
-            "entity",
-            "metrics",
-            "inventory",
-            "events"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "entity": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string"
-                },
-                "type": {
-                  "type": "string"
-                },
-                "id_attributes": {
-                  "type": "array",
-                  "items": [
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "Key": {
-                          "type": "string"
-                        },
-                        "Value": {
-                          "type": "string"
-                        }
-                      },
-                      "required": [
-                        "Key",
-                        "Value"
-                      ]
-                    }
-                  ]
-                }
-              },
-              "required": [
-                "name",
-                "type",
-                "id_attributes"
-              ]
-            },
-            "metrics": {
-              "type": "array",
-              "items": [
-                {
-                  "type": "object",
-                  "properties": {
-                    "database": {
-                      "type": "string"
-                    },
-                    "displayName": {
-                      "type": "string"
-                    },
-                    "entityName": {
-                      "type": "string"
-                    },
-                    "event_type": {
-                      "type": "string"
-                    },
-                    "schema": {
-                      "type": "string"
-                    },
-                    "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -15072,7 +12927,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -15215,7 +13070,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -15358,7 +13213,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -15501,7 +13356,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -15644,7 +13499,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -15787,7 +13642,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -15930,7 +13785,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -16073,7 +13928,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -16216,7 +14071,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -16359,7 +14214,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -16502,7 +14357,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -16645,7 +14500,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -16788,7 +14643,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -16931,7 +14786,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -17074,7 +14929,7 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
-                      "type": "integer"
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
@@ -17217,7 +15072,2152 @@
                       "type": "string"
                     },
                     "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
                       "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
+                    },
+                    "table.bloatSizeInBytes": {
+                      "type": "integer"
+                    },
+                    "table.dataSizeInBytes": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "database",
+                    "displayName",
+                    "entityName",
+                    "event_type",
+                    "schema",
+                    "table.bloatRatio",
+                    "table.bloatSizeInBytes",
+                    "table.dataSizeInBytes"
+                  ]
+                }
+              ]
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "entity",
+            "metrics",
+            "inventory",
+            "events"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "entity": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "id_attributes": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "Key": {
+                          "type": "string"
+                        },
+                        "Value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Key",
+                        "Value"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "id_attributes"
+              ]
+            },
+            "metrics": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "database": {
+                      "type": "string"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "entityName": {
+                      "type": "string"
+                    },
+                    "event_type": {
+                      "type": "string"
+                    },
+                    "schema": {
+                      "type": "string"
+                    },
+                    "table.bloatRatio": {
+                      "type": "number"
                     },
                     "table.bloatSizeInBytes": {
                       "type": "integer"
