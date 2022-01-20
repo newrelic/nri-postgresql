@@ -14,12 +14,57 @@ queries:
       FROM pg_stat_bgwriter BG;
 
     # database defaults to the auth database in the main config
-    database: new_frontier_config_dev
+    database: postgres
 
     # If not set explicitly here, metric type will default to
     # 'gauge' for numbers and 'attribute' for strings
     metric_types:
       buffers_allocated: rate
 
-    # If unset, sample_name defaults to OracleCustomSample
-    sample_name: MyCustomSample
+    # If unset, sample_name defaults to PostgresCustomSample
+    sample_name: MyCustomPostgresSample
+
+  # Query to collect unused indexes. This query needs to repeat for every user database to collect data from all of them.
+  - query: >-
+      SELECT schemaname, CAST(relname as varchar(100)), CAST(indexrelname as varchar(100)), idx_scan, idx_tup_fetch, idx_tup_read, 
+      pg_size_pretty(pg_relation_size(indexrelid)) as idx_size,
+      pg_size_pretty(sum(pg_relation_size(indexrelid))
+      OVER (ORDER BY idx_scan, indexrelid)) as total
+      FROM pg_stat_user_indexes
+      WHERE idx_scan=0
+      AND idx_tup_fetch=0
+      AND idx_tup_read=0
+      LIMIT 25;
+
+    # database defaults to the auth database in the main config
+    # database: postgres
+
+    # If unset, sample_name defaults to PostgresCustomSample
+    sample_name: PostgresUnusedIndexesSample
+
+  # Query to collect missing indexes. This query needs to repeat for every user database to collect data from all of them.
+  - query: >-
+      SELECT schemaname, CAST(relname as varchar(100)), seq_scan, seq_tup_read, seq_tup_read/seq_scan as avg, idx_scan
+      FROM pg_stat_user_tables
+      WHERE seq_scan > 0
+      LIMIT 25;
+
+    # database defaults to the auth database in the main config
+    # database: postgres
+
+    # If unset, sample_name defaults to PostgresCustomSample
+    sample_name: PostgresMissingIndexesSample
+
+  # Query to collect most expensive queries. This query needs to repeat for every user database to collect data from all of them.
+  - query: >-
+      SELECT round(( 100 * total_time / sum(total_time) over ())::smallint) percent,
+      CAST(total_time as int), calls as total_calls, rows as total_rows, CAST(userid as int),
+      round(mean_time::int) as mean_time, substring(query, 1, 4000) as query
+      FROM pg_stat_statements
+      LIMIT 25;
+
+    # database defaults to the auth database in the main config
+    # database: postgres
+
+    # If unset, sample_name defaults to PostgresCustomSample
+    sample_name: PostgresExpensiveQueriesSample
