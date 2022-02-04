@@ -57,11 +57,16 @@ queries:
 
   # Query to collect most expensive queries. This query needs to repeat for every user database to collect data from all of them.
   - query: >-
-      SELECT round(( 100 * total_time / sum(total_time) over ())::smallint) percent,
-      CAST(total_time as int), calls as total_calls, rows as total_rows, CAST(userid as int),
-      round(mean_time::int) as mean_time, substring(query, 1, 4000) as query
-      FROM pg_stat_statements
-      LIMIT 25;
+      SELECT CAST(d.datname as varchar(100)) as databasename, 
+      CAST(u.usename as varchar(100)) as username, 
+      round(( 100 * s.total_time / sum(s.total_time) over ())::smallint) as percent,
+      CAST(s.total_time as int), s.calls as total_calls, s.rows as total_rows,
+      round(s.mean_time::int) as mean_time, substring(s.query, 1, 4000) as query
+      FROM pg_stat_statements s 
+      JOIN pg_database d ON (s.dbid = d.oid)
+      JOIN pg_user u ON (s.userid = u.usesysid)
+      ORDER BY s.total_time DESC
+      LIMIT 50;
 
     # database defaults to the auth database in the main config
     # database: postgres
