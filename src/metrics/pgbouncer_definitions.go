@@ -38,17 +38,17 @@ var pgbouncerPoolsDefinition = &QueryDefinition{
 
 	dataModels: []struct {
 		databaseBase
-		User       *string `db:"user"`
-		ClCanceled *int64  `db:"cl_cancel_req"  metric_name:"pgbouncer.pools.clientConnectionsCancelReq" source_type:"gauge"`
-		ClActive   *int64  `db:"cl_active"      metric_name:"pgbouncer.pools.clientConnectionsActive"    source_type:"gauge"`
-		ClWaiting  *int64  `db:"cl_waiting"     metric_name:"pgbouncer.pools.clientConnectionsWaiting"   source_type:"gauge"`
-		SvActive   *int64  `db:"sv_active"      metric_name:"pgbouncer.pools.serverConnectionsActive"    source_type:"gauge"`
-		SvIdle     *int64  `db:"sv_idle"        metric_name:"pgbouncer.pools.serverConnectionsIdle"      source_type:"gauge"`
-		SvUsed     *int64  `db:"sv_used"        metric_name:"pgbouncer.pools.serverConnectionsUsed"      source_type:"gauge"`
-		SvTested   *int64  `db:"sv_tested"      metric_name:"pgbouncer.pools.serverConnectionsTested"    source_type:"gauge"`
-		SvLogin    *int64  `db:"sv_login"       metric_name:"pgbouncer.pools.serverConnectionsLogin"     source_type:"gauge"`
-		MaxWait    *int64  `db:"maxwait"        metric_name:"pgbouncer.pools.maxwaitInMilliseconds"      source_type:"gauge"`
-		MaxWaitUs  *int64  `db:"maxwait_us"`
-		PoolMode   *string `db:"pool_mode"`
+		User        *string `db:"user"`
+		ClCancelReq *int64  `db:"cl_cancel_req"  metric_name:"pgbouncer.pools.clientConnectionsCancelReq" source_type:"gauge"`
+		ClActive    *int64  `db:"cl_active"      metric_name:"pgbouncer.pools.clientConnectionsActive"    source_type:"gauge"`
+		ClWaiting   *int64  `db:"cl_waiting"     metric_name:"pgbouncer.pools.clientConnectionsWaiting"   source_type:"gauge"`
+		SvActive    *int64  `db:"sv_active"      metric_name:"pgbouncer.pools.serverConnectionsActive"    source_type:"gauge"`
+		SvIdle      *int64  `db:"sv_idle"        metric_name:"pgbouncer.pools.serverConnectionsIdle"      source_type:"gauge"`
+		SvUsed      *int64  `db:"sv_used"        metric_name:"pgbouncer.pools.serverConnectionsUsed"      source_type:"gauge"`
+		SvTested    *int64  `db:"sv_tested"      metric_name:"pgbouncer.pools.serverConnectionsTested"    source_type:"gauge"`
+		SvLogin     *int64  `db:"sv_login"       metric_name:"pgbouncer.pools.serverConnectionsLogin"     source_type:"gauge"`
+		MaxWait     *int64  `db:"maxwait"        metric_name:"pgbouncer.pools.maxwaitInMilliseconds"      source_type:"gauge"`
+		MaxWaitUs   *int64  `db:"maxwait_us"`
+		PoolMode    *string `db:"pool_mode"`
 	}{},
 }
