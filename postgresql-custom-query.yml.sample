@@ -56,6 +56,11 @@ queries:
     sample_name: PostgresMissingIndexesSample
 
   # Query to collect most expensive queries. This query needs to repeat for every user database to collect data from all of them.
+  # Note this extension may not be enabled on your server. 
+  ## For AWS RDS environments pg_stat_statements will be available by default depending on your version.
+  ## AWS link to check: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts.General.FeatureSupport.Extensions
+  # For standalone instances it must be added to your postgresql.conf file.
+  ## Link here: https://www.postgresql.org/docs/current/pgstatstatements.html
   - query: >-
       SELECT CAST(d.datname as varchar(100)) as databasename, 
       CAST(u.usename as varchar(100)) as username, 
