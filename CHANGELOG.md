@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.10.2 (2022-03-10)
+### Changed
+- Updated the custom query sample file `pg_stat_statements` query, disabling it by default.
+
+## 2.10.1 (2022-02-08)
+### Fixed
+- Add cl_cancel_req to pgBouncer pool metrics.
+
+## 2.10.0 (2021-11-16)
+### Fixed
+- Numeric custom metrics without metric type defined are now converted to Gauge type instead of string.
+
 ## 2.9.0 (2021-09-17)
 ### Added
 - Adds `COLLECTION_IGNORE_DATABASE_LIST` configuration, that allows to exclude a list of database names for metrics collection.
@@ -12,7 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## 2.8.0 (2021-08-27)
 ### Added
 
-Moved default config.sample to [V4](https://docs.newrelic.com/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/), added a dependency for infra-agent version 1.20.0
+Moved default config.sample to [V4](https://docs.newrelic.com/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-newer-configuration-format/), added a dependency for infra-agent version 1.20.0.
 
 Please notice that old [V3](https://docs.newrelic.com/docs/create-integrations/infrastructure-integrations-sdk/specifications/host-integrations-standard-configuration-format/) configuration format is deprecated, but still supported.
 
