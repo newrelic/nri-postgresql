@@ -56,9 +56,12 @@ queries:
     sample_name: PostgresMissingIndexesSample
 
   # Query to collect most expensive queries. This query needs to repeat for every user database to collect data from all of them.
-  # Note this extension may not be enabled on your server. 
+  # Note this extension may not be enabled on your server.
+  # In the main postgres-config.yml file it is best to let it default to the postgre database when connecting. 
   ## For AWS RDS environments pg_stat_statements will be available by default depending on your version.
   ## AWS link to check: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts.General.FeatureSupport.Extensions
+  ## For AWS Aurora instances running Postgres 13+ it may be necessary to manually create the pg_stat_statement extension with the following command:
+  ### CREATE EXTENSION pg_stat_statements;
   # For standalone instances it must be added to your postgresql.conf file.
   ## Link here: https://www.postgresql.org/docs/current/pgstatstatements.html
   # Uncomment this query when the pg_stat_statement extension has been added to the shared_preload_libraries
@@ -72,6 +75,22 @@ queries:
   #    JOIN pg_database d ON (s.dbid = d.oid)
   #    JOIN pg_user u ON (s.userid = u.usesysid)
   #    ORDER BY s.total_time DESC
+  #    LIMIT 50;
+
+    # database defaults to the auth database in the main config
+    # database: postgres
+
+  # Use this version of the query if running Postgres 13+
+  #- query: >-
+  #    SELECT CAST(d.datname as varchar(100)) as databasename, 
+  #    CAST(u.usename as varchar(100)) as username, 
+  #    round(( 100 * s.total_exec_time / sum(s.total_exec_time) over ())::smallint) as percent,
+  #    CAST(s.total_exec_time as int), s.calls as total_calls, s.rows as total_rows,
+  #    round(s.mean_time::int) as mean_time, substring(s.query, 1, 4000) as query
+  #    FROM pg_stat_statements s 
+  #    JOIN pg_database d ON (s.dbid = d.oid)
+  #    JOIN pg_user u ON (s.userid = u.usesysid)
+  #    ORDER BY s.total_exec_time DESC
   #    LIMIT 50;
 
     # database defaults to the auth database in the main config
