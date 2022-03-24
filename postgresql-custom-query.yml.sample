@@ -57,7 +57,7 @@ queries:
 
   # Query to collect most expensive queries. This query needs to repeat for every user database to collect data from all of them.
   # Note this extension may not be enabled on your server.
-  # In the main postgres-config.yml file it is best to let it default to the postgre database when connecting. 
+  # In the main postgres-config.yml file it is best to let it default to the postgres database when connecting. 
   ## For AWS RDS environments pg_stat_statements will be available by default depending on your version.
   ## AWS link to check: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html#PostgreSQL.Concepts.General.FeatureSupport.Extensions
   ## For AWS Aurora instances running Postgres 13+ it may be necessary to manually create the pg_stat_statement extension with the following command:
