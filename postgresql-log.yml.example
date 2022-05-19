@@ -1,0 +1,13 @@
+###############################################################################
+# Log forwarder configuration for Postgresql logs                             #
+# NOTE: Postgres installations can vary.  Use the appropriate file:           #
+#       log location that matches your environment/installation and version   #
+# Source: file                                                                #
+# Available customization parameters: attributes, max_line_kb, pattern        #
+###############################################################################
+logs:
+  - name: postgresql
+    file: /var/lib/pgsql/12/data/log/postgresql*.log
+#   file: /var/log/postgresql/*.log
+    attributes:
+      logtype: postgresql
