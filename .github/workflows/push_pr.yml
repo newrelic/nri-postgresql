@@ -21,6 +21,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: newrelic/newrelic-infra-checkers@v1
+        with:
+          semgrep-append: false
       - name: Unit tests
         run: |
           git status
