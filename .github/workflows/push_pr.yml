@@ -21,12 +21,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: newrelic/newrelic-infra-checkers@v1
+      - name: Unit tests
+        run: |
+          git status
+          git --no-pager diff
       - name: Semgrep
         uses: returntocorp/semgrep-action@v1
         with:
           auditOn: push
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
+        uses: golangci/golangci-lint-action@v3.1.0
         continue-on-error: ${{ github.event_name != 'pull_request' }}
         with:
           only-new-issues: true
