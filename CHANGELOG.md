@@ -5,8 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## 2.10.3  (2022-07-05)
-
+## 2.10.4  (2022-07-05)
 ### Changed
 - Update Go to v1.18
 - Bump dependencies
@@ -14,6 +13,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 Added support for more distributions:
 - RHEL(EL) 9
 - Ubuntu 22.04
+
+## 2.10.3  (2022-05-25)
+### Changed
+- Updated the custom query file for Postgres 13
+- fix(ci/cd): removing snyk unused step
+### Added
+- add_postgresql_logs_example_yml
 
 ## 2.10.2 (2022-03-10)
 ### Changed
