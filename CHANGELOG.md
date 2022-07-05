@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.10.3  (2022-07-05)
+
+### Changed
+- Update Go to v1.18
+- Bump dependencies
+### Added
+Added support for more distributions:
+- RHEL(EL) 9
+- Ubuntu 22.04
+
 ## 2.10.2 (2022-03-10)
 ### Changed
 - Updated the custom query sample file `pg_stat_statements` query, disabling it by default.
