@@ -48,6 +48,7 @@ integrations:
     # True if the SSL certificate should be trusted without validating.
     # Setting this to true may open up the monitoring service to MITM attacks.
     # Defaults to false.
+    # This setting will need to be set to true for managed database environments like Azure Flexbile or AWS RDS/Aurora
     TRUST_SERVER_CERTIFICATE: "false"
 
     SSL_CERT_LOCATION: /etc/newrelic-infra/postgresql.crt
