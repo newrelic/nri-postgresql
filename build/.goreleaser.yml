@@ -48,6 +48,8 @@ nfpms:
     contents:
       - src: "postgresql-config.yml.sample"
         dst: "/etc/newrelic-infra/integrations.d/postgresql-config.yml.sample"
+      - src: "postgresql-custom-query.yml.sample"
+        dst: "/etc/newrelic-infra/integrations.d/postgresql-custom-query.yml.sample"
       - src: "postgresql-log.yml.example"
         dst: "/etc/newrelic-infra/logging.d/postgresql-log.yml.example"
       - src: "CHANGELOG.md"
@@ -89,6 +91,7 @@ archives:
     name_template: "{{ .ProjectName }}-{{ .Arch }}.{{ .Version }}_dirty"
     files:
       - postgresql-config.yml.sample
+      - postgresql-custom-query.yml.sample
       - src: 'legacy/postgresql-win-definition.yml'
         dst: .
         strip_parent: true

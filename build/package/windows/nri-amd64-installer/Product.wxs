@@ -94,5 +94,13 @@
                       KeyPath="yes"/>
             </Component>
         </ComponentGroup>
+        <ComponentGroup Id="PluginConfigsComponent" Directory="PluginConfigsFolder">
+            <Component Id="CMP_NRI_$(var.IntegrationName)_CONFIG_YML" Guid="1a855376-0d1c-4aa1-bba8-a8e53664da10" Win64="yes">
+                <File Id="FILE_NRI_$(var.IntegrationName)_CONFIG_YML"
+                      Name="$(var.IntegrationName)-custom-query.yml.sample"
+                      Source="$(var.BinariesPath)New Relic\newrelic-infra\integrations.d\$(var.IntegrationName)-custom-query.yml.sample"
+                      KeyPath="yes"/>
+            </Component>
+        </ComponentGroup>
     </Fragment>
 </Wix>
