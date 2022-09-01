@@ -4,7 +4,7 @@ integrations:
     # The username for the postgres instance. Required.
     USERNAME: postgres
     # The password for the postgres instance. Required.
-    PASSWORD: pass
+    PASSWORD: 'pass'
 
     # The hostname for the postgres instance. Defaults to localhost.
     HOSTNAME: psql-sample.localnet
