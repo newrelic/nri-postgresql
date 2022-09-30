@@ -159,7 +159,11 @@ func buildSchemaListForDatabase(con *connection.PGSQLConnection) (SchemaList, er
 
 	for index, row := range dataModel {
 		if !row.SchemaName.Valid || !row.TableName.Valid {
-			log.Error("Query responded with a null schema name or table name. Skipping row %d", index)
+			if row.IndexName.Valid {
+				log.Debug("Skipping Index %s. Schema name or Table name null", row.IndexName.String)
+			} else {
+				log.Debug("Query responded with a null schema name or table name. Skipping row %d", index)
+			}
 			continue
 		}
 
@@ -167,7 +171,7 @@ func buildSchemaListForDatabase(con *connection.PGSQLConnection) (SchemaList, er
 			schemaList[row.SchemaName.String] = make(TableList)
 		}
 
-		if _, ok := schemaList[row.TableName.String]; !ok {
+		if _, ok := schemaList[row.SchemaName.String][row.TableName.String]; !ok {
 			schemaList[row.SchemaName.String][row.TableName.String] = make([]string, 0)
 		}
 

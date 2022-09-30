@@ -331,6 +331,7 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 			"schema1": collection.TableList{
 				"table1": []string{
 					"index1",
+					"index2",
 				},
 			},
 		},
@@ -345,7 +346,7 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 		"index_size",
 		"tuples_read",
 		"tuples_fetched",
-	}).AddRow("db1", "schema1", "table1", "index1", 1, 2, 3)
+	}).AddRow("db1", "schema1", "table1", "index1", 1, 2, 3).AddRow("db1", "schema1", "table1", "index2", 1, 2, 3)
 
 	mock.ExpectQuery(".*INDEXQUERY.*").
 		WillReturnRows(indexRows)

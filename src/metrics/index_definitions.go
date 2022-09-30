@@ -1,9 +1,6 @@
 package metrics
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/newrelic/nri-postgresql/src/collection"
 )
 
@@ -14,27 +11,6 @@ func generateIndexDefinitions(schemaList collection.SchemaList) []*QueryDefiniti
 	}
 
 	return queryDefinitions
-}
-
-func (qd *QueryDefinition) insertSchemaTableIndexes(schemaList collection.SchemaList) *QueryDefinition {
-	schemaTableIndexes := make([]string, 0)
-	for schema, tableList := range schemaList {
-		for table, indexList := range tableList {
-			for _, index := range indexList {
-				schemaTableIndexes = append(schemaTableIndexes, fmt.Sprintf("'%s.%s.%s'", schema, table, index))
-			}
-		}
-	}
-
-	if len(schemaTableIndexes) == 0 {
-		return nil
-	}
-
-	schemaTableIndexString := strings.Join(schemaTableIndexes, ",")
-
-	qd.query = strings.Replace(qd.query, `%SCHEMA_TABLE_INDEXES%`, schemaTableIndexString, 1)
-
-	return qd
 }
 
 var indexDefinition = &QueryDefinition{
