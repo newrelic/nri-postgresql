@@ -2,9 +2,10 @@ package metrics
 
 import (
 	"fmt"
-	"github.com/newrelic/nri-postgresql/src/collection"
 	"reflect"
 	"strings"
+
+	"github.com/newrelic/nri-postgresql/src/collection"
 )
 
 // QueryDefinition holds the query and the unmarshall model

@@ -1,3 +1,4 @@
+// Package collection contains the collection methods to parse and build the collection schema
 package collection
 
 import (
