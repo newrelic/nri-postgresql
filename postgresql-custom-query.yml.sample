@@ -86,7 +86,7 @@ queries:
   #    CAST(u.usename as varchar(100)) as username, 
   #    round(( 100 * s.total_exec_time / sum(s.total_exec_time) over ())::smallint) as percent,
   #    CAST(s.total_exec_time as int), s.calls as total_calls, s.rows as total_rows,
-  #    round(s.mean_time::int) as mean_time, substring(s.query, 1, 4000) as query
+  #    round(s.mean_exec_time::int) as mean_time, substring(s.query, 1, 4000) as query
   #    FROM pg_stat_statements s 
   #    JOIN pg_database d ON (s.dbid = d.oid)
   #    JOIN pg_user u ON (s.userid = u.usesysid)

@@ -43,16 +43,17 @@ integrations:
     COLLECT_BLOAT_METRICS: "true"
     
     # True if SSL is to be used. Defaults to false.
-    ENABLE_SSL: "true"
+    ENABLE_SSL: "false"
 
     # True if the SSL certificate should be trusted without validating.
     # Setting this to true may open up the monitoring service to MITM attacks.
     # Defaults to false.
+    # This setting will need to be set to true for managed database environments like Azure Flexbile or AWS RDS/Aurora
     TRUST_SERVER_CERTIFICATE: "false"
 
-    SSL_CERT_LOCATION: /etc/newrelic-infra/postgresql.crt
-    SSL_KEY_LOCATION: /etc/newrelic-infra/postgresql.key
-    SSL_ROOT_CERT_LOCATION: /etc/newrelic-infra/root_cert.crt
+    # SSL_CERT_LOCATION: /etc/newrelic-infra/postgresql.crt
+    # SSL_KEY_LOCATION: /etc/newrelic-infra/postgresql.key
+    # SSL_ROOT_CERT_LOCATION: /etc/newrelic-infra/root_cert.crt
     TIMEOUT: "10"
 
     # A SQL query to collect custom metrics. Must have the columns metric_name, metric_type, and metric_value. Additional columns are added as attributes
