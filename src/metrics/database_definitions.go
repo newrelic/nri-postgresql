@@ -1,8 +1,6 @@
 package metrics
 
 import (
-	"strings"
-
 	"github.com/blang/semver/v4"
 	"github.com/newrelic/nri-postgresql/src/collection"
 )
@@ -27,19 +25,6 @@ func generateDatabaseDefinitions(databases collection.DatabaseList, version *sem
 	}
 
 	return queryDefinitions
-}
-
-func (q *QueryDefinition) insertDatabaseNames(databases collection.DatabaseList) *QueryDefinition {
-	// TODO ensure len(databases) != 0
-	databaseList := ""
-	for database := range databases {
-		databaseList += `'` + database + `',`
-	}
-	databaseList = databaseList[0 : len(databaseList)-1]
-
-	q.query = strings.Replace(q.query, `%DATABASES%`, databaseList, 1)
-
-	return q
 }
 
 // databaseDefinitionUnder91 is the query used to fetch metrics from Postgres below version 9.1.

@@ -330,7 +330,14 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 		"db1": collection.SchemaList{
 			"schema1": collection.TableList{
 				"table1": []string{
-					"index1",
+					"index11",
+				},
+			},
+		},
+		"db2": collection.SchemaList{
+			"schema1": collection.TableList{
+				"table1": []string{
+					"index21",
 				},
 			},
 		},
@@ -345,20 +352,43 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 		"index_size",
 		"tuples_read",
 		"tuples_fetched",
-	}).AddRow("db1", "schema1", "table1", "index1", 1, 2, 3)
+	}).AddRow("db1", "schema1", "table1", "index11", 1, 2, 3)
+	indexRows2 := sqlmock.NewRows([]string{
+		"database",
+		"schema_name",
+		"table_name",
+		"index_name",
+		"index_size",
+		"tuples_read",
+		"tuples_fetched",
+	}).AddRow("db2", "schema1", "table1", "index21", 1, 2, 3)
 
 	mock.ExpectQuery(".*INDEXQUERY.*").
 		WillReturnRows(indexRows)
+	mock.ExpectQuery(".*INDEXQUERY.*").
+		WillReturnRows(indexRows2)
 
 	ci := &connection.MockInfo{}
 	populateIndexMetricsForDatabase(dbList["db1"], testConnection, testIntegration, ci)
+	populateIndexMetricsForDatabase(dbList["db2"], testConnection, testIntegration, ci)
 
 	expected := map[string]interface{}{
 		"database":                   "db1",
 		"schema":                     "schema1",
 		"table":                      "table1",
-		"displayName":                "index1",
-		"entityName":                 "index:index1",
+		"displayName":                "index11",
+		"entityName":                 "index:index11",
+		"event_type":                 "PostgresqlIndexSample",
+		"index.sizeInBytes":          float64(1),
+		"index.rowsReadPerSecond":    float64(0),
+		"index.rowsFetchedPerSecond": float64(0),
+	}
+	expected2 := map[string]interface{}{
+		"database":                   "db2",
+		"schema":                     "schema1",
+		"table":                      "table1",
+		"displayName":                "index21",
+		"entityName":                 "index:index21",
 		"event_type":                 "PostgresqlIndexSample",
 		"index.sizeInBytes":          float64(1),
 		"index.rowsReadPerSecond":    float64(0),
@@ -370,9 +400,17 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 	id3 := integration.NewIDAttribute("host", "testhost")
 	id4 := integration.NewIDAttribute("port", "1234")
 	id5 := integration.NewIDAttribute("pg-table", "table1")
-	indexEntity, err := testIntegration.Entity("index1", "pg-index", id1, id2, id3, id4, id5)
+	indexEntity, err := testIntegration.Entity("index11", "pg-index", id1, id2, id3, id4, id5)
 	assert.Nil(t, err)
 	assert.Equal(t, expected, indexEntity.Metrics[0].Metrics)
+	id12 := integration.NewIDAttribute("pg-database", "db2")
+	id22 := integration.NewIDAttribute("pg-schema", "schema1")
+	id32 := integration.NewIDAttribute("host", "testhost")
+	id42 := integration.NewIDAttribute("port", "1234")
+	id52 := integration.NewIDAttribute("pg-table", "table1")
+	indexEntity2, err := testIntegration.Entity("index21", "pg-index", id12, id22, id32, id42, id52)
+	assert.Nil(t, err)
+	assert.Equal(t, expected2, indexEntity2.Metrics[0].Metrics)
 }
 
 func Test_populateIndexMetricsForDatabase_noIndexes(t *testing.T) {

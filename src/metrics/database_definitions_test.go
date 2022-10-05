@@ -44,9 +44,9 @@ func Test_insertDatabaseNames(t *testing.T) {
 	}
 
 	databaseList := collection.DatabaseList{"test1": {}, "test2": {}}
-	testDefinition.insertDatabaseNames(databaseList)
+	td := testDefinition.insertDatabaseNames(databaseList)
 
-	expectedRegexp := `SELECT \* FROM test WHERE database IN \('test[12]','test[12]'\);`
+	expectedRegexp := `SELECT \* FROM test WHERE database IN \('test[12]','test[22]'\);`
 
-	assert.Regexp(t, regexp.MustCompile(expectedRegexp), testDefinition.query)
+	assert.Regexp(t, regexp.MustCompile(expectedRegexp), td.query)
 }

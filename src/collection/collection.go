@@ -1,3 +1,4 @@
+// Package collection contains the collection methods to parse and build the collection schema
 package collection
 
 import (
@@ -159,7 +160,11 @@ func buildSchemaListForDatabase(con *connection.PGSQLConnection) (SchemaList, er
 
 	for index, row := range dataModel {
 		if !row.SchemaName.Valid || !row.TableName.Valid {
-			log.Error("Query responded with a null schema name or table name. Skipping row %d", index)
+			if row.IndexName.Valid {
+				log.Debug("Skipping Index %s. Schema name or Table name null. [Schema valid: %t / Table valid: %t]", row.IndexName.String, row.SchemaName.Valid, row.TableName.Valid)
+			} else {
+				log.Debug("Query responded with a null schema name or table name. Skipping row %d. [Schema valid: %t / Table valid: %t]", index, row.SchemaName.Valid, row.TableName.Valid)
+			}
 			continue
 		}
 
@@ -167,7 +172,7 @@ func buildSchemaListForDatabase(con *connection.PGSQLConnection) (SchemaList, er
 			schemaList[row.SchemaName.String] = make(TableList)
 		}
 
-		if _, ok := schemaList[row.TableName.String]; !ok {
+		if _, ok := schemaList[row.SchemaName.String][row.TableName.String]; !ok {
 			schemaList[row.SchemaName.String][row.TableName.String] = make([]string, 0)
 		}
 

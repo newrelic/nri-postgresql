@@ -1,9 +1,6 @@
 package metrics
 
 import (
-	"fmt"
-	"strings"
-
 	"github.com/blang/semver/v4"
 	"github.com/newrelic/nri-postgresql/src/collection"
 )
@@ -29,28 +26,6 @@ func generateTableDefinitions(schemaList collection.SchemaList, version *semver.
 	}
 
 	return queryDefinitions
-}
-
-func (qd *QueryDefinition) insertSchemaTables(schemaList collection.SchemaList) *QueryDefinition {
-	schemaTables := make([]string, 0)
-	for schema, tableList := range schemaList {
-		for table := range tableList {
-			schemaTables = append(schemaTables, fmt.Sprintf("'%s.%s'", schema, table))
-		}
-	}
-
-	if len(schemaTables) == 0 {
-		return nil
-	}
-
-	schemaTablesString := strings.Join(schemaTables, ",")
-
-	newDef := &QueryDefinition{
-		dataModels: qd.dataModels,
-		query:      strings.Replace(qd.query, `%SCHEMA_TABLES%`, schemaTablesString, 1),
-	}
-
-	return newDef
 }
 
 var tableDefinition = &QueryDefinition{
