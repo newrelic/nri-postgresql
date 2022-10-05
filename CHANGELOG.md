@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 2.10.5  (2022-10-05)
+### Fixed
+- In Tables with multiple indexes, only one was reported. Issue https://github.com/newrelic/nri-postgresql/issues/94
+- When collecting metrics from multiple databases only indexes from the 1st database were reported
+
 ## 2.10.4  (2022-07-05)
 ### Changed
 - Update Go to v1.18
