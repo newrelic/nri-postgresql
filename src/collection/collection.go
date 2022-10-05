@@ -161,9 +161,9 @@ func buildSchemaListForDatabase(con *connection.PGSQLConnection) (SchemaList, er
 	for index, row := range dataModel {
 		if !row.SchemaName.Valid || !row.TableName.Valid {
 			if row.IndexName.Valid {
-				log.Debug("Skipping Index %s. Schema name or Table name null. [Schema: %s / Table %s]", row.IndexName.String)
+				log.Debug("Skipping Index %s. Schema name or Table name null. [Schema valid: %t / Table valid: %t]", row.IndexName.String, row.SchemaName.Valid, row.TableName.Valid)
 			} else {
-				log.Debug("Query responded with a null schema name or table name. Skipping row %d. [Schema: %s / Table %s]", index)
+				log.Debug("Query responded with a null schema name or table name. Skipping row %d. [Schema valid: %t / Table valid: %t]", index, row.SchemaName.Valid, row.TableName.Valid)
 			}
 			continue
 		}
