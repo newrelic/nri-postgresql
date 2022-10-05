@@ -25,19 +25,27 @@ func (qd QueryDefinition) GetDataModels() interface{} {
 	return ptr.Interface()
 }
 
-func (qd *QueryDefinition) insertDatabaseNames(databases collection.DatabaseList) *QueryDefinition {
-	databaseList := ""
-	for database := range databases {
-		databaseList += `'` + database + `',`
+func (qd QueryDefinition) insertDatabaseNames(databases collection.DatabaseList) *QueryDefinition {
+	schemaDBs := make([]string, 0)
+	for schemaDB := range databases {
+		schemaDBs = append(schemaDBs, fmt.Sprintf("'%s'", schemaDB))
 	}
-	databaseList = databaseList[0 : len(databaseList)-1]
 
-	qd.query = strings.Replace(qd.query, `%DATABASES%`, databaseList, 1)
+	if len(schemaDBs) == 0 {
+		return nil
+	}
 
-	return qd
+	schemaDBString := strings.Join(schemaDBs, ",")
+
+	newDBDef := &QueryDefinition{
+		dataModels: qd.dataModels,
+		query:      strings.Replace(qd.query, `%DATABASES%`, schemaDBString, 1),
+	}
+
+	return newDBDef
 }
 
-func (qd *QueryDefinition) insertSchemaTables(schemaList collection.SchemaList) *QueryDefinition {
+func (qd QueryDefinition) insertSchemaTables(schemaList collection.SchemaList) *QueryDefinition {
 	schemaTables := make([]string, 0)
 	for schema, tableList := range schemaList {
 		for table := range tableList {
@@ -59,7 +67,7 @@ func (qd *QueryDefinition) insertSchemaTables(schemaList collection.SchemaList) 
 	return newTableDef
 }
 
-func (qd *QueryDefinition) insertSchemaTableIndexes(schemaList collection.SchemaList) *QueryDefinition {
+func (qd QueryDefinition) insertSchemaTableIndexes(schemaList collection.SchemaList) *QueryDefinition {
 	schemaTableIndexes := make([]string, 0)
 	for schema, tableList := range schemaList {
 		for table, indexList := range tableList {
