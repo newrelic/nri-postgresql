@@ -4,6 +4,8 @@ builds:
     binary: nri-postgresql
     ldflags:
       - -s -w -X main.integrationVersion={{.Version}} -X main.gitCommit={{.Commit}} -X main.buildDate={{.Date}}
+    env:
+      - CGO_ENABLED=0
     goos:
       - linux
       - darwin
@@ -21,6 +23,8 @@ builds:
     binary: nri-postgresql
     ldflags:
       - -s -w -X main.integrationVersion={{.Version}} -X main.gitCommit={{.Commit}} -X main.buildDate={{.Date}}
+    env:
+      - CGO_ENABLED=0
     goos:
       - windows
     goarch:
