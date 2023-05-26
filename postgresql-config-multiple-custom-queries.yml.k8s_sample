@@ -1,0 +1,37 @@
+# This example configuration for the newrelic-infrastructure Helm chart assumes you are configuring the nri-bundle chart values. 
+# Prerequisite: apply the ConfigMap with `kubectl apply -f postgresql-custom-query.yml.k8s_sample`
+newrelic-infrastructure:
+  enabled: true
+  kubelet:
+    extraVolumeMounts:
+    - mountPath: /config
+      name: psql-vol
+    extraVolumes:
+    - name: psql-vol
+      configMap:
+        name: psql-config
+  integrations:
+    postgresql-config.yml:    
+      discovery:
+        command:
+          exec: /var/db/newrelic-infra/nri-discovery-kubernetes
+          match:
+            label.app.kubernetes.io/name: postgresql
+      integrations:
+        - name: nri-postgresql
+          env:
+            COLLECT_DB_LOCK_METRICS: false
+            COLLECTION_LIST: all
+            CUSTOM_METRICS_CONFIG: /config/postgresql-custom-query.yml
+            DATABASE: postgres
+            HOSTNAME: ${discovery.ip}
+            #HOSTNAME: psql-sample.localnet
+            PORT: 5432
+            USERNAME: postgres
+            PASSWORD: mypass
+            TIMEOUT: 10
+          interval: 15s
+          inventory_source: config/postgresql
+          labels:
+            env: production
+            role: postgresql
