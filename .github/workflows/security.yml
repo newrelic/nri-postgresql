@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Run Trivy vulnerability scanner in repo mode
         uses: aquasecurity/trivy-action@0.7.1
@@ -26,7 +26,7 @@ jobs:
           ignore-unfixed: true
           exit-code: 1
           severity: 'HIGH,CRITICAL'
-          skip-files: 'tests/integration/consumer-producer/pom.xml'
+          skip-dirs: 'build'
 
       - name: Run Trivy vulnerability scanner sarif output
         uses: aquasecurity/trivy-action@0.7.1
