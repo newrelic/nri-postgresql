@@ -90,13 +90,6 @@ jobs:
           GPG_MAIL: 'infrastructure-eng@newrelic.com'
           GPG_PASSPHRASE: ${{ secrets.OHAI_GPG_PASSPHRASE }}
           GPG_PRIVATE_KEY_BASE64: ${{ secrets.OHAI_GPG_PRIVATE_KEY_BASE64 }} # base64 encoded
-      - name: Notify failure via Slack
-        if: ${{ failure() }}
-        uses: archive/github-actions-slack@master
-        with:
-          slack-bot-user-oauth-access-token: ${{ secrets.COREINT_SLACK_TOKEN }}
-          slack-channel: ${{ secrets.COREINT_SLACK_CHANNEL }}
-          slack-text: "❌ `${{ env.REPO_FULL_NAME }}`: prerelease pipeline failed."
       - name: Test package installability
         uses: newrelic/integrations-pkg-test-action/linux@v1
         with:
@@ -147,14 +140,6 @@ jobs:
         shell: bash
         run: |
           build/windows/upload_msi.sh ${INTEGRATION} ${{ matrix.goarch }} ${TAG}
-      - name: Notify failure via Slack
-        if: ${{ failure() }}
-        uses: archive/github-actions-slack@master
-        with:
-          slack-bot-user-oauth-access-token: ${{ secrets.COREINT_SLACK_TOKEN }}
-          slack-channel: ${{ secrets.COREINT_SLACK_CHANNEL }}
-          slack-text: "❌ `${{ env.REPO_FULL_NAME }}`: prerelease pipeline failed."
-
 
   publish-to-s3:
     name: Send release assets to S3
@@ -199,3 +184,15 @@ jobs:
           packageLocation: repo
           stagingRepo: true
           upgrade: false
+
+  notify-failure:
+    if: ${{ always() && failure() }}
+    needs: [test-nix, test-windows, test-integration-nix, prerelease, package-win, publish-to-s3]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify failure via Slack
+        uses: archive/github-actions-slack@master
+        with:
+          slack-bot-user-oauth-access-token: ${{ secrets.COREINT_SLACK_TOKEN }}
+          slack-channel: ${{ secrets.COREINT_SLACK_CHANNEL }}
+          slack-text: "❌ `${{ env.ORIGINAL_REPO_NAME }}`: [prerelease pipeline failed](${{ github.server_url }}/${{ env.ORIGINAL_REPO_NAME }}/actions/runs/${{ github.run_id }})."

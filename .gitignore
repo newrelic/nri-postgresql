@@ -58,3 +58,5 @@ vendor
 cmd/nri-postgresql/versioninfo.json
 cmd/nri-postgresql/resource.syso
 
+# Release toolkit
+CHANGELOG.partial.md
