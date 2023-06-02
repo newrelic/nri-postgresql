@@ -9,9 +9,15 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### enhancement
+## v2.11.0 - 2023-06-02
+
+### 🚀 Enhancements
 - Upgrade Go version to 1.20
 
+### ⛓️ Dependencies
+- Updated github.com/stretchr/testify to v1.8.4 - [Changelog 🔗](https://github.com/stretchr/testify/releases/tag/v1.8.4)
+- Updated github.com/jmoiron/sqlx to v1.3.5 - [Changelog 🔗](https://github.com/jmoiron/sqlx/releases/tag/v1.3.5)
+- Updated github.com/lib/pq to v1.10.9 - [Changelog 🔗](https://github.com/lib/pq/releases/tag/v1.10.9)
 
 ## 2.10.5  (2022-10-05)
 ### Fixed
