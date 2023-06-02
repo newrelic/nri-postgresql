@@ -9,9 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-## 2.11.0 (2023-06-06)
-# Changed
+### enhancement
 - Upgrade Go version to 1.20
+
 
 ## 2.10.5  (2022-10-05)
 ### Fixed
