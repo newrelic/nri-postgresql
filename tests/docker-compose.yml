@@ -27,7 +27,7 @@ services:
       POSTGRES_DB: demo
 
   nri-postgresql:
-    image: golang:1.18
+    image: golang:1.20-buster
     container_name: nri_postgresql
     working_dir: /code
     depends_on:
