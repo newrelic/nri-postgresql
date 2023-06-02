@@ -9,6 +9,10 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+## 2.11.0 (2023-06-06)
+# Changed
+- Upgrade Go version to 1.20
+
 ## 2.10.5  (2022-10-05)
 ### Fixed
 - In Tables with multiple indexes, only one was reported. Issue https://github.com/newrelic/nri-postgresql/issues/94
