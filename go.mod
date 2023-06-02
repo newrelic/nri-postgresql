@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/blang/semver/v4 v4.0.0
 	github.com/jmoiron/sqlx v1.3.5
-	github.com/lib/pq v1.9.0
+	github.com/lib/pq v1.10.9
 	github.com/newrelic/infra-integrations-sdk v3.7.3+incompatible
 	github.com/stretchr/testify v1.8.4
 	github.com/xeipuuv/gojsonschema v1.2.0
