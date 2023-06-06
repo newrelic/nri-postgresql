@@ -1,7 +1,6 @@
 package metrics
 
 import (
-	"regexp"
 	"testing"
 
 	"github.com/blang/semver/v4"
@@ -38,6 +37,8 @@ func Test_generateDatabaseDefinitions_LengthV925(t *testing.T) {
 }
 
 func Test_insertDatabaseNames(t *testing.T) {
+	t.Parallel()
+
 	testDefinition := &QueryDefinition{
 		query:      `SELECT * FROM test WHERE database IN (%DATABASES%);`,
 		dataModels: &[]struct{}{},
@@ -46,7 +47,12 @@ func Test_insertDatabaseNames(t *testing.T) {
 	databaseList := collection.DatabaseList{"test1": {}, "test2": {}}
 	td := testDefinition.insertDatabaseNames(databaseList)
 
-	expectedRegexp := `SELECT \* FROM test WHERE database IN \('test[12]','test[22]'\);`
-
-	assert.Regexp(t, regexp.MustCompile(expectedRegexp), td.query)
+	// The database names order is undetermined but the query is equivalent.
+	assert.Contains(t,
+		[]string{
+			`SELECT * FROM test WHERE database IN ('test1','test2');`,
+			`SELECT * FROM test WHERE database IN ('test2','test1');`,
+		},
+		td.query,
+	)
 }
