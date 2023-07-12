@@ -9,8 +9,13 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### enhancement
+## v2.12.0 - 2023-07-12
+
+### 🚀 Enhancements
 - Adds support for pgbouncer v18 and new metrics:`pgbouncer.pools.clientConnectionsWaitingCancelReq`,`pgbouncer.pools.clientConnectionsActiveCancelReq`,`pgbouncer.pools.serverConnectionsActiveCancel`,`pgbouncer.pools.serverConnectionsBeingCancel`,`pgbouncer.pools.serverConnectionsActive`
+
+### ⛓️ Dependencies
+- Updated gopkg.in/yaml.v2 to v3
 
 ## v2.11.0 - 2023-06-02
 
