@@ -13,7 +13,7 @@ jobs:
   prerelease:
     uses: newrelic/coreint-automation/.github/workflows/trigger_prerelease.yaml@v1
     with:
-      rt-included-files: go.mod
+      rt-included-files: go.mod,go.sum,build/Dockerfile
     secrets:
       bot_token: ${{ secrets.COREINT_BOT_TOKEN }}
       slack_channel:  ${{ secrets.COREINT_SLACK_CHANNEL }}
