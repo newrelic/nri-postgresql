@@ -9,6 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+### bugfix
+- Re-release to support Amazon Linux 2023
+
 ## v2.12.0 - 2023-07-12
 
 ### 🚀 Enhancements
