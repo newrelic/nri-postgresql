@@ -18,7 +18,7 @@ jobs:
 
   test-nix:
     name: Run unit tests on *Nix
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - name: Login to DockerHub
@@ -53,7 +53,7 @@ jobs:
 
   test-integration-nix:
     name: Run integration tests on *Nix
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: src/github.com/${{env.ORIGINAL_REPO_NAME}}
@@ -74,7 +74,7 @@ jobs:
 
   prerelease:
     name: Build binary for *Nix/Win, create archives for *Nix/Win, create packages for *Nix, upload all artifacts into GH Release assets
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [test-nix, test-windows, test-integration-nix]
     steps:
       - uses: actions/checkout@v2
@@ -142,7 +142,7 @@ jobs:
 
   publish-to-s3:
     name: Send release assets to S3
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [package-win]
     steps:
       - name: Login to DockerHub

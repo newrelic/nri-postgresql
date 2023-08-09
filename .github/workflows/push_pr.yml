@@ -17,7 +17,7 @@ env:
 jobs:
   static-analysis:
     name: Run all static analysis checks
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-go@v3
@@ -41,7 +41,7 @@ jobs:
 
   test-nix:
     name: Run unit tests on *Nix
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - name: Login to DockerHub
@@ -77,7 +77,7 @@ jobs:
 
   test-integration-nix:
     name: Run integration tests on *Nix
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     defaults:
       run:
         working-directory: src/github.com/${{env.ORIGINAL_REPO_NAME}}
@@ -104,7 +104,7 @@ jobs:
 
   test-build:
     name: Test binary compilation for all platforms:arch
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
       - name: Login to DockerHub
