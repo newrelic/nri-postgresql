@@ -31,7 +31,7 @@ jobs:
 
   test-windows:
     name: Run unit tests on Windows
-    runs-on: windows-2019
+    runs-on: windows-2022
     env:
       GOPATH: ${{ github.workspace }}
     defaults:
@@ -97,7 +97,7 @@ jobs:
 
   package-win:
     name: Create MSI & Upload into GH Release assets
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs: [prerelease]
     env:
       GOPATH: ${{ github.workspace }}
