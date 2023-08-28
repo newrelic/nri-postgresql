@@ -55,7 +55,7 @@ jobs:
 
   test-windows:
     name: Run unit tests on Windows
-    runs-on: windows-2019
+    runs-on: windows-2022
     env:
       GOPATH: ${{ github.workspace }}
     defaults:
