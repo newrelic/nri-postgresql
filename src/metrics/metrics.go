@@ -7,9 +7,8 @@ import (
 	"regexp"
 	"sync"
 
-	"github.com/newrelic/infra-integrations-sdk/data/attribute"
-
 	"github.com/blang/semver/v4"
+	"github.com/newrelic/infra-integrations-sdk/data/attribute"
 	"github.com/newrelic/infra-integrations-sdk/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/integration"
 	"github.com/newrelic/infra-integrations-sdk/log"
@@ -531,7 +530,6 @@ func PopulatePgBouncerMetrics(pgIntegration *integration.Integration, con *conne
 			if err := metricSet.MarshalMetrics(db); err != nil {
 				log.Error("Failed to populate pgbouncer entity with metrics: %s", err.Error())
 			}
-
 		}
 	}
 }
