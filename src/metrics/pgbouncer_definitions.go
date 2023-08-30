@@ -38,7 +38,7 @@ var pgbouncerPoolsDefinition = &QueryDefinition{
 
 	dataModels: []struct {
 		databaseBase
-		User               *string `db:"user"`
+		User               *string `db:"user"                  metric_name:"pgbouncer.pools.user"                          source_type:"attribute"`
 		ClCancelReq        *int64  `db:"cl_cancel_req"         metric_name:"pgbouncer.pools.clientConnectionsCancelReq"        source_type:"gauge"` // removed in v1.18
 		ClActive           *int64  `db:"cl_active"             metric_name:"pgbouncer.pools.clientConnectionsActive"           source_type:"gauge"`
 		ClWaiting          *int64  `db:"cl_waiting"            metric_name:"pgbouncer.pools.clientConnectionsWaiting"          source_type:"gauge"`

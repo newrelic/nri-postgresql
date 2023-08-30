@@ -465,6 +465,7 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 				"pgbouncer.pools.serverConnectionsTested":  float64(6),
 				"pgbouncer.pools.serverConnectionsLogin":   float64(7),
 				"pgbouncer.pools.maxwaitInMilliseconds":    float64(8),
+				"pgbouncer.pools.user":                     "testUser",
 				"displayName":                              "testDB",
 				"entityName":                               "pgbouncer:testDB",
 				"event_type":                               "PgBouncerSample",
@@ -502,6 +503,7 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 				"event_type":                                 "PgBouncerSample",
 				"host":                                       "testhost",
 				"pgbouncer.pools.clientConnectionsCancelReq": float64(10),
+				"pgbouncer.pools.user":                       "testUser",
 			},
 		},
 		{
@@ -541,6 +543,7 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 				"pgbouncer.pools.clientConnectionsActiveCancelReq":  float64(11),
 				"pgbouncer.pools.serverConnectionsActiveCancel":     float64(12),
 				"pgbouncer.pools.serverConnectionsBeingCancel":      float64(13),
+				"pgbouncer.pools.user":                              "testUser",
 			},
 		},
 	}
