@@ -9,7 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### enhancement
+## v2.13.0 - 2023-09-04
+
+### 🚀 Enhancements
 - Pgbouncer Pools metrics are now decorated as well with the user attribute to improve the querying experience.
 
 ## v2.12.2 - 2023-08-07
