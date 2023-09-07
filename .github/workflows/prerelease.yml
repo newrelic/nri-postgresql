@@ -122,7 +122,8 @@ jobs:
       - name: Download zip from GH Release assets and extract .exe
         shell: pwsh
         run: |
-          build\windows\download_zip_extract_exe.ps1 "$env:INTEGRATION" ${{ matrix.goarch }} "$env:TAG" "$env:REPO_FULL_NAME"
+          build\windows\download_zip.ps1 "$env:INTEGRATION" ${{ matrix.goarch }} "$env:TAG" "$env:REPO_FULL_NAME"
+          build\windows\extract_exe.ps1 "$env:INTEGRATION" ${{ matrix.goarch }} "$env:TAG"
       - name: Create MSI
         shell: pwsh
         run: |
