@@ -1,0 +1,17 @@
+name: Security Scan
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - renovate/**
+  pull_request:
+  schedule:
+    - cron: "0 3 * * *"
+
+jobs:
+  security:
+    uses: newrelic/coreint-automation/.github/workflows/reusable_security.yaml@v1
+    with:
+      skip-dirs: "build"
