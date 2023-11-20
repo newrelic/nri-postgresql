@@ -11,7 +11,7 @@ on:
 
 jobs:
   prerelease:
-    uses: newrelic/coreint-automation/.github/workflows/reusable_trigger_prerelease.yaml@v1
+    uses: newrelic/coreint-automation/.github/workflows/reusable_trigger_prerelease.yaml@v2
     with:
       rt-included-files: go.mod,go.sum,build/Dockerfile
     secrets:
