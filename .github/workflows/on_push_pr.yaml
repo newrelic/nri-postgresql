@@ -144,7 +144,7 @@ jobs:
         run: git tag "$TAG"
 
       - name: Download artifact from previous job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: windows-packages
           path: src/github.com/${{ env.ORIGINAL_REPO_NAME }}/dist/
