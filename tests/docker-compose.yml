@@ -18,8 +18,8 @@ services:
       POSTGRES_PASSWORD: example
       POSTGRES_DB: demo
 
-  postgres-9-2-onwards:
-    image: postgres:13
+  postgres-latest-supported:
+    image: postgres:16
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -33,7 +33,7 @@ services:
     depends_on:
       - postgres-9-0
       - postgres-9-1
-      - postgres-9-2-onwards
+      - postgres-latest-supported
     volumes:
       - ../:/code
     entrypoint: go run /code/src/main.go
