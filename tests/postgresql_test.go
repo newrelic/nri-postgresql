@@ -20,10 +20,10 @@ import (
 
 const (
 	// docker-compose service names
-	serviceNameNRI               = "nri-postgresql"
-	serviceNamePostgres90        = "postgres-9-0"
-	serviceNamePostgres91        = "postgres-9-1"
-	serviceNamePostgres92Onwards = "postgres-9-2-onwards"
+	serviceNameNRI            = "nri-postgresql"
+	serviceNamePostgres90     = "postgres-9-0"
+	serviceNamePostgres91     = "postgres-9-1"
+	serviceNamePostgresLatest = "postgres-latest-supported"
 )
 
 func executeDockerCompose(serviceName string, envVars []string) (string, string, error) {
@@ -66,27 +66,27 @@ func TestSuccessConnection(t *testing.T) {
 		EnvVars  []string
 	}{
 		{
-			Name:     "Testing Metrics for Postgres v9.0x",
+			Name:     "Testing Metrics and inventory for Postgres v9.0x",
 			Hostname: serviceNamePostgres90,
 			Schema:   "jsonschema90.json",
-			EnvVars:  []string{"METRIC=true"},
+			EnvVars:  []string{},
 		},
 		{
-			Name:     "Testing Metrics for Postgres v9.1x",
+			Name:     "Testing Metrics and inventory for Postgres v9.1x",
 			Hostname: serviceNamePostgres91,
 			Schema:   "jsonschema91.json",
-			EnvVars:  []string{"METRIC=true"},
+			EnvVars:  []string{},
 		},
 		{
-			Name:     "Testing Metrics for Postgres v9.2x +",
-			Hostname: serviceNamePostgres92Onwards,
-			Schema:   "jsonschema92.json",
-			EnvVars:  []string{"METRIC=true"},
+			Name:     "Testing Metrics and inventory for latest Postgres supported version",
+			Hostname: serviceNamePostgresLatest,
+			Schema:   "jsonschema-latest.json",
+			EnvVars:  []string{},
 		},
 		{
-			Name:     "Testing Postgres Inventory",
-			Hostname: serviceNamePostgres92Onwards,
-			Schema:   "jsonschema-inventory.json",
+			Name:     "Inventory only for latest Postgres supported version",
+			Hostname: serviceNamePostgresLatest,
+			Schema:   "jsonschema-inventory-latest.json",
 			EnvVars:  []string{"INVENTORY=true"},
 		},
 	}
@@ -111,7 +111,7 @@ func TestSuccessConnection(t *testing.T) {
 
 func TestMissingRequiredVars(t *testing.T) {
 	envVars := []string{
-		"HOSTNAME=" + serviceNamePostgres92Onwards,
+		"HOSTNAME=" + serviceNamePostgresLatest,
 		"DATABASE=demo",
 	}
 	_, stderr, err := executeDockerCompose(serviceNameNRI, envVars)
@@ -121,7 +121,7 @@ func TestMissingRequiredVars(t *testing.T) {
 
 func TestIgnoringDB(t *testing.T) {
 	envVars := []string{
-		"HOSTNAME=" + serviceNamePostgres92Onwards,
+		"HOSTNAME=" + serviceNamePostgresLatest,
 		"USERNAME=postgres",
 		"PASSWORD=example",
 		"DATABASE=demo",
