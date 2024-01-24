@@ -68,7 +68,7 @@ integrations:
     # Can be use instead of CUSTOM_METRICS_QUERY to specify the path to a
     # YAML configuration with one or more custom SQL queries to collect
     # For more information check https://docs.newrelic.com/docs/integrations/host-integrations/host-integrations-list/postgresql-monitoring-integration/#example-postgresSQL-config
-    # CUSTOM_METRICS_CONFIG: /path/to/custom-metrics.yml
+    # CUSTOM_METRICS_CONFIG: /path/to/postgresql-custom-query.yml
     
   interval: 15s
   labels:
