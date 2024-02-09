@@ -20,6 +20,8 @@ github.com/mattn/go-sqlite3 v1.14.7 h1:fxWBnXkxfM6sRiuH3bqJ4CfzZojMOLVc0UTsTglEg
 github.com/mattn/go-sqlite3 v1.14.7/go.mod h1:NyWgC/yNuGj7Q9rpYnZvas74GogHl5/Z4A/KQRfk6bU=
 github.com/newrelic/infra-integrations-sdk v3.7.3+incompatible h1:+o/MxTzFsC3BRVKpkw1pXer9Nja2mxWNbV9GfH7iKBc=
 github.com/newrelic/infra-integrations-sdk v3.7.3+incompatible/go.mod h1:tMUHRMq6mJS0YyBnbWrTXAnREnQqC1AGO6Lu45u5xAM=
+github.com/newrelic/infra-integrations-sdk v3.8.0+incompatible h1:QvwHLsgHyGw4ZULOSnnWQnVPE744K1eda+2XLp2eHtg=
+github.com/newrelic/infra-integrations-sdk v3.8.0+incompatible/go.mod h1:tMUHRMq6mJS0YyBnbWrTXAnREnQqC1AGO6Lu45u5xAM=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e h1:fD57ERR4JtEqsWbfPhv4DMiApHyliiK5xCTNVSPiaAs=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/pkg/errors v0.9.1 h1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=
