@@ -9,6 +9,11 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+## v2.13.1 - 2024-02-26
+
+### ⛓️ Dependencies
+- Updated github.com/newrelic/infra-integrations-sdk to v3.8.2+incompatible
+
 ## v2.13.0 - 2023-09-04
 
 ### 🚀 Enhancements
