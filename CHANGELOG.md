@@ -9,7 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### bugfix
+## v2.13.2 - 2024-03-07
+
+### 🐞 Bug fixes
 - Updated golang to version v1.21.7 to fix a vulnerability
 
 ## v2.13.1 - 2024-02-26
