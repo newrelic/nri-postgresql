@@ -27,7 +27,7 @@ services:
       POSTGRES_DB: demo
 
   nri-postgresql:
-    image: golang:1.21.7-bookworm
+    image: golang:1.22.1-bookworm
     container_name: nri_postgresql
     working_dir: /code
     depends_on:
