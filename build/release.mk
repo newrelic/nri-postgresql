@@ -21,7 +21,7 @@ release/clean:
 .PHONY : release/deps
 release/deps: $(GORELEASER_BIN)
 	@echo "===> $(INTEGRATION) === [release/deps] install goversioninfo"
-	@GO111MODULE=off go get github.com/josephspurrier/goversioninfo/cmd/goversioninfo
+	@go install github.com/josephspurrier/goversioninfo/cmd/goversioninfo@233067e5ebdfc62d994b1446a607b40ced91907b
 
 .PHONY : release/build
 release/build: release/deps release/clean
