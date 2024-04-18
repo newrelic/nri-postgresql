@@ -9,7 +9,7 @@ on:
 
 jobs:
   release:
-    uses: newrelic/coreint-automation/.github/workflows/reusable_on_release.yaml@v2
+    uses: newrelic/coreint-automation/.github/workflows/reusable_on_release.yaml@v3
     with:
       integration: postgresql
       tag: ${{ github.event.release.tag_name }}
