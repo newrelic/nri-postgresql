@@ -21,8 +21,7 @@ import (
 const (
 	// docker compose service names
 	serviceNameNRI            = "nri-postgresql"
-	serviceNamePostgres90     = "postgres-9-0"
-	serviceNamePostgres91     = "postgres-9-1"
+	serviceNamePostgres96     = "postgres-9-6"
 	serviceNamePostgresLatest = "postgres-latest-supported"
 )
 
@@ -66,15 +65,9 @@ func TestSuccessConnection(t *testing.T) {
 		EnvVars  []string
 	}{
 		{
-			Name:     "Testing Metrics and inventory for Postgres v9.0x",
-			Hostname: serviceNamePostgres90,
-			Schema:   "jsonschema90.json",
-			EnvVars:  []string{},
-		},
-		{
-			Name:     "Testing Metrics and inventory for Postgres v9.1x",
-			Hostname: serviceNamePostgres91,
-			Schema:   "jsonschema91.json",
+			Name:     "Testing Metrics and inventory for Postgres v9.6.x",
+			Hostname: serviceNamePostgres96,
+			Schema:   "jsonschema96.json",
 			EnvVars:  []string{},
 		},
 		{
