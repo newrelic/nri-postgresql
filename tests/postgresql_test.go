@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	// docker-compose service names
+	// docker compose service names
 	serviceNameNRI            = "nri-postgresql"
 	serviceNamePostgres90     = "postgres-9-0"
 	serviceNamePostgres91     = "postgres-9-1"
@@ -27,14 +27,14 @@ const (
 )
 
 func executeDockerCompose(serviceName string, envVars []string) (string, string, error) {
-	cmdLine := []string{"run"}
+	cmdLine := []string{"compose", "run"}
 	for i := range envVars {
 		cmdLine = append(cmdLine, "-e")
 		cmdLine = append(cmdLine, envVars[i])
 	}
 	cmdLine = append(cmdLine, serviceName)
-	fmt.Printf("executing: docker-compose %s\n", strings.Join(cmdLine, " "))
-	cmd := exec.Command("docker-compose", cmdLine...)
+	fmt.Printf("executing: docker %s\n", strings.Join(cmdLine, " "))
+	cmd := exec.Command("docker", cmdLine...)
 	var outbuf, errbuf bytes.Buffer
 	cmd.Stdout = &outbuf
 	cmd.Stderr = &errbuf
