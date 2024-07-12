@@ -32,6 +32,7 @@ type SchemaList map[string]TableList
 type TableList map[string][]string
 
 type databaseIgnoreList map[string]struct{}
+type tableIgnoreList map[string]struct{}
 
 // BuildCollectionList unmarshals the collection_list from the args and builds the list of
 // objects to be collected. If collection_list is a JSON array, it collects every object in
@@ -45,6 +46,11 @@ func BuildCollectionList(al args.ArgumentList, ci connection.Info) (DatabaseList
 	ignoreDBList, err := parseIgnoreList(al.CollectionIgnoreDatabaseList)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse ignore db list: %w", err)
+	}
+
+	ignoreTableList, err := parseIgnoreList(al.CollectionIgnoreTableList)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse ignore table list: %w", err)
 	}
 
 	switch {
@@ -64,7 +70,7 @@ func BuildCollectionList(al args.ArgumentList, ci connection.Info) (DatabaseList
 	}
 
 	if len(dbNames) != 0 {
-		if dbList, err = buildCollectionListFromDatabaseNames(dbNames, ignoreDBList, ci); err != nil {
+		if dbList, err = buildCollectionListFromDatabaseNames(dbNames, ignoreDBList, ignoreTableList, ci); err != nil {
 			return nil, err
 		}
 	}
@@ -72,23 +78,23 @@ func BuildCollectionList(al args.ArgumentList, ci connection.Info) (DatabaseList
 	return dbList, nil
 }
 
-func parseIgnoreList(list string) (databaseIgnoreList, error) {
-	ignoreDBList := []string{}
-	ignoreDBMap := databaseIgnoreList{}
+func parseIgnoreList(list string) (map[string]struct{}, error) {
+	ignoreList := []string{}
+	ignoreMap := map[string]struct{}{}
 
 	if list == "" {
-		return ignoreDBMap, nil
+		return ignoreMap, nil
 	}
 
-	if err := json.Unmarshal([]byte(list), &ignoreDBList); err != nil {
+	if err := json.Unmarshal([]byte(list), &ignoreList); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal list arg '%s': %w", list, err)
 	}
 
-	for _, db := range ignoreDBList {
-		ignoreDBMap[db] = struct{}{}
+	for _, item := range ignoreList {
+		ignoreMap[item] = struct{}{}
 	}
 
-	return ignoreDBMap, nil
+	return ignoreMap, nil
 }
 
 func getAllDatabaseNames(ci connection.Info) ([]string, error) {
@@ -116,7 +122,7 @@ func getAllDatabaseNames(ci connection.Info) ([]string, error) {
 	return databaseNames, nil
 }
 
-func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList databaseIgnoreList, ci connection.Info) (DatabaseList, error) {
+func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList, ignoreTableList map[string]struct{}, ci connection.Info) (DatabaseList, error) {
 	databaseList := DatabaseList{}
 	for _, db := range dbnames {
 		if _, ok := ignoreDBList[db]; ok {
@@ -130,7 +136,7 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList databas
 		}
 		defer con.Close()
 
-		schemaList, err := buildSchemaListForDatabase(con)
+		schemaList, err := buildSchemaListForDatabase(con, ignoreTableList)
 		if err != nil {
 			log.Error("Failed to build schema list for database '%s': %s", db, err)
 			continue
@@ -145,7 +151,7 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList databas
 	return databaseList, nil
 }
 
-func buildSchemaListForDatabase(con *connection.PGSQLConnection) (SchemaList, error) {
+func buildSchemaListForDatabase(con *connection.PGSQLConnection, ignoreTableList map[string]struct{}) (SchemaList, error) {
 	schemaList := make(SchemaList)
 
 	var dataModel []struct {
@@ -165,6 +171,10 @@ func buildSchemaListForDatabase(con *connection.PGSQLConnection) (SchemaList, er
 			} else {
 				log.Debug("Query responded with a null schema name or table name. Skipping row %d. [Schema valid: %t / Table valid: %t]", index, row.SchemaName.Valid, row.TableName.Valid)
 			}
+			continue
+		}
+
+		if _, ok := ignoreTableList[row.TableName.String]; ok {
 			continue
 		}
 
