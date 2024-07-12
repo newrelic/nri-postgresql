@@ -30,9 +30,9 @@ test:
 
 integration-test:
 	@echo "=== $(INTEGRATION) === [ test ]: running integration tests..."
-	@docker-compose -f tests/docker-compose.yml pull
-	@go test -v -tags=integration -count 1 ./tests/. || (ret=$$?; docker-compose -f tests/docker-compose.yml down && exit $$ret)
-	@docker-compose -f tests/docker-compose.yml down
+	@docker compose -f tests/docker-compose.yml pull
+	@go test -v -tags=integration -count 1 ./tests/. || (ret=$$?; docker compose -f tests/docker-compose.yml down && exit $$ret)
+	@docker compose -f tests/docker-compose.yml down
 
 install: compile
 	@echo "=== $(INTEGRATION) === [ install ]: installing bin/$(BINARY_NAME)..."
