@@ -67,7 +67,7 @@ func TestSuccessConnection(t *testing.T) {
 		{
 			Name:     "Testing Metrics and inventory for Postgres v9.6.x",
 			Hostname: serviceNamePostgres96,
-			Schema:   "jsonschema96.json",
+			Schema:   "jsonschema-latest.json",
 			EnvVars:  []string{},
 		},
 		{

@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: example
       POSTGRES_DB: demo
 
-  postgres-16:
+  postgres-latest-supported:
     image: postgres:16
     restart: always
     environment:
@@ -21,7 +21,7 @@ services:
     working_dir: /code
     depends_on:
       - postgres-9-6
-      - postgres-16
+      - postgres-latest-supported
     volumes:
       - ../:/code
     entrypoint: go run /code/src/main.go
