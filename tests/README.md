@@ -2,7 +2,7 @@
 
 Steps to update the integration tests for the latest supported version:
 
-1. Update the postgres image in the `postgres-latest-supported` of the [docker-compose](./docker-compose.yml).
+1. Update the postgres image in the `postgres-latest-supported` of the [docker compose](./docker-compose.yml).
 2. Execute the integration tests
     * If the JSON-schema validation fails:
         - Check the inventory, some server settings might have been removed.
