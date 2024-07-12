@@ -1,17 +1,6 @@
-version: '3.1'
-
 services:
-
-  postgres-9-0:
-    image: postgres:9.0
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: example
-      POSTGRES_DB: demo
-
-  postgres-9-1:
-    image: postgres:9.1
+  postgres-9-6:
+    image: postgres:9.6
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -31,8 +20,7 @@ services:
     container_name: nri_postgresql
     working_dir: /code
     depends_on:
-      - postgres-9-0
-      - postgres-9-1
+      - postgres-9-6
       - postgres-latest-supported
     volumes:
       - ../:/code
