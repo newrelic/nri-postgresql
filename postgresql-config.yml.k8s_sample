@@ -46,6 +46,11 @@
             # COLLECTION_IGNORE_DATABASE_LIST: '["azure_maintenance","azure_sys"]'
             #
             # COLLECTION_IGNORE_DATABASE_LIST: '[]'
+
+            # JSON array of table names that will be ignored for metrics collection.
+            # Defaults to empty '[]'.
+            # Example:
+            # COLLECTION_IGNORE_TABLE_LIST: '["table1","table2"]'
             
             # True if database lock metrics should be collected
             # Note: requires that the `tablefunc` extension be installed on the public schema
