@@ -31,8 +31,8 @@ type SchemaList map[string]TableList
 // TableList is a map from table name to an array of indexes to collect
 type TableList map[string][]string
 
-type databaseIgnoreList map[string]struct{}
-type tableIgnoreList map[string]struct{}
+// ignoreList is a map to store items to be ignored during collection
+type ignoreList map[string]struct{}
 
 // BuildCollectionList unmarshals the collection_list from the args and builds the list of
 // objects to be collected. If collection_list is a JSON array, it collects every object in
@@ -78,19 +78,19 @@ func BuildCollectionList(al args.ArgumentList, ci connection.Info) (DatabaseList
 	return dbList, nil
 }
 
-func parseIgnoreList(list string) (map[string]struct{}, error) {
-	ignoreList := []string{}
-	ignoreMap := map[string]struct{}{}
+func parseIgnoreList(list string) (ignoreList, error) {
+	ignoreItems := []string{}
+	ignoreMap := ignoreList{}
 
 	if list == "" {
 		return ignoreMap, nil
 	}
 
-	if err := json.Unmarshal([]byte(list), &ignoreList); err != nil {
+	if err := json.Unmarshal([]byte(list), &ignoreItems); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal list arg '%s': %w", list, err)
 	}
 
-	for _, item := range ignoreList {
+	for _, item := range ignoreItems {
 		ignoreMap[item] = struct{}{}
 	}
 
@@ -122,7 +122,7 @@ func getAllDatabaseNames(ci connection.Info) ([]string, error) {
 	return databaseNames, nil
 }
 
-func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList, ignoreTableList map[string]struct{}, ci connection.Info) (DatabaseList, error) {
+func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList, ignoreTableList ignoreList, ci connection.Info) (DatabaseList, error) {
 	databaseList := DatabaseList{}
 	for _, db := range dbnames {
 		if _, ok := ignoreDBList[db]; ok {
@@ -151,7 +151,7 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList, ignore
 	return databaseList, nil
 }
 
-func buildSchemaListForDatabase(con *connection.PGSQLConnection, ignoreTableList map[string]struct{}) (SchemaList, error) {
+func buildSchemaListForDatabase(con *connection.PGSQLConnection, ignoreTableList ignoreList) (SchemaList, error) {
 	schemaList := make(SchemaList)
 
 	var dataModel []struct {
