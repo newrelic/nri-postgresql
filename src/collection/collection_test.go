@@ -20,7 +20,7 @@ func Test_buildSchemaListForDatabase(t *testing.T) {
 	mock.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
 	mock.ExpectClose()
 
-	ignoreTableList := tableIgnoreList{}
+	ignoreTableList := ignoreList{}
 	schemaList, err := buildSchemaListForDatabase(testConnection, ignoreTableList)
 	assert.Nil(t, err)
 	testConnection.Close()
@@ -46,7 +46,7 @@ func Test_buildSchemaListForDatabase_TableOnly(t *testing.T) {
 	mock.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
 	mock.ExpectClose()
 
-	ignoreTableList := tableIgnoreList{}
+	ignoreTableList := ignoreList{}
 	schemaList, err := buildSchemaListForDatabase(testConnection, ignoreTableList)
 	assert.Nil(t, err)
 
