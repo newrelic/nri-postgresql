@@ -20,7 +20,8 @@ func Test_buildSchemaListForDatabase(t *testing.T) {
 	mock.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
 	mock.ExpectClose()
 
-	schemaList, err := buildSchemaListForDatabase(testConnection)
+	ignoreTableList := ignoreList{}
+	schemaList, err := buildSchemaListForDatabase(testConnection, ignoreTableList)
 	assert.Nil(t, err)
 	testConnection.Close()
 
@@ -45,7 +46,8 @@ func Test_buildSchemaListForDatabase_TableOnly(t *testing.T) {
 	mock.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
 	mock.ExpectClose()
 
-	schemaList, err := buildSchemaListForDatabase(testConnection)
+	ignoreTableList := ignoreList{}
+	schemaList, err := buildSchemaListForDatabase(testConnection, ignoreTableList)
 	assert.Nil(t, err)
 
 	testConnection.Close()
@@ -174,5 +176,41 @@ func TestBuildCollectionList_All(t *testing.T) {
 	assert.NoError(t, mock2.ExpectationsWereMet())
 
 	ci.AssertNotCalled(t, "NewConnection", "ignored_database")
+	ci.AssertExpectations(t)
+}
+
+func TestBuildCollectionList_IgnoreTables(t *testing.T) {
+	al := args.ArgumentList{
+		CollectionList:               `["database1"]`,
+		CollectionIgnoreDatabaseList: ``,
+		CollectionIgnoreTableList:    `["ignored_table"]`,
+	}
+
+	ci := connection.MockInfo{}
+	testConnection1, mock1 := connection.CreateMockSQL(t)
+
+	ci.On("NewConnection", "database1").Return(testConnection1, nil)
+
+	instanceRows := sqlmock.NewRows([]string{
+		"schema_name",
+		"table_name",
+		"index_name",
+	}).AddRow("schema1", "table1", "index1").AddRow("schema1", "ignored_table", "index2")
+
+	mock1.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
+	mock1.ExpectClose()
+
+	expected := DatabaseList{
+		"database1": SchemaList{
+			"schema1": TableList{
+				"table1": []string{"index1"},
+			},
+		},
+	}
+
+	dl, err := BuildCollectionList(al, &ci)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, dl)
+	assert.NoError(t, mock1.ExpectationsWereMet())
 	ci.AssertExpectations(t)
 }

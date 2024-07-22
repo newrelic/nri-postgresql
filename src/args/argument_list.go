@@ -18,6 +18,7 @@ type ArgumentList struct {
 	Port                         string `default:"5432" help:"The port to connect to the PostgreSQL database"`
 	CollectionList               string `default:"{}" help:"A JSON object which defines the databases, schemas, tables, and indexes to collect. Can also be a JSON array that list databases to be collected. Can also be the string literal 'ALL' to collect everything. Collects nothing by default."`
 	CollectionIgnoreDatabaseList string `default:"[]" help:"A JSON array that list databases that will be excluded from collection. Nothing is excluded by default."`
+	CollectionIgnoreTableList    string `default:"[]" help:"A JSON array that list tables that will be excluded from collection. Nothing is excluded by default."`
 	SSLRootCertLocation          string `default:"" help:"Absolute path to PEM encoded root certificate file"`
 	SSLCertLocation              string `default:"" help:"Absolute path to PEM encoded client cert file"`
 	SSLKeyLocation               string `default:"" help:"Absolute path to PEM encoded client key file"`
