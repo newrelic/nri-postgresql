@@ -9,8 +9,13 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### enhancement
+## v2.14.0 - 2024-09-09
+
+### 🚀 Enhancements
 - Added `COLLECTION_IGNORE_TABLE_LIST` in order to filter by table name.
+
+### ⛓️ Dependencies
+- Updated golang version to v1.23.1
 
 ## v2.13.7 - 2024-08-12
 
