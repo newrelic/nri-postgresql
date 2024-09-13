@@ -53,11 +53,13 @@ var tableDefinition = &QueryDefinition{
 			n_live_tup, -- table.liveRows
 			n_dead_tup -- table.deadRows
 		FROM pg_statio_user_tables as statio
-		join pg_stat_user_tables as stat
-		on stat.relid=statio.relid
-		join pg_class c
-		on c.relname=stat.relname
-		where stat.schemaname::text || '.' || stat.relname::text in (%SCHEMA_TABLES%)`,
+		JOIN pg_stat_user_tables as stat
+			ON stat.relid=statio.relid
+		JOIN pg_class c
+			ON c.relname=stat.relname
+		JOIN pg_namespace n
+    		ON c.relnamespace = n.oid
+		WHERE n.nspname = stat.schemaname AND stat.schemaname::text || '.' || stat.relname::text in (%SCHEMA_TABLES%)`,
 
 	dataModels: []struct {
 		databaseBase
