@@ -23,14 +23,15 @@ var indexDefinition = &QueryDefinition{
 					idx_tup_read AS tuples_read,
 					idx_tup_fetch AS tuples_fetched
 			FROM pg_tables t
-			LEFT OUTER JOIN pg_class c ON t.tablename=c.relname
 			LEFT OUTER JOIN
-					( SELECT c.relname AS ctablename, x.indexrelid indexoid, ipg.relname AS indexname, x.indnatts AS number_of_columns, idx_scan, idx_tup_read, idx_tup_fetch, indexrelname, indisunique FROM pg_index x
+					( SELECT c.relname AS ctablename, n.nspname AS cschemaname, x.indexrelid indexoid, ipg.relname AS indexname, x.indnatts AS number_of_columns, idx_scan, idx_tup_read, idx_tup_fetch, indexrelname, indisunique FROM pg_index x
 								 JOIN pg_class c ON c.oid = x.indrelid
+								 JOIN pg_namespace n ON c.relnamespace = n.oid
 								 JOIN pg_class ipg ON ipg.oid = x.indexrelid
-								 JOIN pg_stat_all_indexes psai ON x.indexrelid = psai.indexrelid )
+								 JOIN pg_stat_all_indexes psai ON x.indexrelid = psai.indexrelid
+					)
 					AS foo
-					ON t.tablename = foo.ctablename
+					ON t.tablename = foo.ctablename AND t.schemaname = foo.cschemaname
 			where indexname is not null and t.schemaname || '.' || t.tablename || '.' || indexname in (%SCHEMA_TABLE_INDEXES%)
 			ORDER BY 1,2;`,
 
