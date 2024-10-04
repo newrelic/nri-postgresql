@@ -1,5 +1,4 @@
 //go:build integration
-// +build integration
 
 package tests
 
@@ -13,7 +12,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/newrelic/infra-integrations-sdk/log"
+	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"github.com/stretchr/testify/assert"
 	"github.com/xeipuuv/gojsonschema"
 )

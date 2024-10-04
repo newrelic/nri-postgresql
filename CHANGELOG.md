@@ -11,6 +11,14 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 ### bugfix
 - Fix an issue with particular metrics when the same table/index exists in several schemas
 
+### dependency
+
+- Upgrade go to 1.23.2
+
+### enhancements
+
+- Upgrade integrations SDK so the interval is variable and allows intervals up to 5 minutes
+
 ## v2.14.0 - 2024-09-09
 
 ### 🚀 Enhancements
