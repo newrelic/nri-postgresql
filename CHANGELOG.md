@@ -8,16 +8,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 Unreleased section should follow [Release Toolkit](https://github.com/newrelic/release-toolkit#render-markdown-and-update-markdown)
 
 ## Unreleased
-### bugfix
-- Fix an issue with particular metrics when the same table/index exists in several schemas
+
+## v2.15.0 - 2024-10-07
 
 ### dependency
-
 - Upgrade go to 1.23.2
 
-### enhancements
-
+### 🚀 Enhancements
 - Upgrade integrations SDK so the interval is variable and allows intervals up to 5 minutes
+
+### 🐞 Bug fixes
+- Fix an issue with particular metrics when the same table/index exists in several schemas
 
 ## v2.14.0 - 2024-09-09
 
