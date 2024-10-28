@@ -2053,39 +2053,6 @@
                   "value"
                 ]
               },
-              "db_user_namespace/boot_val": {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "value"
-                ]
-              },
-              "db_user_namespace/reset_val": {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "value"
-                ]
-              },
-              "db_user_namespace/setting": {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "value"
-                ]
-              },
               "deadlock_timeout/boot_val": {
                 "type": "object",
                 "properties": {
@@ -7490,39 +7457,6 @@
                   "value"
                 ]
               },
-              "old_snapshot_threshold/boot_val": {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "value"
-                ]
-              },
-              "old_snapshot_threshold/reset_val": {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "value"
-                ]
-              },
-              "old_snapshot_threshold/setting": {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "value"
-                ]
-              },
               "parallel_leader_participation/boot_val": {
                 "type": "object",
                 "properties": {
@@ -10194,39 +10128,6 @@
                   "value"
                 ]
               },
-              "trace_recovery_messages/boot_val": {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "value"
-                ]
-              },
-              "trace_recovery_messages/reset_val": {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "value"
-                ]
-              },
-              "trace_recovery_messages/setting": {
-                "type": "object",
-                "properties": {
-                  "value": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "value"
-                ]
-              },
               "trace_sort/boot_val": {
                 "type": "object",
                 "properties": {
@@ -12128,9 +12029,6 @@
               "data_sync_retry/boot_val",
               "data_sync_retry/reset_val",
               "data_sync_retry/setting",
-              "db_user_namespace/boot_val",
-              "db_user_namespace/reset_val",
-              "db_user_namespace/setting",
               "deadlock_timeout/boot_val",
               "deadlock_timeout/reset_val",
               "deadlock_timeout/setting",
@@ -12623,9 +12521,6 @@
               "min_wal_size/boot_val",
               "min_wal_size/reset_val",
               "min_wal_size/setting",
-              "old_snapshot_threshold/boot_val",
-              "old_snapshot_threshold/reset_val",
-              "old_snapshot_threshold/setting",
               "parallel_leader_participation/boot_val",
               "parallel_leader_participation/reset_val",
               "parallel_leader_participation/setting",
@@ -12869,9 +12764,6 @@
               "trace_notify/boot_val",
               "trace_notify/reset_val",
               "trace_notify/setting",
-              "trace_recovery_messages/boot_val",
-              "trace_recovery_messages/reset_val",
-              "trace_recovery_messages/setting",
               "trace_sort/boot_val",
               "trace_sort/reset_val",
               "trace_sort/setting",
