@@ -11843,6 +11843,426 @@
                 "required": [
                   "value"
                 ]
+              },
+              "allow_alter_system/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "allow_alter_system/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "allow_alter_system/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "commit_timestamp_buffers/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "commit_timestamp_buffers/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "commit_timestamp_buffers/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "enable_group_by_reordering/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "enable_group_by_reordering/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "enable_group_by_reordering/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "event_triggers/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "event_triggers/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "event_triggers/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "huge_pages_status/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "huge_pages_status/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "huge_pages_status/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "io_combine_limit/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "io_combine_limit/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "io_combine_limit/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "max_notify_queue_pages/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "max_notify_queue_pages/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "max_notify_queue_pages/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "multixact_member_buffers/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "multixact_member_buffers/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "multixact_member_buffers/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "multixact_offset_buffers/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "multixact_offset_buffers/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "multixact_offset_buffers/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "notify_buffers/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "notify_buffers/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "notify_buffers/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "restrict_nonsystem_relation_kind/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "restrict_nonsystem_relation_kind/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "restrict_nonsystem_relation_kind/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "serializable_buffers/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "serializable_buffers/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "serializable_buffers/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "subtransaction_buffers/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "subtransaction_buffers/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "subtransaction_buffers/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "summarize_wal/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "summarize_wal/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "summarize_wal/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "sync_replication_slots/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "sync_replication_slots/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "sync_replication_slots/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "synchronized_standby_slots/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "synchronized_standby_slots/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "synchronized_standby_slots/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "trace_connection_negotiation/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "trace_connection_negotiation/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "trace_connection_negotiation/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "transaction_buffers/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "transaction_buffers/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "transaction_buffers/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "transaction_timeout/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "transaction_timeout/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "transaction_timeout/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "wal_summary_keep_time/boot_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "wal_summary_keep_time/reset_val": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
+              },
+              "wal_summary_keep_time/setting": {
+                "type": "object",
+                "properties": {
+                  "value": {"type": "string"}
+                },
+                "required": ["value"]
               }
             },
             "required": [
@@ -12919,7 +13339,67 @@
               "xmloption/setting",
               "zero_damaged_pages/boot_val",
               "zero_damaged_pages/reset_val",
-              "zero_damaged_pages/setting"
+              "zero_damaged_pages/setting",
+              "allow_alter_system/boot_val",
+              "allow_alter_system/reset_val",
+              "allow_alter_system/setting",
+              "commit_timestamp_buffers/boot_val",
+              "commit_timestamp_buffers/reset_val",
+              "commit_timestamp_buffers/setting",
+              "enable_group_by_reordering/boot_val",
+              "enable_group_by_reordering/reset_val",
+              "enable_group_by_reordering/setting",
+              "event_triggers/boot_val",
+              "event_triggers/reset_val",
+              "event_triggers/setting",
+              "huge_pages_status/boot_val",
+              "huge_pages_status/reset_val",
+              "huge_pages_status/setting",
+              "io_combine_limit/boot_val",
+              "io_combine_limit/reset_val",
+              "io_combine_limit/setting",
+              "max_notify_queue_pages/boot_val",
+              "max_notify_queue_pages/reset_val",
+              "max_notify_queue_pages/setting",
+              "multixact_member_buffers/boot_val",
+              "multixact_member_buffers/reset_val",
+              "multixact_member_buffers/setting",
+              "multixact_offset_buffers/boot_val",
+              "multixact_offset_buffers/reset_val",
+              "multixact_offset_buffers/setting",
+              "notify_buffers/boot_val",
+              "notify_buffers/reset_val",
+              "notify_buffers/setting",
+              "restrict_nonsystem_relation_kind/boot_val",
+              "restrict_nonsystem_relation_kind/reset_val",
+              "restrict_nonsystem_relation_kind/setting",
+              "serializable_buffers/boot_val",
+              "serializable_buffers/reset_val",
+              "serializable_buffers/setting",
+              "subtransaction_buffers/boot_val",
+              "subtransaction_buffers/reset_val",
+              "subtransaction_buffers/setting",
+              "summarize_wal/boot_val",
+              "summarize_wal/reset_val",
+              "summarize_wal/setting",
+              "sync_replication_slots/boot_val",
+              "sync_replication_slots/reset_val",
+              "sync_replication_slots/setting",
+              "synchronized_standby_slots/boot_val",
+              "synchronized_standby_slots/reset_val",
+              "synchronized_standby_slots/setting",
+              "trace_connection_negotiation/boot_val",
+              "trace_connection_negotiation/reset_val",
+              "trace_connection_negotiation/setting",
+              "transaction_buffers/boot_val",
+              "transaction_buffers/reset_val",
+              "transaction_buffers/setting",
+              "transaction_timeout/boot_val",
+              "transaction_timeout/reset_val",
+              "transaction_timeout/setting",
+              "wal_summary_keep_time/boot_val",
+              "wal_summary_keep_time/reset_val",
+              "wal_summary_keep_time/setting"
             ]
           },
           "events": {
