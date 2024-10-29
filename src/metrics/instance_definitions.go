@@ -4,29 +4,52 @@ import (
 	"github.com/blang/semver/v4"
 )
 
+type VersionDefinition struct {
+	minVersion       semver.Version
+	queryDefinitions []*QueryDefinition
+}
+
+var versionDefinitions = []VersionDefinition{
+	{
+		minVersion: semver.MustParse("17.0.0"),
+		queryDefinitions: []*QueryDefinition{
+			instanceDefinitionBase170,
+			instanceDefinition170,
+		},
+	},
+	{
+		minVersion: semver.MustParse("9.2.0"),
+		queryDefinitions: []*QueryDefinition{
+			instanceDefinitionBase,
+			instanceDefinition91,
+			instanceDefinition92,
+		},
+	},
+	{
+		minVersion: semver.MustParse("9.1.0"),
+		queryDefinitions: []*QueryDefinition{
+			instanceDefinitionBase,
+			instanceDefinition91,
+		},
+	},
+	{
+		minVersion: semver.MustParse("0.0.0"),
+		queryDefinitions: []*QueryDefinition{
+			instanceDefinitionBase,
+		},
+	},
+}
+
 func generateInstanceDefinitions(version *semver.Version) []*QueryDefinition {
-	queryDefinitions := make([]*QueryDefinition, 1, 3)
-	v91 := semver.MustParse("9.1.0")
-	v92 := semver.MustParse("9.2.0")
-	v170 := semver.MustParse("17.0.0")
-
-	if !version.GE(v170) {
-		queryDefinitions[0] = instanceDefinitionBase
-
-		if version.GE(v91) {
-			queryDefinitions = append(queryDefinitions, instanceDefinition91)
+	// Find the first version definition that's applicable
+	for _, versionDef := range versionDefinitions {
+		if version.GE(versionDef.minVersion) {
+			return versionDef.queryDefinitions
 		}
-
-		if version.GE(v92) {
-			queryDefinitions = append(queryDefinitions, instanceDefinition92)
-		}
-
-	} else {
-		queryDefinitions[0] = instanceDefinitionBase170
-		queryDefinitions = append(queryDefinitions, instanceDefinition170)
 	}
 
-	return queryDefinitions
+	// This should never happen due to the "0.0.0" fallback version,
+	return []*QueryDefinition{instanceDefinitionBase}
 }
 
 var instanceDefinitionBase = &QueryDefinition{
