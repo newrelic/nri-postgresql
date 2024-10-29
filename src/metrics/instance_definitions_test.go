@@ -39,12 +39,12 @@ func Test_generateInstanceDefinitions170(t *testing.T) {
 	v := semver.MustParse("17.0.0")
 	queryDefinitions := generateInstanceDefinitions(&v)
 
-	assert.Equal(t, 5, len(queryDefinitions))
+	assert.Equal(t, 2, len(queryDefinitions))
 }
 
 func Test_generateInstanceDefinitions175(t *testing.T) {
 	v := semver.MustParse("17.5.0")
 	queryDefinitions := generateInstanceDefinitions(&v)
 
-	assert.Equal(t, 5, len(queryDefinitions))
+	assert.Equal(t, 2, len(queryDefinitions))
 }

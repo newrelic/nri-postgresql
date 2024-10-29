@@ -5,23 +5,25 @@ import (
 )
 
 func generateInstanceDefinitions(version *semver.Version) []*QueryDefinition {
-	queryDefinitions := make([]*QueryDefinition, 1, 5)
+	queryDefinitions := make([]*QueryDefinition, 1, 3)
 	v91 := semver.MustParse("9.1.0")
 	v92 := semver.MustParse("9.2.0")
 	v170 := semver.MustParse("17.0.0")
 
-	queryDefinitions[0] = instanceDefinitionBase
+	if !version.GE(v170) {
+		queryDefinitions[0] = instanceDefinitionBase
 
-	if version.GE(v91) {
-		queryDefinitions = append(queryDefinitions, instanceDefinition91)
-	}
+		if version.GE(v91) {
+			queryDefinitions = append(queryDefinitions, instanceDefinition91)
+		}
 
-	if version.GE(v92) {
-		queryDefinitions = append(queryDefinitions, instanceDefinition92)
-	}
+		if version.GE(v92) {
+			queryDefinitions = append(queryDefinitions, instanceDefinition92)
+		}
 
-	if version.GE(v170) {
-		queryDefinitions = append(queryDefinitions, instanceDefinitionBase170, instanceDefinition170)
+	} else {
+		queryDefinitions[0] = instanceDefinitionBase170
+		queryDefinitions = append(queryDefinitions, instanceDefinition170)
 	}
 
 	return queryDefinitions
