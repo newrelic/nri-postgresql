@@ -100,6 +100,12 @@
                 "checkpointer.checkpointsScheduledPerSecond": {
                   "type": "number"
                 },
+                "io.backendFsyncCallsPerSecond": {
+                  "type": "number"
+                },
+                "io.buffersWrittenByBackendPerSecond": {
+                  "type": "number"
+                },
                 "displayName": {
                   "type": "string"
                 },
