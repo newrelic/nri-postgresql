@@ -15,6 +15,7 @@ var versionDefinitions = []VersionDefinition{
 		queryDefinitions: []*QueryDefinition{
 			instanceDefinitionBase170,
 			instanceDefinition170,
+			instanceDefinitionInputOutput170,
 		},
 	},
 	{
@@ -32,12 +33,6 @@ var versionDefinitions = []VersionDefinition{
 			instanceDefinition91,
 		},
 	},
-	{
-		minVersion: semver.MustParse("0.0.0"),
-		queryDefinitions: []*QueryDefinition{
-			instanceDefinitionBase,
-		},
-	},
 }
 
 func generateInstanceDefinitions(version *semver.Version) []*QueryDefinition {
@@ -48,7 +43,6 @@ func generateInstanceDefinitions(version *semver.Version) []*QueryDefinition {
 		}
 	}
 
-	// This should never happen due to the "0.0.0" fallback version,
 	return []*QueryDefinition{instanceDefinitionBase}
 }
 
@@ -112,12 +106,12 @@ var instanceDefinitionBase170 = &QueryDefinition{
 
 var instanceDefinition170 = &QueryDefinition{
 	query: `SELECT 
-		BG.num_timed AS scheduled_checkpoints_performed,
-		BG.num_requested AS requested_checkpoints_performed,
-		BG.buffers_written AS buffers_written_during_checkpoint,
-		cast(BG.write_time AS bigint) AS time_writing_checkpoint_files_to_disk,
-		cast(BG.sync_time AS bigint) AS time_synchronizing_checkpoint_files_to_disk
-		FROM pg_stat_checkpointer BG;`,
+		CP.num_timed AS scheduled_checkpoints_performed,
+		CP.num_requested AS requested_checkpoints_performed,
+		CP.buffers_written AS buffers_written_during_checkpoint,
+		cast(CP.write_time AS bigint) AS time_writing_checkpoint_files_to_disk,
+		cast(CP.sync_time AS bigint) AS time_synchronizing_checkpoint_files_to_disk
+		FROM pg_stat_checkpointer CP;`,
 
 	dataModels: []struct {
 		ScheduledCheckpointsPerformed  *int64 `db:"scheduled_checkpoints_performed"             metric_name:"checkpointer.checkpointsScheduledPerSecond"                  source_type:"rate"`
@@ -125,5 +119,17 @@ var instanceDefinition170 = &QueryDefinition{
 		BuffersWrittenDuringCheckpoint *int64 `db:"buffers_written_during_checkpoint"           metric_name:"checkpointer.buffersWrittenForCheckpointsPerSecond"      source_type:"rate"`
 		CheckpointWriteTime            *int64 `db:"time_writing_checkpoint_files_to_disk"       metric_name:"checkpointer.checkpointWriteTimeInMillisecondsPerSecond" source_type:"rate"`
 		CheckpointSyncTime             *int64 `db:"time_synchronizing_checkpoint_files_to_disk" metric_name:"checkpointer.checkpointSyncTimeInMillisecondsPerSecond"  source_type:"rate"`
+	}{},
+}
+
+var instanceDefinitionInputOutput170 = &QueryDefinition{
+	query: `SELECT 
+		SUM(IO.writes) AS buffers_written_by_backend, 
+		SUM(IO.fsyncs) AS times_backend_executed_own_fsync 
+		FROM pg_stat_io IO;`,
+
+	dataModels: []struct {
+		BuffersWrittenByBackend *int64 `db:"buffers_written_by_backend"       metric_name:"io.buffersWrittenByBackendPerSecond"  source_type:"rate"`
+		BackendExecutedOwnFsync *int64 `db:"times_backend_executed_own_fsync" metric_name:"io.backendFsyncCallsPerSecond"        source_type:"rate"`
 	}{},
 }
