@@ -303,7 +303,7 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 	assert.Equal(t, expectedBase, tableEntity.Metrics[1].Metrics)
 }
 
-func Test_populateTableMetricsForDatabase_noTables(t *testing.T) {
+func TestPopulateTableMetricsForDatabaseNoTables(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
 	dbList := collection.DatabaseList{
@@ -323,7 +323,7 @@ func Test_populateTableMetricsForDatabase_noTables(t *testing.T) {
 	assert.Equal(t, 0, len(tableEntity.Metrics))
 }
 
-func Test_populateIndexMetricsForDatabase(t *testing.T) {
+func TestPopulateIndexMetricsForDatabase(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
 	dbList := collection.DatabaseList{
@@ -413,7 +413,7 @@ func Test_populateIndexMetricsForDatabase(t *testing.T) {
 	assert.Equal(t, expected2, indexEntity2.Metrics[0].Metrics)
 }
 
-func Test_populateIndexMetricsForDatabase_noIndexes(t *testing.T) {
+func TestPopulateIndexMetricsForDatabaseNoIndexes(t *testing.T) {
 	testIntegration, _ := integration.New("test", "test")
 
 	dbList := collection.DatabaseList{
@@ -435,10 +435,54 @@ func Test_populateIndexMetricsForDatabase_noIndexes(t *testing.T) {
 }
 
 func TestPopulatePgBouncerMetrics(t *testing.T) {
+
+	pgbouncerPriorTo23StatsRows := func() *sqlmock.Rows {
+		return sqlmock.NewRows([]string{
+			"database",
+			"total_xact_count",
+			"total_query_count",
+			"total_received",
+			"total_sent",
+			"total_xact_time",
+			"total_query_time",
+			"total_wait_time",
+			"avg_xact_count",
+			"avg_xact_time",
+			"avg_query_count",
+			"avg_recv",
+			"avg_sent",
+			"avg_query_time",
+			"avg_wait_time",
+		}).AddRow("testDB", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
+	}
+
+	pgbouncerPriorTo23ExpectedStats := func() map[string]interface{} {
+		return map[string]interface{}{
+			"pgbouncer.stats.transactionsPerSecond":                           float64(0),
+			"pgbouncer.stats.queriesPerSecond":                                float64(0),
+			"pgbouncer.stats.bytesInPerSecond":                                float64(0),
+			"pgbouncer.stats.bytesOutPerSecond":                               float64(0),
+			"pgbouncer.stats.totalTransactionDurationInMillisecondsPerSecond": float64(0),
+			"pgbouncer.stats.totalQueryDurationInMillisecondsPerSecond":       float64(0),
+			"pgbouncer.stats.avgTransactionCount":                             float64(8),
+			"pgbouncer.stats.avgTransactionDurationInMilliseconds":            float64(9),
+			"pgbouncer.stats.avgQueryCount":                                   float64(10),
+			"pgbouncer.stats.avgBytesIn":                                      float64(11),
+			"pgbouncer.stats.avgBytesOut":                                     float64(12),
+			"pgbouncer.stats.avgQueryDurationInMilliseconds":                  float64(13),
+			"displayName": "testDB",
+			"entityName":  "pgbouncer:testDB",
+			"event_type":  "PgBouncerSample",
+			"host":        "testhost",
+		}
+	}
+
 	testsCases := []struct {
 		name               string
 		pgbouncerPoolsRows *sqlmock.Rows
+		pgbouncerStatsRows *sqlmock.Rows
 		expectedPool       map[string]interface{}
+		expectedStats      map[string]interface{}
 	}{
 		{
 			name: "pgbouncer version =< 15",
@@ -456,6 +500,8 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 				"maxwait_us",
 				"pool_mode",
 			}).AddRow("testDB", "testUser", 1, 2, 3, 4, 5, 6, 7, 8, 9, "testMode"),
+			pgbouncerStatsRows: pgbouncerPriorTo23StatsRows(),
+			expectedStats:      pgbouncerPriorTo23ExpectedStats(),
 			expectedPool: map[string]interface{}{
 				"pgbouncer.pools.clientConnectionsActive":  float64(1),
 				"pgbouncer.pools.clientConnectionsWaiting": float64(2),
@@ -489,6 +535,8 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 				"pool_mode",
 				"cl_cancel_req", // Added column.
 			}).AddRow("testDB", "testUser", 1, 2, 3, 4, 5, 6, 7, 8, 9, "testMode", 10),
+			pgbouncerStatsRows: pgbouncerPriorTo23StatsRows(),
+			expectedStats:      pgbouncerPriorTo23ExpectedStats(),
 			expectedPool: map[string]interface{}{
 				"pgbouncer.pools.clientConnectionsActive":    float64(1),
 				"pgbouncer.pools.clientConnectionsWaiting":   float64(2),
@@ -526,6 +574,8 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 				"sv_active_cancel",
 				"sv_being_canceled",
 			}).AddRow("testDB", "testUser", 1, 2, 3, 4, 5, 6, 7, 8, 9, "testMode", 10, 11, 12, 13),
+			pgbouncerStatsRows: pgbouncerPriorTo23StatsRows(),
+			expectedStats:      pgbouncerPriorTo23ExpectedStats(),
 			expectedPool: map[string]interface{}{
 				"pgbouncer.pools.clientConnectionsActive":           float64(1),
 				"pgbouncer.pools.clientConnectionsWaiting":          float64(2),
@@ -546,17 +596,27 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 				"pgbouncer.pools.user":                              "testUser",
 			},
 		},
-	}
-
-	for _, testCase := range testsCases {
-		testCase := testCase
-
-		t.Run(testCase.name, func(t *testing.T) {
-			testIntegration, _ := integration.New("test", "test")
-
-			testConnection, mock := connection.CreateMockSQL(t)
-
-			pgbouncerStatsRows := sqlmock.NewRows([]string{
+		{
+			name: "pgbouncer version >= 23",
+			pgbouncerPoolsRows: sqlmock.NewRows([]string{
+				"database",
+				"user",
+				"cl_active",
+				"cl_waiting",
+				"sv_active",
+				"sv_idle",
+				"sv_used",
+				"sv_tested",
+				"sv_login",
+				"maxwait",
+				"maxwait_us",
+				"pool_mode",
+				"cl_waiting_cancel_req",
+				"cl_active_cancel_req",
+				"sv_active_cancel",
+				"sv_being_canceled",
+			}).AddRow("testDB", "testUser", 1, 2, 3, 4, 5, 6, 7, 8, 9, "testMode", 10, 11, 12, 13),
+			pgbouncerStatsRows: sqlmock.NewRows([]string{
 				"database",
 				"total_xact_count",
 				"total_query_count",
@@ -572,9 +632,29 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 				"avg_sent",
 				"avg_query_time",
 				"avg_wait_time",
-			}).AddRow("testDB", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14)
-
-			expectedStats := map[string]interface{}{
+				"total_server_assignment_count", // New in v23
+				"avg_server_assignment_count",   // New in v23
+			}).AddRow("testDB", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16),
+			expectedPool: map[string]interface{}{
+				"pgbouncer.pools.clientConnectionsActive":           float64(1),
+				"pgbouncer.pools.clientConnectionsWaiting":          float64(2),
+				"pgbouncer.pools.serverConnectionsActive":           float64(3),
+				"pgbouncer.pools.serverConnectionsIdle":             float64(4),
+				"pgbouncer.pools.serverConnectionsUsed":             float64(5),
+				"pgbouncer.pools.serverConnectionsTested":           float64(6),
+				"pgbouncer.pools.serverConnectionsLogin":            float64(7),
+				"pgbouncer.pools.maxwaitInMilliseconds":             float64(8),
+				"displayName":                                       "testDB",
+				"entityName":                                        "pgbouncer:testDB",
+				"event_type":                                        "PgBouncerSample",
+				"host":                                              "testhost",
+				"pgbouncer.pools.clientConnectionsWaitingCancelReq": float64(10),
+				"pgbouncer.pools.clientConnectionsActiveCancelReq":  float64(11),
+				"pgbouncer.pools.serverConnectionsActiveCancel":     float64(12),
+				"pgbouncer.pools.serverConnectionsBeingCancel":      float64(13),
+				"pgbouncer.pools.user":                              "testUser",
+			},
+			expectedStats: map[string]interface{}{
 				"pgbouncer.stats.transactionsPerSecond":                           float64(0),
 				"pgbouncer.stats.queriesPerSecond":                                float64(0),
 				"pgbouncer.stats.bytesInPerSecond":                                float64(0),
@@ -587,15 +667,27 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 				"pgbouncer.stats.avgBytesIn":                                      float64(11),
 				"pgbouncer.stats.avgBytesOut":                                     float64(12),
 				"pgbouncer.stats.avgQueryDurationInMilliseconds":                  float64(13),
-
+				"pgbouncer.stats.totalServerAssignmentCount":                      float64(15),
+				"pgbouncer.stats.avgServerAssignmentCount":                        float64(16),
 				"displayName": "testDB",
 				"entityName":  "pgbouncer:testDB",
 				"event_type":  "PgBouncerSample",
 				"host":        "testhost",
-			}
+			},
+		},
+	}
+
+	for _, testCase := range testsCases {
+		testCase := testCase
+
+		t.Run(testCase.name, func(t *testing.T) {
+			testIntegration, _ := integration.New("test", "test")
+
+			testConnection, mock := connection.CreateMockSQL(t)
 
 			mock.ExpectQuery("SHOW STATS;").
-				WillReturnRows(pgbouncerStatsRows)
+				WillReturnRows(testCase.pgbouncerStatsRows)
+
 			mock.ExpectQuery("SHOW POOLS;").
 				WillReturnRows(testCase.pgbouncerPoolsRows)
 
@@ -606,7 +698,8 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 			id4 := integration.NewIDAttribute("port", "1234")
 			pbEntity, err := testIntegration.Entity("testDB", "pgbouncer", id3, id4)
 			assert.Nil(t, err)
-			assert.Equal(t, expectedStats, pbEntity.Metrics[0].Metrics)
+			assert.Equal(t, len(pbEntity.Metrics), 2)
+			assert.Equal(t, testCase.expectedStats, pbEntity.Metrics[0].Metrics)
 			assert.Equal(t, testCase.expectedPool, pbEntity.Metrics[1].Metrics)
 		})
 	}

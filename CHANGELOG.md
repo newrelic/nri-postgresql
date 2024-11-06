@@ -10,21 +10,7 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 ## Unreleased
 
 ### Enhancements
-- Added support for PostgreSQL v17 
-
-### Breaking Changes
-- Metric collection updated to reflect PostgreSQL v17 table structure changes:
-  - Metrics previously collected from `pg_stat_bgwriter` are now collected from:
-    - `pg_stat_checkpointer`
-    - `pg_stat_io`
-  - Variable names have changed from original `pg_stat_bgwriter` metrics to reflect new table structure:
-    - `bgwriter.buffersWrittenForCheckpointsPerSecond` → `checkpointer.buffersWrittenForCheckpointsPerSecond`
-    - `bgwriter.checkpointSyncTimeInMillisecondsPerSecond` → `checkpointer.checkpointSyncTimeInMillisecondsPerSecond`
-    - `bgwriter.checkpointWriteTimeInMillisecondsPerSecond` → `checkpointer.checkpointWriteTimeInMillisecondsPerSecond`
-    - `bgwriter.checkpointsRequestedPerSecond` → `checkpointer.checkpointsRequestedPerSecond`
-    - `bgwriter.checkpointsScheduledPerSecond` → `checkpointer.checkpointsScheduledPerSecond`
-    - `bgwriter.backendFsyncCallsPerSecond` → `io.backendFsyncCallsPerSecond`
-    - `bgwriter.buffersWrittenByBackendPerSecond` → `io.buffersWrittenByBackendPerSecond`
+- Added support for pgbouncer v1.23 with new columns in `STATS` table.
 
 ## v2.15.0 - 2024-10-07
 

@@ -13,23 +13,25 @@ var pgbouncerStatsDefinition = &QueryDefinition{
 
 	dataModels: []struct {
 		databaseBase
-		TotalXactCount  *int64 `db:"total_xact_count"  metric_name:"pgbouncer.stats.transactionsPerSecond"                           source_type:"rate"`
-		TotalQueryCount *int64 `db:"total_query_count" metric_name:"pgbouncer.stats.queriesPerSecond"                                source_type:"rate"`
-		TotalReceived   *int64 `db:"total_received"    metric_name:"pgbouncer.stats.bytesInPerSecond"                                source_type:"rate"`
-		TotalSent       *int64 `db:"total_sent"        metric_name:"pgbouncer.stats.bytesOutPerSecond"                               source_type:"rate"`
-		TotalXactTime   *int64 `db:"total_xact_time"   metric_name:"pgbouncer.stats.totalTransactionDurationInMillisecondsPerSecond" source_type:"rate"`
-		TotalQueryTime  *int64 `db:"total_query_time"  metric_name:"pgbouncer.stats.totalQueryDurationInMillisecondsPerSecond"       source_type:"rate"`
-		TotalRequests   *int64 `db:"total_requests"    metric_name:"pgbouncer.stats.requestsPerSecond"                               source_type:"rate"`
-		TotalWaitTime   *int64 `db:"total_wait_time"`
-		AvgXactCount    *int64 `db:"avg_xact_count"    metric_name:"pgbouncer.stats.avgTransactionCount"                             source_type:"gauge"`
-		AvgXactTime     *int64 `db:"avg_xact_time"     metric_name:"pgbouncer.stats.avgTransactionDurationInMilliseconds"            source_type:"gauge"`
-		AvgQueryCount   *int64 `db:"avg_query_count"   metric_name:"pgbouncer.stats.avgQueryCount"                                   source_type:"gauge"`
-		AvgRecv         *int64 `db:"avg_recv"          metric_name:"pgbouncer.stats.avgBytesIn"                                      source_type:"gauge"`
-		AvgSent         *int64 `db:"avg_sent"          metric_name:"pgbouncer.stats.avgBytesOut"                                     source_type:"gauge"`
-		AvgReq          *int64 `db:"avg_req"           metric_name:"pgbouncer.stats.avgRequestsPerSecond"                            source_type:"gauge"`
-		AvgQueryTime    *int64 `db:"avg_query_time"    metric_name:"pgbouncer.stats.avgQueryDurationInMilliseconds"                  source_type:"gauge"`
-		AvgQuery        *int64 `db:"avg_query"         metric_name:"pgbouncer.stats.avgQueryDurationInMilliseconds"                  source_type:"gauge"`
-		AvgWaitTime     *int64 `db:"avg_wait_time"`
+		TotalXactCount             *int64 `db:"total_xact_count"  metric_name:"pgbouncer.stats.transactionsPerSecond"                           source_type:"rate"`
+		TotalQueryCount            *int64 `db:"total_query_count" metric_name:"pgbouncer.stats.queriesPerSecond"                                source_type:"rate"`
+		TotalServerAssignmentCount *int64 `db:"total_server_assignment_count" metric_name:"pgbouncer.stats.totalServerAssignmentCount" source_type:"gauge"` // added in v1.23
+		TotalReceived              *int64 `db:"total_received"    metric_name:"pgbouncer.stats.bytesInPerSecond"                                source_type:"rate"`
+		TotalSent                  *int64 `db:"total_sent"        metric_name:"pgbouncer.stats.bytesOutPerSecond"                               source_type:"rate"`
+		TotalXactTime              *int64 `db:"total_xact_time"   metric_name:"pgbouncer.stats.totalTransactionDurationInMillisecondsPerSecond" source_type:"rate"`
+		TotalQueryTime             *int64 `db:"total_query_time"  metric_name:"pgbouncer.stats.totalQueryDurationInMillisecondsPerSecond"       source_type:"rate"`
+		TotalRequests              *int64 `db:"total_requests"    metric_name:"pgbouncer.stats.requestsPerSecond"                               source_type:"rate"`
+		TotalWaitTime              *int64 `db:"total_wait_time"`
+		AvgXactCount               *int64 `db:"avg_xact_count"    metric_name:"pgbouncer.stats.avgTransactionCount"                             source_type:"gauge"`
+		AvgXactTime                *int64 `db:"avg_xact_time"     metric_name:"pgbouncer.stats.avgTransactionDurationInMilliseconds"            source_type:"gauge"`
+		AvgQueryCount              *int64 `db:"avg_query_count"   metric_name:"pgbouncer.stats.avgQueryCount"                                   source_type:"gauge"`
+		AvgServerAssignmentCount   *int64 `db:"avg_server_assignment_count" metric_name:"pgbouncer.stats.avgServerAssignmentCount" source_type:"gauge"` // added in v1.23
+		AvgRecv                    *int64 `db:"avg_recv"          metric_name:"pgbouncer.stats.avgBytesIn"                                      source_type:"gauge"`
+		AvgSent                    *int64 `db:"avg_sent"          metric_name:"pgbouncer.stats.avgBytesOut"                                     source_type:"gauge"`
+		AvgReq                     *int64 `db:"avg_req"           metric_name:"pgbouncer.stats.avgRequestsPerSecond"                            source_type:"gauge"`
+		AvgQueryTime               *int64 `db:"avg_query_time"    metric_name:"pgbouncer.stats.avgQueryDurationInMilliseconds"                  source_type:"gauge"`
+		AvgQuery                   *int64 `db:"avg_query"         metric_name:"pgbouncer.stats.avgQueryDurationInMilliseconds"                  source_type:"gauge"`
+		AvgWaitTime                *int64 `db:"avg_wait_time"`
 	}{},
 }
 
