@@ -9,10 +9,10 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### 🚀 Enhancements
+### Enhancements
 - Added support for PostgreSQL v17 
 
-### ⚠️ Breaking Changes
+### Breaking Changes
 - Metric collection updated to reflect PostgreSQL v17 table structure changes:
   - Metrics previously collected from `pg_stat_bgwriter` are now collected from:
     - `pg_stat_checkpointer`
