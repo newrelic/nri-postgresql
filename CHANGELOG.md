@@ -9,6 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+### Enhancements
+- Added support for pgbouncer v1.23 with new columns in `STATS` table.
+
 ## v2.15.0 - 2024-10-07
 
 ### dependency
