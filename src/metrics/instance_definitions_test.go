@@ -62,7 +62,7 @@ func Test_generateInstanceDefinitionsOutOfOrder(t *testing.T) {
 		queryDefinitions := generateInstanceDefinitions(&version)
 		expectedQueries := []*QueryDefinition{instanceDefinitionInputOutput170, instanceDefinition170, instanceDefinitionBase170}
 
-		// This fails beacuse order is different
+		// This fails because order is different
 		assert.False(t, assert.ObjectsAreEqual(expectedQueries, queryDefinitions), "Query definitions should be in the correct order")
 	})
 }
