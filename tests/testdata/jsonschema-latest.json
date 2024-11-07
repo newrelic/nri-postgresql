@@ -85,6 +85,27 @@
                 "bgwriter.checkpointsScheduledPerSecond": {
                   "type": "number"
                 },
+                "checkpointer.buffersWrittenForCheckpointsPerSecond": {
+                  "type": "number"
+                },
+                "checkpointer.checkpointSyncTimeInMillisecondsPerSecond": {
+                  "type": "number"
+                },
+                "checkpointer.checkpointWriteTimeInMillisecondsPerSecond": {
+                  "type": "number"
+                },
+                "checkpointer.checkpointsRequestedPerSecond": {
+                  "type": "number"
+                },
+                "checkpointer.checkpointsScheduledPerSecond": {
+                  "type": "number"
+                },
+                "io.backendFsyncCallsPerSecond": {
+                  "type": "number"
+                },
+                "io.buffersWrittenByBackendPerSecond": {
+                  "type": "number"
+                },
                 "displayName": {
                   "type": "string"
                 },
