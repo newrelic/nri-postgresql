@@ -11,7 +11,7 @@ on:
 
 jobs:
   push-pr:
-    uses: newrelic/coreint-automation/.github/workflows/reusable_push_pr.yaml@v3
+    uses: newrelic/coreint-automation/.github/workflows/reusable_push_pr.yaml@v4
     with:
       integration: postgresql
       run_test_build_fake_prerelease: true
