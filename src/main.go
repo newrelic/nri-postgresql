@@ -1,12 +1,8 @@
-//go:generate goversioninfo
 package main
 
 import (
+	"flag"
 	"fmt"
-	"os"
-	"runtime"
-	"strings"
-
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"github.com/newrelic/nri-postgresql/src/args"
@@ -14,6 +10,10 @@ import (
 	"github.com/newrelic/nri-postgresql/src/connection"
 	"github.com/newrelic/nri-postgresql/src/inventory"
 	"github.com/newrelic/nri-postgresql/src/metrics"
+	"github.com/newrelic/nri-postgresql/src/query_monitoring"
+	"os"
+	"runtime"
+	"strings"
 )
 
 const (
@@ -27,9 +27,11 @@ var (
 )
 
 func main() {
+
 	var args args.ArgumentList
 	// Create Integration
 	pgIntegration, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
+	//query_monitoring.PrintQueryOutput(args)
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
@@ -84,6 +86,12 @@ func main() {
 			defer con.Close()
 			inventory.PopulateInventory(instance, con)
 		}
+	}
+
+	con, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
+	runAnalysis := flag.Bool("analysis", true, "Run query analysis submodule")
+	if *runAnalysis {
+		query_monitoring.RunAnalysis(instance, con, args)
 	}
 
 	if err = pgIntegration.Publish(); err != nil {
