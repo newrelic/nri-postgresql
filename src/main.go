@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
@@ -87,12 +86,8 @@ func main() {
 			inventory.PopulateInventory(instance, con)
 		}
 	}
-
 	con, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
-	runAnalysis := flag.Bool("analysis", true, "Run query analysis submodule")
-	if *runAnalysis {
-		query_monitoring.RunAnalysis(instance, con, args)
-	}
+	query_monitoring.RunAnalysis(instance, con, args)
 
 	if err = pgIntegration.Publish(); err != nil {
 		log.Error(err.Error())
