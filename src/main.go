@@ -86,6 +86,7 @@ func main() {
 			inventory.PopulateInventory(instance, con)
 		}
 	}
+	//need to change the connection to change
 	con, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
 	query_monitoring.RunAnalysis(instance, con, args)
 
