@@ -94,7 +94,7 @@ func PopulateSlowRunningMetrics(instanceEntity *integration.Entity, conn *connec
 		log.Info("Populate-slow running: %+v", slowQueries)
 
 		for _, model := range slowQueries {
-			metricSet := instanceEntity.NewMetricSet("PostgresSlowQueriestharun")
+			metricSet := instanceEntity.NewMetricSet("PostgresSlowQueries")
 
 			modelValue := reflect.ValueOf(model)
 			modelType := reflect.TypeOf(model)
@@ -112,7 +112,7 @@ func PopulateSlowRunningMetrics(instanceEntity *integration.Entity, conn *connec
 				}
 			}
 
-		//	log.Info("Metrics set for slow query: %s in database: %s", *model.QueryID, *model.DatabaseName)
+			//	log.Info("Metrics set for slow query: %s in database: %s", *model.QueryID, *model.DatabaseName)
 		}
 	} else {
 		log.Info("Extension 'pg_stat_statements' is not enabled.")
