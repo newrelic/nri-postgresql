@@ -74,7 +74,7 @@ func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *connecti
 				}
 			}
 
-			//	log.Info("Metrics set for slow query: %s in database: %s", *model.QueryID, *model.DatabaseName)
+			log.Info("Metrics set for slow query: %s in database: %s", *model.QueryID, *model.DatabaseName)
 		}
 	} else {
 		log.Info("Extension 'pg_wait_sampling' is not enabled.")
