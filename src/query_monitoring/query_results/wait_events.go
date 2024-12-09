@@ -56,21 +56,20 @@ func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *connecti
 		log.Info("Populate wait event : %+v", waitQueries)
 
 		for _, model := range waitQueries {
-			metricSet := instanceEntity.NewMetricSet("PostgresWaitQueries")
+			//metricSet := instanceEntity.NewMetricSet("PostgresWaitQueries")
 
-			modelValue := reflect.ValueOf(model)
-			modelType := reflect.TypeOf(model)
+			//modelValue := reflect.ValueOf(model)
+			//modelType := reflect.TypeOf(model)
 
-			for i := 0; i < modelValue.NumField(); i++ {
-				field := modelValue.Field(i)
-				fieldType := modelType.Field(i)
-				metricName := fieldType.Tag.Get("metric_name")
-				sourceType := fieldType.Tag.Get("source_type")
-
-				if field.Kind() == reflect.Ptr && !field.IsNil() {
-					setMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
-				} else if field.Kind() != reflect.Ptr {
-					setMetric(metricSet, metricName, field.Interface(), sourceType)
+			for _, model := range waitQueries {
+				metricSet := instanceEntity.NewMetricSet("PostgresWaitQueries")
+				modelValue := reflect.ValueOf(model)
+				modelType := reflect.TypeOf(model)
+				for i := 0; i < modelValue.NumField(); i++ {
+					field := modelValue.Field(i)
+					fieldName := modelType.Field(i).Tag.Get("metric_name")
+					sourceType := modelType.Field(i).Tag.Get("source_type")
+					setMetric(metricSet, fieldName, field.Interface(), sourceType)
 				}
 			}
 
