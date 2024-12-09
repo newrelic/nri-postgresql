@@ -11,9 +11,9 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query_monitoring/validations"
 )
 
-func GetWaitEventMetrics(conn *connection.PGSQLConnection) ([]datamodels.WaitEventQuery, error) {
-	var waitQueries []datamodels.WaitEventQuery
-	var query = queries.WaitEvents
+func GetBlockingMetrics(conn *connection.PGSQLConnection) ([]datamodels.BlockingQuery, error) {
+	var blockingQueries []datamodels.BlockingQuery
+	var query = queries.BlockingQueries
 	rows, err := conn.Queryx(query)
 	if err != nil {
 		return nil, err
@@ -21,42 +21,42 @@ func GetWaitEventMetrics(conn *connection.PGSQLConnection) ([]datamodels.WaitEve
 	defer rows.Close()
 
 	for rows.Next() {
-		var waitQuery datamodels.WaitEventQuery
-		if err := rows.StructScan(&waitQuery); err != nil {
+		var blockingQuery datamodels.BlockingQuery
+		if err := rows.StructScan(&blockingQuery); err != nil {
 			return nil, err
 		}
-		waitQueries = append(waitQueries, waitQuery)
+		blockingQueries = append(blockingQueries, blockingQuery)
 	}
 
-	for _, query := range waitQueries {
-		log.Info("Wait Query: %+v", query)
+	for _, query := range blockingQueries {
+		log.Info("Blocking Query: %+v", query)
 	}
-	return waitQueries, nil
+	return blockingQueries, nil
 }
 
 // PopulateSlowRunningMetrics fetches slow-running metrics and populates them into the metric set
-func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection) {
-	isExtensionEnabled, err := validations.CheckPgWaitSamplingExtensionEnabled(conn)
+func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection, query string) {
+	isExtensionEnabled, err := validations.CheckPgStatStatementsExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
 		return
 	}
 	if isExtensionEnabled {
-		log.Info("Extension 'pg_wait_sampling' enabled.")
-		waitQueries, err := GetWaitEventMetrics(conn)
+		log.Info("Extension 'pg_stat_statements' enabled.")
+		blockingQueries, err := GetBlockingMetrics(conn)
 		if err != nil {
-			log.Error("Error fetching wait event queries: %v", err)
+			log.Error("Error fetching Blocking queries: %v", err)
 			return
 		}
 
-		if len(waitQueries) == 0 {
-			log.Info("No wait event queries found.")
+		if len(blockingQueries) == 0 {
+			log.Info("No Blocking queries found.")
 			return
 		}
-		log.Info("Populate wait event : %+v", waitQueries)
+		log.Info("Populate Blocking running: %+v", blockingQueries)
 
-		for _, model := range waitQueries {
-			metricSet := instanceEntity.NewMetricSet("PostgresWaitQueries")
+		for _, model := range blockingQueries {
+			metricSet := instanceEntity.NewMetricSet("PostgresBlockingQueries")
 
 			modelValue := reflect.ValueOf(model)
 			modelType := reflect.TypeOf(model)
@@ -74,10 +74,10 @@ func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *connecti
 				}
 			}
 
-			log.Info("Metrics set for slow query: %s in database: %s", *model.QueryID, *model.DatabaseName)
+			//	log.Info("Metrics set for slow query: %s in database: %s", *model.QueryID, *model.DatabaseName)
 		}
 	} else {
-		log.Info("Extension 'pg_wait_sampling' is not enabled.")
+		log.Info("Extension 'pg_stat_statements' is not enabled.")
 		return
 	}
 
