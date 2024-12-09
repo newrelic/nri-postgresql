@@ -29,7 +29,7 @@ func GetWaitEventMetrics(conn *connection.PGSQLConnection) ([]datamodels.WaitEve
 	}
 
 	for _, query := range waitQueries {
-		log.Info("Slow Query: %+v", query)
+		log.Info("Wait Query: %+v", query)
 	}
 	return waitQueries, nil
 }
