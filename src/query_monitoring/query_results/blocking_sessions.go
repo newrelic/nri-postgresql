@@ -192,8 +192,8 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			continue
 		}
 		log.Info("execPlan", execPlan[0]["Plan"])
-		firstJson, err := json.Marshal(execPlan[0]["Plan"])
-		if err != nil {
+		firstJson, bl := execPlan[0]["Plan"].(map[string]interface{})
+		if !bl {
 			log.Error("Failed to marshal firstJson: %v", err)
 			continue
 		}
