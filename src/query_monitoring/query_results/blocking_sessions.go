@@ -82,3 +82,52 @@ func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *connectio
 	}
 
 }
+func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection) {
+	individualQueries := GetIndividualQueryMetrics(conn)
+	if len(individualQueries) == 0 {
+		log.Info("No individual queries found.")
+		return
+	}
+	log.Info("Populate individual queries: %+v", individualQueries)
+
+	for _, model := range individualQueries {
+		metricSet := instanceEntity.NewMetricSet("PostgresIndividualQueriesSample")
+
+		modelValue := reflect.ValueOf(model)
+		modelType := reflect.TypeOf(model)
+
+		for i := 0; i < modelValue.NumField(); i++ {
+			field := modelValue.Field(i)
+			fieldType := modelType.Field(i)
+			metricName := fieldType.Tag.Get("metric_name")
+			sourceType := fieldType.Tag.Get("source_type")
+
+			if field.Kind() == reflect.Ptr && !field.IsNil() {
+				setMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
+			} else if field.Kind() != reflect.Ptr {
+				setMetric(metricSet, metricName, field.Interface(), sourceType)
+			}
+		}
+	}
+}
+
+func GetIndividualQueryMetrics(conn *connection.PGSQLConnection) []interface{} {
+	rows, err := conn.Queryx("select query from pg_stat_monitor where query like 'select * from actor%'")
+	if err != nil {
+		return nil
+	}
+	defer rows.Close()
+
+	var results []interface{}
+	for rows.Next() {
+		var model datamodels.IndividualQuerySearch
+		if err := rows.StructScan(&model); err != nil {
+			log.Error("Could not scan row: ", err)
+			continue
+		}
+		results = append(results, model)
+	}
+	log.Info("resultsss", results)
+	return results
+
+}

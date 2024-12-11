@@ -15,5 +15,6 @@ func RunAnalysis(instanceEntity *integration.Entity, connection *connection.PGSQ
 	query_results.PopulateSlowRunningMetrics(instanceEntity, connection, queries.SlowQueries)
 	query_results.PopulateWaitEventMetrics(instanceEntity, connection)
 	query_results.PopulateBlockingMetrics(instanceEntity, connection, queries.BlockingQueries)
+	individualQueriesList = query_results.PopulateIndividualQueryMetrics(instanceEntity, connection)
 	fmt.Println("Query analysis completed.")
 }
