@@ -191,6 +191,7 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			log.Error("Failed to unmarshal execution plan: %v", err)
 			continue
 		}
+		log.Info("execPlan", execPlan)
 		firstJson, err := json.Marshal(execPlan[0]["Plan"])
 		if err != nil {
 			log.Error("Failed to marshal firstJson: %v", err)
