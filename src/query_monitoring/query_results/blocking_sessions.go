@@ -2,7 +2,6 @@ package query_results
 
 import (
 	"encoding/json"
-	"fmt"
 	"reflect"
 
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
@@ -201,15 +200,15 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			log.Info("Key: %d, Value: %v\n", key, value)
 		}
 
-		log.Info("firstJson", firstJson)
-
-		var execPlanMetrics datamodels.QueryExecutionPlanMetrics
-		err = json.Unmarshal(firstJson, &execPlanMetrics)
-		if err != nil {
-			fmt.Println("Error unmarshalling JSON:", err)
-			return nil
-		}
-		executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)
+		//log.Info("firstJson", firstJson)
+		//
+		//var execPlanMetrics datamodels.QueryExecutionPlanMetrics
+		//err = json.Unmarshal(firstJson, &execPlanMetrics)
+		//if err != nil {
+		//	fmt.Println("Error unmarshalling JSON:", err)
+		//	return nil
+		//}
+		//executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)
 	}
 	return executionPlanMetricsList
 
