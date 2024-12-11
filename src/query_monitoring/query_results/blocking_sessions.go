@@ -202,7 +202,10 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 
 		//log.Info("firstJson", firstJson)
 		//
-		//var execPlanMetrics datamodels.QueryExecutionPlanMetrics
+		var execPlanMetrics datamodels.QueryExecutionPlanMetrics
+		f := firstJson["Plan Rows"].(float64)
+		execPlanMetrics.PlanRows = &f
+		executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)
 		//err = json.Unmarshal(firstJson, &execPlanMetrics)
 		//if err != nil {
 		//	fmt.Println("Error unmarshalling JSON:", err)
