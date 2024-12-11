@@ -196,6 +196,9 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			log.Error("Failed to marshal firstJson: %v", err)
 			continue
 		}
+		for key, value := range firstJson {
+			log.Info("Key: %s, Value: %v\n", key, value)
+		}
 
 		log.Info("firstJson", firstJson)
 
