@@ -197,7 +197,7 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			continue
 		}
 		for key, value := range firstJson {
-			log.Info("Key: %v, Value: %v\n", key, value)
+			log.Info("Key: %s, Value: %s\n", key, value)
 		}
 
 		//log.Info("firstJson", firstJson)
