@@ -40,5 +40,5 @@ type IndividualQuerySearch struct {
 }
 
 type QueryExecutionPlanMetrics struct {
-	PlanRows *float64 `json:"Plan Rows"           metric_name:"executionplan.plan_rows"             source_type:"gauge"`
+	PlanRows *float64 `metric_name:"executionplan.plan_rows"             source_type:"gauge"`
 }
