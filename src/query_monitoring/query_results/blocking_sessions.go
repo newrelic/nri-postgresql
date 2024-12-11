@@ -1,6 +1,8 @@
 package query_results
 
 import (
+	"encoding/json"
+	"fmt"
 	"reflect"
 
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
@@ -82,11 +84,11 @@ func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *connectio
 	}
 
 }
-func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection) {
+func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection) []datamodels.IndividualQuerySearch {
 	individualQueries := GetIndividualQueryMetrics(conn)
 	if len(individualQueries) == 0 {
 		log.Info("No individual queries found.")
-		return
+		return nil
 	}
 	log.Info("Populate individual queries: %+v", individualQueries)
 
@@ -109,16 +111,17 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *co
 			}
 		}
 	}
+	return individualQueries
 }
 
-func GetIndividualQueryMetrics(conn *connection.PGSQLConnection) []interface{} {
+func GetIndividualQueryMetrics(conn *connection.PGSQLConnection) []datamodels.IndividualQuerySearch {
 	rows, err := conn.Queryx("select query from pg_stat_monitor where query like 'select * from actor%'")
 	if err != nil {
 		return nil
 	}
 	defer rows.Close()
 
-	var results []interface{}
+	var results []datamodels.IndividualQuerySearch
 	for rows.Next() {
 		var model datamodels.IndividualQuerySearch
 		if err := rows.StructScan(&model); err != nil {
@@ -129,5 +132,79 @@ func GetIndividualQueryMetrics(conn *connection.PGSQLConnection) []interface{} {
 	}
 	log.Info("resultsss", results)
 	return results
+
+}
+
+func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection, results []datamodels.IndividualQuerySearch) {
+	if len(results) == 0 {
+		log.Info("No individual queries found.")
+		return
+	}
+	log.Info("Populate individual queries: %+v", results)
+
+	executionDetailsList := GetExecutionPlanMetrics(conn, results)
+
+	log.Info("executionDetailsList", executionDetailsList)
+
+	for _, model := range executionDetailsList {
+		metricSet := instanceEntity.NewMetricSet("PostgresExecutionPlanMetricsSample")
+
+		modelValue := reflect.ValueOf(model)
+		modelType := reflect.TypeOf(model)
+
+		for i := 0; i < modelValue.NumField(); i++ {
+			field := modelValue.Field(i)
+			fieldType := modelType.Field(i)
+			metricName := fieldType.Tag.Get("metric_name")
+			sourceType := fieldType.Tag.Get("source_type")
+
+			if field.Kind() == reflect.Ptr && !field.IsNil() {
+				setMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
+			} else if field.Kind() != reflect.Ptr {
+				setMetric(metricSet, metricName, field.Interface(), sourceType)
+			}
+		}
+	}
+}
+
+func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamodels.IndividualQuerySearch) []datamodels.QueryExecutionPlanMetrics {
+	var executionPlanMetricsList []datamodels.QueryExecutionPlanMetrics
+	for _, individualQuery := range results {
+		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
+		rows, err := conn.Queryx(query)
+		if err != nil {
+			continue
+		}
+		defer rows.Close()
+		if !rows.Next() {
+			return nil
+		}
+		var execPlanJSON string
+		if err := rows.Scan(&execPlanJSON); err != nil {
+			log.Error("Error scanning row: ", err.Error())
+			continue
+		}
+
+		var execPlan []map[string]interface{}
+		err = json.Unmarshal([]byte(execPlanJSON), &execPlan)
+		if err != nil {
+			log.Error("Failed to unmarshal execution plan: %v", err)
+			continue
+		}
+		firstJson, err := json.Marshal(execPlan[0]["Plan"])
+		if err != nil {
+			log.Error("Failed to marshal firstJson: %v", err)
+			continue
+		}
+
+		var execPlanMetrics datamodels.QueryExecutionPlanMetrics
+		err = json.Unmarshal(firstJson, &execPlanMetrics)
+		if err != nil {
+			fmt.Println("Error unmarshalling JSON:", err)
+			return nil
+		}
+		executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)
+	}
+	return executionPlanMetricsList
 
 }
