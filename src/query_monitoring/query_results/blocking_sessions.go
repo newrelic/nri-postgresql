@@ -175,6 +175,12 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 
 	var executionPlanMetricsList []datamodels.QueryExecutionPlanMetrics
 
+	var groupIndividualQueriesByDatabase = GroupQueriesByDatabase(results)
+
+	for _, databaseName := range groupIndividualQueriesByDatabase {
+		log.Info("databaseName : ", databaseName)
+	}
+
 	for _, individualQuery := range results {
 		newConn, err := connection.OpenDB(args, *individualQuery.DatabaseName)
 		if err != nil {
@@ -212,12 +218,6 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			return nil
 		}
 		log.Info("execPlanMetrics", execPlanMetrics, execPlan[0]["Plan"])
-		//var execPlanMetrics datamodels.QueryExecutionPlanMetrics
-		//err = json.Unmarshal(firstJson, &execPlanMetrics)
-		//if err != nil {
-		//	fmt.Println("Error unmarshalling JSON:", err)
-		//	return nil
-		//}
 
 		execPlanMetrics.QueryText = *individualQuery.QueryText
 		execPlanMetrics.QueryId = *individualQuery.QueryId
@@ -233,4 +233,15 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 	}
 	return executionPlanMetricsList
 
+}
+
+func GroupQueriesByDatabase(results []datamodels.IndividualQuerySearch) map[string][]datamodels.IndividualQuerySearch {
+	databaseMap := make(map[string][]datamodels.IndividualQuerySearch)
+
+	for _, query := range results {
+		dbName := *query.DatabaseName
+		databaseMap[dbName] = append(databaseMap[dbName], query)
+	}
+
+	return databaseMap
 }
