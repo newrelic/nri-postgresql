@@ -175,10 +175,10 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 
 	for _, individualQuery := range results {
 		//newConnection, err := performanceDbConnection.OpenDB(args)
-		if err != nil {
-			log.Error("Error opening database connection: %v", err)
-			return nil
-		}
+		//if err != nil {
+		//	log.Error("Error opening database connection: %v", err)
+		//	return nil
+		//}
 		log.Info("individualQuery", "")
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
 		rows, err := conn.Queryx(query)
