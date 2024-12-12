@@ -6,6 +6,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/args"
 	"reflect"
 
+	"github.com/mitchellh/mapstructure"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"github.com/newrelic/nri-postgresql/src/connection"
@@ -201,18 +202,20 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			log.Error("Failed to unmarshal execution plan: %v", err)
 			continue
 		}
-		firstJson, err := json.Marshal(execPlan[0]["Plan"])
-		if err != nil {
-			log.Error("Failed to marshal firstJson: %v", err)
-			continue
-		}
-		log.Info("firstJson", firstJson)
+
 		var execPlanMetrics datamodels.QueryExecutionPlanMetrics
-		err = json.Unmarshal(firstJson, &execPlanMetrics)
+		err = mapstructure.Decode(execPlan[0]["Plan"], &execPlanMetrics)
 		if err != nil {
-			fmt.Println("Error unmarshalling JSON:", err)
+			log.Error("Failed to decode execPlan to execPlanMetrics: %v", err)
 			return nil
 		}
+		log.Info("execPlanMetrics", execPlanMetrics)
+		//var execPlanMetrics datamodels.QueryExecutionPlanMetrics
+		//err = json.Unmarshal(firstJson, &execPlanMetrics)
+		//if err != nil {
+		//	fmt.Println("Error unmarshalling JSON:", err)
+		//	return nil
+		//}
 
 		execPlanMetrics.QueryText = *individualQuery.QueryText
 		execPlanMetrics.QueryId = *individualQuery.QueryId
