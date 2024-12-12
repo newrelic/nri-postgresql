@@ -1,8 +1,7 @@
 // Package connection contains the PGSQLConnection type and methods for manipulating and querying a PostgreSQL connection
-package psqlconnection
+package performanceDbConnection
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/jmoiron/sqlx"
 	"net"
@@ -216,17 +215,18 @@ func GenerateDSN(args args.ArgumentList) string {
 	//	return fmt.Sprintf("%s:%s@unix(%s)/%s?%s", args.Username, args.Password, args.Socket, args.Database, query.Encode())
 	//}
 
-	mysqlURL := net.JoinHostPort(args.Hostname, args.Port)
+	postgresqlURL := net.JoinHostPort(args.Hostname, args.Port)
 
-	return fmt.Sprintf("%s:%s@tcp(%s)/%s?%s", args.Username, args.Password, mysqlURL, args.Database, query.Encode())
+	return fmt.Sprintf("%s:%s@tcp(%s)/%s?%s", args.Username, args.Password, postgresqlURL, args.Database, query.Encode())
 }
 
-func openDB(args args.ArgumentList) (*sql.DB, error) {
+func OpenDB(args args.ArgumentList) (*PGSQLConnection, error) {
 	dsn := GenerateDSN(args)
-	source, err := sql.Open("postgres", dsn)
+	source, err := sqlx.Open("postgres", dsn)
 	if err != nil {
 		return nil, fmt.Errorf("error opening %s: %v", dsn, err)
 	}
-
-	return source, nil
+	return &PGSQLConnection{
+		connection: source,
+	}, nil
 }

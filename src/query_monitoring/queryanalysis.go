@@ -22,6 +22,6 @@ func RunAnalysis(instanceEntity *integration.Entity, args args.ArgumentList) {
 	query_results.PopulateWaitEventMetrics(instanceEntity, newConnection)
 	query_results.PopulateBlockingMetrics(instanceEntity, newConnection, queries.BlockingQueries)
 	individualQueries := query_results.PopulateIndividualQueryMetrics(instanceEntity, newConnection)
-	query_results.PopulateExecutionPlanMetrics(instanceEntity, newConnection, individualQueries)
+	query_results.PopulateExecutionPlanMetrics(instanceEntity, newConnection, individualQueries, args)
 	fmt.Println("Query analysis completed.")
 }

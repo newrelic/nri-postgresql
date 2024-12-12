@@ -3,6 +3,8 @@ package query_results
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/newrelic/nri-postgresql/src/args"
+	performanceDbConnection "github.com/newrelic/nri-postgresql/src/query_monitoring/psqlconnection"
 	"reflect"
 
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
@@ -135,14 +137,15 @@ func GetIndividualQueryMetrics(conn *connection.PGSQLConnection) []datamodels.In
 
 }
 
-func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection, results []datamodels.IndividualQuerySearch) {
+func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection, results []datamodels.IndividualQuerySearch, args args.ArgumentList) {
+
 	if len(results) == 0 {
 		log.Info("No individual queries found.")
 		return
 	}
 	log.Info("Populate individual queries: %+v", results)
 
-	executionDetailsList := GetExecutionPlanMetrics(conn, results)
+	executionDetailsList := GetExecutionPlanMetrics(conn, results, args)
 
 	log.Info("executionDetailsList", executionDetailsList)
 
@@ -161,20 +164,25 @@ func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, conn *conn
 			if field.Kind() == reflect.Ptr && !field.IsNil() {
 				setMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
 			} else if field.Kind() != reflect.Ptr {
+				log.Info("fielddddd", field.Interface())
 				setMetric(metricSet, metricName, field.Interface(), sourceType)
 			}
 		}
 	}
 }
 
-func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamodels.IndividualQuerySearch) []datamodels.QueryExecutionPlanMetrics {
+func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamodels.IndividualQuerySearch, args args.ArgumentList) []datamodels.QueryExecutionPlanMetrics {
 	var executionPlanMetricsList []datamodels.QueryExecutionPlanMetrics
 
 	for _, individualQuery := range results {
-
+		newConnection, err := performanceDbConnection.OpenDB(args)
+		if err != nil {
+			log.Error("Error opening database connection: %v", err)
+			return nil
+		}
 		log.Info("individualQuery", "")
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
-		rows, err := conn.Queryx(query)
+		rows, err := newConnection.Queryx(query)
 		if err != nil {
 			continue
 		}
@@ -206,6 +214,7 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			fmt.Println("Error unmarshalling JSON:", err)
 			return nil
 		}
+
 		execPlanMetrics.QueryText = *individualQuery.QueryText
 		execPlanMetrics.QueryId = *individualQuery.QueryId
 		execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
