@@ -178,7 +178,7 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 	var groupIndividualQueriesByDatabase = GroupQueriesByDatabase(results)
 
 	for _, databaseName := range groupIndividualQueriesByDatabase {
-		log.Info("databaseName : ", databaseName)
+		log.Info("databaseNameQQQQQQ : ", databaseName)
 	}
 
 	for _, individualQuery := range results {
