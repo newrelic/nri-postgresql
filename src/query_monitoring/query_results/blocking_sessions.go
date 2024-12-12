@@ -180,58 +180,109 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 	for dbName, indiQueries := range groupIndividualQueriesByDatabase {
 		fmt.Printf("Database: %s\n", dbName)
 		fmt.Printf("Queries: %+v\n", indiQueries)
-	}
-
-	for _, individualQuery := range results {
-		newConn, err := connection.OpenDB(args, *individualQuery.DatabaseName)
+		newConn, err := connection.OpenDB(args, dbName)
 		if err != nil {
 			log.Error("Error opening database connection: %v", err)
 			continue
 		}
 		defer newConn.Close()
-		log.Info("individualQuery", "")
-		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
-		rows, err := newConn.Queryx(query)
-		if err != nil {
-			continue
-		}
-		defer rows.Close()
-		if !rows.Next() {
-			return nil
-		}
-		var execPlanJSON string
-		if err := rows.Scan(&execPlanJSON); err != nil {
-			log.Error("Error scanning row: ", err.Error())
-			continue
-		}
+		for _, individualQuery := range indiQueries {
+			newConn, err := connection.OpenDB(args, *individualQuery.DatabaseName)
+			if err != nil {
+				log.Error("Error opening database connection: %v", err)
+				continue
+			}
+			defer newConn.Close()
+			log.Info("individualQuery", "")
+			query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
+			rows, err := newConn.Queryx(query)
+			if err != nil {
+				continue
+			}
+			defer rows.Close()
+			if !rows.Next() {
+				return nil
+			}
+			var execPlanJSON string
+			if err := rows.Scan(&execPlanJSON); err != nil {
+				log.Error("Error scanning row: ", err.Error())
+				continue
+			}
 
-		var execPlan []map[string]interface{}
-		err = json.Unmarshal([]byte(execPlanJSON), &execPlan)
-		if err != nil {
-			log.Error("Failed to unmarshal execution plan: %v", err)
-			continue
+			var execPlan []map[string]interface{}
+			err = json.Unmarshal([]byte(execPlanJSON), &execPlan)
+			if err != nil {
+				log.Error("Failed to unmarshal execution plan: %v", err)
+				continue
+			}
+
+			var execPlanMetrics datamodels.QueryExecutionPlanMetrics
+			err = mapstructure.Decode(execPlan[0]["Plan"], &execPlanMetrics)
+			if err != nil {
+				log.Error("Failed to decode execPlan to execPlanMetrics: %v", err)
+				return nil
+			}
+			log.Info("execPlanMetrics", execPlanMetrics, execPlan[0]["Plan"])
+
+			execPlanMetrics.QueryText = *individualQuery.QueryText
+			execPlanMetrics.QueryId = *individualQuery.QueryId
+			execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
+
+			fmt.Printf("QueryExecutionPlanMetricsssssss: %+v\n", execPlanMetrics)
+			executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)
 		}
-
-		var execPlanMetrics datamodels.QueryExecutionPlanMetrics
-		err = mapstructure.Decode(execPlan[0]["Plan"], &execPlanMetrics)
-		if err != nil {
-			log.Error("Failed to decode execPlan to execPlanMetrics: %v", err)
-			return nil
-		}
-		log.Info("execPlanMetrics", execPlanMetrics, execPlan[0]["Plan"])
-
-		execPlanMetrics.QueryText = *individualQuery.QueryText
-		execPlanMetrics.QueryId = *individualQuery.QueryId
-		execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
-
-		fmt.Printf("QueryExecutionPlanMetricsssssss: %+v\n", execPlanMetrics)
-		executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)
-		//if err != nil {
-		//	fmt.Println("Error unmarshalling JSON:", err)
-		//	return nil
-		//}
-		//executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)
 	}
+
+	//for _, individualQuery := range results {
+	//	newConn, err := connection.OpenDB(args, *individualQuery.DatabaseName)
+	//	if err != nil {
+	//		log.Error("Error opening database connection: %v", err)
+	//		continue
+	//	}
+	//	defer newConn.Close()
+	//	log.Info("individualQuery", "")
+	//	query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
+	//	rows, err := newConn.Queryx(query)
+	//	if err != nil {
+	//		continue
+	//	}
+	//	defer rows.Close()
+	//	if !rows.Next() {
+	//		return nil
+	//	}
+	//	var execPlanJSON string
+	//	if err := rows.Scan(&execPlanJSON); err != nil {
+	//		log.Error("Error scanning row: ", err.Error())
+	//		continue
+	//	}
+	//
+	//	var execPlan []map[string]interface{}
+	//	err = json.Unmarshal([]byte(execPlanJSON), &execPlan)
+	//	if err != nil {
+	//		log.Error("Failed to unmarshal execution plan: %v", err)
+	//		continue
+	//	}
+	//
+	//	var execPlanMetrics datamodels.QueryExecutionPlanMetrics
+	//	err = mapstructure.Decode(execPlan[0]["Plan"], &execPlanMetrics)
+	//	if err != nil {
+	//		log.Error("Failed to decode execPlan to execPlanMetrics: %v", err)
+	//		return nil
+	//	}
+	//	log.Info("execPlanMetrics", execPlanMetrics, execPlan[0]["Plan"])
+	//
+	//	execPlanMetrics.QueryText = *individualQuery.QueryText
+	//	execPlanMetrics.QueryId = *individualQuery.QueryId
+	//	execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
+	//
+	//	fmt.Printf("QueryExecutionPlanMetricsssssss: %+v\n", execPlanMetrics)
+	//	executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)
+	//if err != nil {
+	//	fmt.Println("Error unmarshalling JSON:", err)
+	//	return nil
+	//}
+	//executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)
+	//}
 	return executionPlanMetricsList
 
 }
