@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/newrelic/nri-postgresql/src/args"
-	performanceDbConnection "github.com/newrelic/nri-postgresql/src/query_monitoring/psqlconnection"
 	"reflect"
 
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
@@ -175,14 +174,14 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 	var executionPlanMetricsList []datamodels.QueryExecutionPlanMetrics
 
 	for _, individualQuery := range results {
-		newConnection, err := performanceDbConnection.OpenDB(args)
+		//newConnection, err := performanceDbConnection.OpenDB(args)
 		if err != nil {
 			log.Error("Error opening database connection: %v", err)
 			return nil
 		}
 		log.Info("individualQuery", "")
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
-		rows, err := newConnection.Queryx(query)
+		rows, err := conn.Queryx(query)
 		if err != nil {
 			continue
 		}
