@@ -117,7 +117,7 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *co
 }
 
 func GetIndividualQueryMetrics(conn *connection.PGSQLConnection) []datamodels.IndividualQuerySearch {
-	rows, err := conn.Queryx("select query,queryid, datname from pg_stat_monitor where query like 'select * from country%';")
+	rows, err := conn.Queryx("select query,queryid, datname from pg_stat_monitor order by bucket_start_time desc limit 10;")
 	if err != nil {
 		return nil
 	}
