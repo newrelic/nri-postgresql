@@ -36,23 +36,23 @@ func GetSlowRunningMetrics(conn *connection.PGSQLConnection) ([]datamodels.SlowR
 }
 
 // PopulateSlowRunningMetrics fetches slow-running metrics and populates them into the metric set
-func PopulateSlowRunningMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection, query string) {
+func PopulateSlowRunningMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection) []datamodels.SlowRunningQuery {
 	isExtensionEnabled, err := validations.CheckPgStatStatementsExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
-		return
+		return nil
 	}
 	if isExtensionEnabled {
 		log.Info("Extension 'pg_stat_statements' enabled.")
 		slowQueries, err := GetSlowRunningMetrics(conn)
 		if err != nil {
 			log.Error("Error fetching slow-running queries: %v", err)
-			return
+			return nil
 		}
 
 		if len(slowQueries) == 0 {
 			log.Info("No slow-running queries found.")
-			return
+			return nil
 		}
 		log.Info("Populate-slow running: %+v", slowQueries)
 
@@ -75,11 +75,11 @@ func PopulateSlowRunningMetrics(instanceEntity *integration.Entity, conn *connec
 				}
 			}
 
-			//	log.Info("Metrics set for slow query: %s in database: %s", *model.QueryID, *model.DatabaseName)
 		}
+		return slowQueries
 	} else {
 		log.Info("Extension 'pg_stat_statements' is not enabled.")
-		return
+		return nil
 	}
 
 }

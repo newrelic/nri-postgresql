@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/newrelic/nri-postgresql/src/args"
 	"reflect"
+	"strings"
 
 	"github.com/mitchellh/mapstructure"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
@@ -39,7 +40,7 @@ func GetBlockingMetrics(conn *connection.PGSQLConnection) ([]datamodels.Blocking
 }
 
 // PopulateSlowRunningMetrics fetches slow-running metrics and populates them into the metric set
-func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection, query string) {
+func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection) {
 	isExtensionEnabled, err := validations.CheckPgStatStatementsExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -86,8 +87,8 @@ func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *connectio
 	}
 
 }
-func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection) []datamodels.IndividualQuerySearch {
-	individualQueries := GetIndividualQueryMetrics(conn)
+func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *connection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQuery) []datamodels.IndividualQuerySearch {
+	individualQueries := GetIndividualQueryMetrics(conn, slowRunningQueries)
 	if len(individualQueries) == 0 {
 		log.Info("No individual queries found.")
 		return nil
@@ -116,8 +117,19 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *co
 	return individualQueries
 }
 
-func GetIndividualQueryMetrics(conn *connection.PGSQLConnection) []datamodels.IndividualQuerySearch {
-	rows, err := conn.Queryx("select query,queryid, datname from pg_stat_monitor order by bucket_start_time desc limit 10;")
+func ConstructIndividualQuery(slowRunningQueries []datamodels.SlowRunningQuery) string {
+	var queryIDs []string
+	for _, query := range slowRunningQueries {
+		queryIDs = append(queryIDs, fmt.Sprintf("%d", *query.QueryID))
+	}
+	query := fmt.Sprintf("SELECT query, queryid, datname FROM pg_stat_monitor WHERE queryid IN (%s) limit 10", strings.Join(queryIDs, ","))
+	return query
+}
+
+func GetIndividualQueryMetrics(conn *connection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQuery) []datamodels.IndividualQuerySearch {
+	query := ConstructIndividualQuery(slowRunningQueries)
+	log.Info("Individual query :", query)
+	rows, err := conn.Queryx(query)
 	if err != nil {
 		return nil
 	}
