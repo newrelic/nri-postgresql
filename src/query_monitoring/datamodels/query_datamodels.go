@@ -40,5 +40,22 @@ type IndividualQuerySearch struct {
 }
 
 type QueryExecutionPlanMetrics struct {
-	PlanRows *float64 `metric_name:"executionplan.plan_rows"             source_type:"gauge"`
+	NodeType            string  `json:"Node Type"           metric_name:"executionplan.node_type"             source_type:"attribute"`
+	StartupCost         float64 `json:"Startup Cost"        metric_name:"executionplan.startup_cost"          source_type:"gauge"`
+	TotalCost           float64 `json:"Total Cost"          metric_name:"executionplan.total_cost"            source_type:"gauge"`
+	PlanRows            int64   `json:"Plan Rows"           metric_name:"executionplan.plan_rows"             source_type:"gauge"`
+	ActualStartupTime   float64 `json:"Actual Startup Time" metric_name:"executionplan.actual_startup_time"   source_type:"gauge"`
+	ActualTotalTime     float64 `json:"Actual Total Time"   metric_name:"executionplan.actual_total_time"     source_type:"gauge"`
+	ActualRows          int64   `json:"Actual Rows"         metric_name:"executionplan.actual_rows"           source_type:"gauge"`
+	ActualLoops         int64   `json:"Actual Loops"        metric_name:"executionplan.actual_loops"          source_type:"gauge"`
+	SharedHitBlocks     int64   `json:"Shared Hit Blocks"   metric_name:"executionplan.shared_hit_blocks"     source_type:"gauge"`
+	SharedReadBlocks    int64   `json:"Shared Read Blocks"  metric_name:"executionplan.shared_read_blocks"    source_type:"gauge"`
+	SharedDirtiedBlocks int64   `json:"Shared Dirtied Blocks" metric_name:"executionplan.shared_dirtied_blocks" source_type:"gauge"`
+	SharedWrittenBlocks int64   `json:"Shared Written Blocks" metric_name:"executionplan.shared_written_blocks" source_type:"gauge"`
+	LocalHitBlocks      int64   `json:"Local Hit Blocks"    metric_name:"executionplan.local_hit_blocks"      source_type:"gauge"`
+	LocalReadBlocks     int64   `json:"Local Read Blocks"   metric_name:"executionplan.local_read_blocks"     source_type:"gauge"`
+	LocalDirtiedBlocks  int64   `json:"Local Dirtied Blocks" metric_name:"executionplan.local_dirtied_blocks"  source_type:"gauge"`
+	LocalWrittenBlocks  int64   `json:"Local Written Blocks" metric_name:"executionplan.local_written_blocks"  source_type:"gauge"`
+	TempReadBlocks      int64   `json:"Temp Read Blocks"    metric_name:"executionplan.temp_read_blocks"      source_type:"gauge"`
+	TempWrittenBlocks   int64   `json:"Temp Written Blocks" metric_name:"executionplan.temp_written_blocks"   source_type:"gauge"`
 }

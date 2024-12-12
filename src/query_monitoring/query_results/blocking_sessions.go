@@ -2,6 +2,7 @@ package query_results
 
 import (
 	"encoding/json"
+	"fmt"
 	"reflect"
 
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
@@ -168,7 +169,10 @@ func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, conn *conn
 
 func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamodels.IndividualQuerySearch) []datamodels.QueryExecutionPlanMetrics {
 	var executionPlanMetricsList []datamodels.QueryExecutionPlanMetrics
+
 	for _, individualQuery := range results {
+
+		log.Info("individualQuery", "")
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
 		rows, err := conn.Queryx(query)
 		if err != nil {
@@ -190,23 +194,21 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			log.Error("Failed to unmarshal execution plan: %v", err)
 			continue
 		}
-		log.Info("execPlan", execPlan[0]["Plan"])
-		firstJson, bl := execPlan[0]["Plan"].(map[string]interface{})
-		if !bl {
+		firstJson, err := json.Marshal(execPlan[0]["Plan"])
+		if err != nil {
 			log.Error("Failed to marshal firstJson: %v", err)
 			continue
 		}
-		for key, value := range firstJson {
-			log.Info("Key: %s, Value: %s\n", key, value)
+
+		var execPlanMetrics datamodels.QueryExecutionPlanMetrics
+		err = json.Unmarshal(firstJson, &execPlanMetrics)
+		if err != nil {
+			fmt.Println("Error unmarshalling JSON:", err)
+			return nil
 		}
 
-		//log.Info("firstJson", firstJson)
-		//
-		var execPlanMetrics datamodels.QueryExecutionPlanMetrics
-		f := firstJson["Plan Rows"].(float64)
-		execPlanMetrics.PlanRows = &f
+		fmt.Printf("QueryExecutionPlanMetricsssssss: %+v\n", execPlanMetrics)
 		executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)
-		//err = json.Unmarshal(firstJson, &execPlanMetrics)
 		//if err != nil {
 		//	fmt.Println("Error unmarshalling JSON:", err)
 		//	return nil

@@ -2,10 +2,11 @@
 package psqlconnection
 
 import (
+	"database/sql"
 	"fmt"
-	"net/url"
-
 	"github.com/jmoiron/sqlx"
+	"net"
+	"net/url"
 	// pq is required for postgreSQL driver but isn't used in code
 	_ "github.com/lib/pq"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
@@ -189,4 +190,43 @@ func addSSLQueries(query url.Values, ci *connectionInfo) {
 		query.Add("sslmode", "verify-full")
 		query.Add("sslrootcert", ci.SSLRootCertLocation)
 	}
+}
+
+func GenerateDSN(args args.ArgumentList) string {
+	query := url.Values{}
+	//if args.OldPasswords {
+	//	query.Add("allowOldPasswords", "true")
+	//}
+	//if args.EnableTLS {
+	//	query.Add("tls", "true")
+	//}
+	//if args.InsecureSkipVerify {
+	//	query.Add("tls", "skip-verify")
+	//}
+	//extraArgsMap, err := url.ParseQuery(args.ExtraConnectionURLArgs)
+	//if err == nil {
+	//	for k, v := range extraArgsMap {
+	//		query.Add(k, v[0])
+	//	}
+	//} else {
+	//	log.Warn("Could not successfully parse ExtraConnectionURLArgs.", err.Error())
+	//}
+	//if args.Socket != "" {
+	//	log.Info("Socket parameter is defined, ignoring host and port parameters")
+	//	return fmt.Sprintf("%s:%s@unix(%s)/%s?%s", args.Username, args.Password, args.Socket, args.Database, query.Encode())
+	//}
+
+	mysqlURL := net.JoinHostPort(args.Hostname, args.Port)
+
+	return fmt.Sprintf("%s:%s@tcp(%s)/%s?%s", args.Username, args.Password, mysqlURL, args.Database, query.Encode())
+}
+
+func openDB(args args.ArgumentList) (*sql.DB, error) {
+	dsn := GenerateDSN(args)
+	source, err := sql.Open("postgres", dsn)
+	if err != nil {
+		return nil, fmt.Errorf("error opening %s: %v", dsn, err)
+	}
+
+	return source, nil
 }

@@ -170,7 +170,7 @@ func createConnectionURL(ci *connectionInfo, database string) string {
 	}
 
 	connectionURL.RawQuery = query.Encode()
-
+	fmt.Println("connectionURL", connectionURL)
 	return connectionURL.String()
 }
 
