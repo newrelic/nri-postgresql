@@ -175,20 +175,20 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 	var executionPlanMetricsList []datamodels.QueryExecutionPlanMetrics
 
 	for _, individualQuery := range results {
-		newConn, err := connection.OpenDB(args, *individualQuery.DatabaseName)
-		if err != nil {
-			log.Error("Error opening database connection: %v", err)
-			continue
-		}
-		defer newConn.Close()
+		//newConn, err := connection.OpenDB(args, *individualQuery.DatabaseName)
+		//if err != nil {
+		//	log.Error("Error opening database connection: %v", err)
+		//	continue
+		//}
+		//defer newConn.Close()
 		//newConnection, err := performanceDbConnection.OpenDB(args)
 		//if err != nil {
 		//	log.Error("Error opening database connection: %v", err)
 		//	return nil
 		//}
-		log.Info("individualQuery", "")
+
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
-		rows, err := newConn.Queryx(query)
+		rows, err := conn.Queryx(query)
 		if err != nil {
 			continue
 		}
