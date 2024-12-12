@@ -115,7 +115,7 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *co
 }
 
 func GetIndividualQueryMetrics(conn *connection.PGSQLConnection) []datamodels.IndividualQuerySearch {
-	rows, err := conn.Queryx("select query from pg_stat_monitor where query like 'select * from actor%'")
+	rows, err := conn.Queryx("select query,queryid, datname from pg_stat_monitor where query like 'select * from actor%';")
 	if err != nil {
 		return nil
 	}
@@ -206,6 +206,9 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			fmt.Println("Error unmarshalling JSON:", err)
 			return nil
 		}
+		execPlanMetrics.QueryText = *individualQuery.QueryText
+		execPlanMetrics.QueryId = *individualQuery.QueryId
+		execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
 
 		fmt.Printf("QueryExecutionPlanMetricsssssss: %+v\n", execPlanMetrics)
 		executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)

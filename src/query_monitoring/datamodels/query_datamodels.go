@@ -36,7 +36,9 @@ type BlockingQuery struct {
 }
 
 type IndividualQuerySearch struct {
-	QueryText *string `json:"query" db:"query" metric_name:"queryplan.query" source_type:"attribute"`
+	QueryText    *string `json:"query" db:"query" metric_name:"queryplan.query" source_type:"attribute"`
+	QueryId      *int64  `json:"queryid" db:"queryid" metric_name:"queryplan.query_id" source_type:"gauge"`
+	DatabaseName *string `json:"datname" db:"datname" metric_name:"queryplan.database" source_type:"attribute"`
 }
 
 type QueryExecutionPlanMetrics struct {
@@ -58,4 +60,7 @@ type QueryExecutionPlanMetrics struct {
 	LocalWrittenBlocks  int64   `json:"Local Written Blocks" metric_name:"executionplan.local_written_blocks"  source_type:"gauge"`
 	TempReadBlocks      int64   `json:"Temp Read Blocks"    metric_name:"executionplan.temp_read_blocks"      source_type:"gauge"`
 	TempWrittenBlocks   int64   `json:"Temp Written Blocks" metric_name:"executionplan.temp_written_blocks"   source_type:"gauge"`
+	DatabaseName        string  `json:"Database"            metric_name:"executionplan.database"              source_type:"attribute"`
+	QueryText           string  `json:"Query"               metric_name:"executionplan.query"                 source_type:"attribute"`
+	QueryId             int64   `json:"Query Id"              metric_name:"executionplan.query_id"                   source_type:"gauge"`
 }
