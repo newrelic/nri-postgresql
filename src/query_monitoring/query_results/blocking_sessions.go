@@ -172,6 +172,7 @@ func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, conn *conn
 }
 
 func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamodels.IndividualQuerySearch, args args.ArgumentList) []datamodels.QueryExecutionPlanMetrics {
+
 	var executionPlanMetricsList []datamodels.QueryExecutionPlanMetrics
 
 	for _, individualQuery := range results {
@@ -181,11 +182,6 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			continue
 		}
 		defer newConn.Close()
-		//newConnection, err := performanceDbConnection.OpenDB(args)
-		//if err != nil {
-		//	log.Error("Error opening database connection: %v", err)
-		//	return nil
-		//}
 		log.Info("individualQuery", "")
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
 		rows, err := newConn.Queryx(query)
