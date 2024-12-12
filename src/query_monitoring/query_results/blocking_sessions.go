@@ -214,9 +214,9 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			return nil
 		}
 
-		execPlanMetrics.QueryText = *individualQuery.QueryText
-		execPlanMetrics.QueryId = *individualQuery.QueryId
-		execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
+		execPlanMetrics.QueryText = individualQuery.QueryText
+		execPlanMetrics.QueryId = individualQuery.QueryId
+		execPlanMetrics.DatabaseName = individualQuery.DatabaseName
 
 		fmt.Printf("QueryExecutionPlanMetricsssssss: %+v\n", execPlanMetrics)
 		executionPlanMetricsList = append(executionPlanMetricsList, execPlanMetrics)
