@@ -209,7 +209,7 @@ func GetExecutionPlanMetrics(conn *connection.PGSQLConnection, results []datamod
 			log.Error("Failed to decode execPlan to execPlanMetrics: %v", err)
 			return nil
 		}
-		log.Info("execPlanMetrics", execPlanMetrics)
+		log.Info("execPlanMetrics", execPlanMetrics, execPlan[0]["Plan"])
 		//var execPlanMetrics datamodels.QueryExecutionPlanMetrics
 		//err = json.Unmarshal(firstJson, &execPlanMetrics)
 		//if err != nil {
