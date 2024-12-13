@@ -26,6 +26,10 @@ func GetSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, queryC
 		if err := rows.StructScan(&slowQuery); err != nil {
 			return nil, err
 		}
+		databaseName := *slowQuery.DatabaseName
+		queryId := *slowQuery.QueryID
+		averageCpuTime := queryCpuMetricsMap[databaseName][queryId]
+		slowQuery.AvgCPUTimeMs = &averageCpuTime
 		slowQueries = append(slowQueries, slowQuery)
 	}
 
