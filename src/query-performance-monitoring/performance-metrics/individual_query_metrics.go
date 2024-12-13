@@ -32,7 +32,7 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *pe
 	log.Info("Populate individual queries: %+v", individualQueries)
 
 	for _, model := range individualQueries {
-		metricSet := instanceEntity.NewMetricSet("PostgresIndividualQueriesSample")
+		metricSet := instanceEntity.NewMetricSet("PostgresIndividualQueries")
 
 		modelValue := reflect.ValueOf(model)
 		modelType := reflect.TypeOf(model)

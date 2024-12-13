@@ -33,7 +33,7 @@ func PopulateQueryCpuMetrics(instanceEntity *integration.Entity, conn *performan
 		return
 	}
 	for _, model := range queryCpuMetricsList {
-		metricSet := instanceEntity.NewMetricSet("PostgresQueryCpuMetricsSample")
+		metricSet := instanceEntity.NewMetricSet("PostgresQueryCpuMetrics")
 
 		modelValue := reflect.ValueOf(model)
 		modelType := reflect.TypeOf(model)

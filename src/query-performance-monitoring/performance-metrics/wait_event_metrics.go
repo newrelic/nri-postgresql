@@ -53,7 +53,7 @@ func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *performa
 	log.Info("Populate wait event : %+v", waitQueries)
 
 	for _, model := range waitQueries {
-		metricSet := instanceEntity.NewMetricSet("PostgresWaitQueries")
+		metricSet := instanceEntity.NewMetricSet("PostgresWaitEvents")
 		modelValue := reflect.ValueOf(model)
 		modelType := reflect.TypeOf(model)
 		for i := 0; i < modelValue.NumField(); i++ {
