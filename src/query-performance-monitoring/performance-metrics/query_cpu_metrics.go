@@ -58,6 +58,10 @@ func GetQueryCpuMetrics(conn *performanceDbConnection.PGSQLConnection) ([]datamo
 	var query = queries.QueryCpuMetrics
 	rows, err := conn.Queryx(query)
 	log.Info("rows: %v", rows)
+	for rows.Next() {
+		log.Info("rrrrrrrrrr: %v", rows)
+
+	}
 	if err != nil {
 		return nil, err
 	}
