@@ -3,6 +3,7 @@ package performance_metrics
 import (
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
+	common_utils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	performanceDbConnection "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/connections"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/queries"
@@ -61,9 +62,9 @@ func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *performa
 			metricName := fieldType.Tag.Get("metric_name")
 			sourceType := fieldType.Tag.Get("source_type")
 			if field.Kind() == reflect.Ptr && !field.IsNil() {
-				setMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
+				common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
 			} else if field.Kind() != reflect.Ptr {
-				setMetric(metricSet, metricName, field.Interface(), sourceType)
+				common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
 			}
 		}
 		log.Info("Metrics set for wait event queryId: %s in database: %s", *model.QueryID, *model.DatabaseName)

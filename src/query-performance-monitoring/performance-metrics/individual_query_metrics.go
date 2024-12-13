@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
+	common_utils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	performanceDbConnection "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/connections"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/queries"
@@ -43,9 +44,9 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *pe
 			sourceType := fieldType.Tag.Get("source_type")
 
 			if field.Kind() == reflect.Ptr && !field.IsNil() {
-				setMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
+				common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
 			} else if field.Kind() != reflect.Ptr {
-				setMetric(metricSet, metricName, field.Interface(), sourceType)
+				common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
 			}
 		}
 	}
