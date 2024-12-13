@@ -86,10 +86,9 @@ func main() {
 			inventory.PopulateInventory(instance, con)
 		}
 	}
-	//need to change the connection to change
-	//con, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
-	log.Info("args: ", args)
-	query_performance_monitoring.QueryPerformanceMain(instance, args)
+	if args.EnableQueryMonitoring {
+		query_performance_monitoring.QueryPerformanceMain(instance, args)
+	}
 
 	if err = pgIntegration.Publish(); err != nil {
 		log.Error(err.Error())
