@@ -12,7 +12,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/validations"
 )
 
-func GetSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection) ([]datamodels.SlowRunningQuery, error) {
+func GetSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, queryCpuMetricsMap map[string]map[int64]float64) ([]datamodels.SlowRunningQuery, error) {
 	var slowQueries []datamodels.SlowRunningQuery
 	var query = queries.SlowQueries
 	rows, err := conn.Queryx(query)
@@ -35,7 +35,7 @@ func GetSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection) ([]dat
 	return slowQueries, nil
 }
 
-func PopulateSlowRunningMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection) []datamodels.SlowRunningQuery {
+func PopulateSlowRunningMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection, queryCpuMetricsMap map[string]map[int64]float64) []datamodels.SlowRunningQuery {
 	isExtensionEnabled, err := validations.CheckPgStatStatementsExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -47,7 +47,8 @@ func PopulateSlowRunningMetrics(instanceEntity *integration.Entity, conn *perfor
 	}
 
 	log.Info("Extension 'pg_stat_statements' enabled.")
-	slowQueries, err := GetSlowRunningMetrics(conn)
+	log.Info("queryCpuMetricsMap: %+v", queryCpuMetricsMap)
+	slowQueries, err := GetSlowRunningMetrics(conn, queryCpuMetricsMap)
 	if err != nil {
 		log.Error("Error fetching slow-running queries: %v", err)
 		return nil
