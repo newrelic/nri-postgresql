@@ -96,5 +96,5 @@ const (
 	IndividualQuerySearch = `SELECT query, queryid, datname 
 							FROM pg_stat_monitor 
 							WHERE queryid IN (%s) 
-							AND bucket_start_time >= NOW() - INTERVAL '15 seconds';`
+-- 							AND bucket_start_time >= NOW() - INTERVAL '15 seconds';`
 )
