@@ -27,7 +27,7 @@ func PopulateQueryCpuMetrics(conn *performanceDbConnection.PGSQLConnection) map[
 	}
 	if len(queryCpuMetricsList) == 0 {
 		log.Info("No Query CPU metrics found.")
-		return []datamodels.QueryCpuMetrics{}
+		return nil
 	}
 	//for _, model := range queryCpuMetricsList {
 	//	metricSet := instanceEntity.NewMetricSet("PostgresQueryCpuMetrics")
