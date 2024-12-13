@@ -91,5 +91,7 @@ const (
       JOIN pg_stat_activity AS blocking_activity ON blocking_locks.pid = blocking_activity.pid
       JOIN pg_stat_statements as blocking_statements on blocking_activity.query_id = blocking_statements.queryid
       WHERE NOT blocked_locks.granted;
+
 `
+	IndividualQuerySearch = `SELECT query, queryid, datname FROM pg_stat_monitor WHERE queryid IN (%s) limit 10;`
 )
