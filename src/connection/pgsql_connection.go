@@ -190,13 +190,3 @@ func addSSLQueries(query url.Values, ci *connectionInfo) {
 		query.Add("sslrootcert", ci.SSLRootCertLocation)
 	}
 }
-
-func OpenDB(args args.ArgumentList, dbName string) (*PGSQLConnection, error) {
-	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		args.Hostname, args.Port, args.Username, args.Password, dbName)
-	db, err := sqlx.Open("postgres", connStr)
-	if err != nil {
-		return nil, err
-	}
-	return &PGSQLConnection{connection: db}, nil
-}

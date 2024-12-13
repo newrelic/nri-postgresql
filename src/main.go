@@ -9,7 +9,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/connection"
 	"github.com/newrelic/nri-postgresql/src/inventory"
 	"github.com/newrelic/nri-postgresql/src/metrics"
-	"github.com/newrelic/nri-postgresql/src/query_monitoring"
+	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring"
 	"os"
 	"runtime"
 	"strings"
@@ -89,7 +89,7 @@ func main() {
 	//need to change the connection to change
 	//con, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
 	log.Info("args: ", args)
-	query_monitoring.RunAnalysis(instance, args)
+	query_performance_monitoring.QueryPerformanceMain(instance, args)
 
 	if err = pgIntegration.Publish(); err != nil {
 		log.Error(err.Error())
