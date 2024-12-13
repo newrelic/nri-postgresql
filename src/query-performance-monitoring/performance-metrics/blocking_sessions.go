@@ -8,7 +8,6 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/queries"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/validations"
-	"reflect"
 )
 
 func GetBlockingMetrics(conn *performanceDbConnection.PGSQLConnection) ([]datamodels.BlockingQuery, error) {
@@ -53,25 +52,25 @@ func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *performan
 		return
 	}
 	log.Info("Populate Blocking running: %+v", blockingQueries)
-
-	for _, model := range blockingQueries {
-		metricSet := instanceEntity.NewMetricSet("PostgresBlockingSessions")
-
-		modelValue := reflect.ValueOf(model)
-		modelType := reflect.TypeOf(model)
-
-		for i := 0; i < modelValue.NumField(); i++ {
-			field := modelValue.Field(i)
-			fieldType := modelType.Field(i)
-			metricName := fieldType.Tag.Get("metric_name")
-			sourceType := fieldType.Tag.Get("source_type")
-
-			if field.Kind() == reflect.Ptr && !field.IsNil() {
-				common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
-			} else if field.Kind() != reflect.Ptr {
-				common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
-			}
-		}
-	}
+	common_utils.IngestBlockSessionMetrics(blockingQueries, instanceEntity)
+	//for _, model := range blockingQueries {
+	//	metricSet := instanceEntity.NewMetricSet("PostgresBlockingSessions")
+	//
+	//	modelValue := reflect.ValueOf(model)
+	//	modelType := reflect.TypeOf(model)
+	//
+	//	for i := 0; i < modelValue.NumField(); i++ {
+	//		field := modelValue.Field(i)
+	//		fieldType := modelType.Field(i)
+	//		metricName := fieldType.Tag.Get("metric_name")
+	//		sourceType := fieldType.Tag.Get("source_type")
+	//
+	//		if field.Kind() == reflect.Ptr && !field.IsNil() {
+	//			common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
+	//		} else if field.Kind() != reflect.Ptr {
+	//			common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
+	//		}
+	//	}
+	//}
 
 }

@@ -10,7 +10,6 @@ import (
 	common_utils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	performanceDbConnection "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/connections"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
-	"reflect"
 )
 
 func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, results []datamodels.IndividualQuerySearch, args args.ArgumentList) {
@@ -25,26 +24,27 @@ func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, results []
 
 	log.Info("executionDetailsList", executionDetailsList)
 
-	for _, model := range executionDetailsList {
-		metricSet := instanceEntity.NewMetricSet("PostgresExecutionPlanMetricsSample")
-
-		modelValue := reflect.ValueOf(model)
-		modelType := reflect.TypeOf(model)
-
-		for i := 0; i < modelValue.NumField(); i++ {
-			field := modelValue.Field(i)
-			fieldType := modelType.Field(i)
-			metricName := fieldType.Tag.Get("metric_name")
-			sourceType := fieldType.Tag.Get("source_type")
-
-			if field.Kind() == reflect.Ptr && !field.IsNil() {
-				common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
-			} else if field.Kind() != reflect.Ptr {
-				log.Info("fielddddd", field.Interface())
-				common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
-			}
-		}
-	}
+	common_utils.IngestExecutionPlanMetrics(executionDetailsList, instanceEntity)
+	//for _, model := range executionDetailsList {
+	//	metricSet := instanceEntity.NewMetricSet("PostgresExecutionPlanMetricsSample")
+	//
+	//	modelValue := reflect.ValueOf(model)
+	//	modelType := reflect.TypeOf(model)
+	//
+	//	for i := 0; i < modelValue.NumField(); i++ {
+	//		field := modelValue.Field(i)
+	//		fieldType := modelType.Field(i)
+	//		metricName := fieldType.Tag.Get("metric_name")
+	//		sourceType := fieldType.Tag.Get("source_type")
+	//
+	//		if field.Kind() == reflect.Ptr && !field.IsNil() {
+	//			common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
+	//		} else if field.Kind() != reflect.Ptr {
+	//			log.Info("fielddddd", field.Interface())
+	//			common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
+	//		}
+	//	}
+	//}
 }
 
 func GetExecutionPlanMetrics(results []datamodels.IndividualQuerySearch, args args.ArgumentList) []datamodels.QueryExecutionPlanMetrics {

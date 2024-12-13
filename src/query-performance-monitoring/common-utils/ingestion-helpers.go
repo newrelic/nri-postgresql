@@ -18,10 +18,10 @@ func SetMetric(metricSet *metric.Set, name string, value interface{}, sourceType
 	}
 }
 
-func IngestMetric(slowQueries []interface{}, instanceEntity *integration.Entity) {
+func IngestMetric(slowQueries []interface{}, instanceEntity *integration.Entity, eventName string) {
 
 	for _, model := range slowQueries {
-		metricSet := instanceEntity.NewMetricSet("PostgresSlowQueries")
+		metricSet := instanceEntity.NewMetricSet(eventName)
 
 		modelValue := reflect.ValueOf(model)
 		modelType := reflect.TypeOf(model)
@@ -46,7 +46,7 @@ func IngestSlowQueryMetrics(slowQueryMetrics []datamodels.SlowRunningQuery, inst
 	for i, v := range slowQueryMetrics {
 		slowQueriesInterface[i] = v
 	}
-	IngestMetric(slowQueriesInterface, instanceEntity)
+	IngestMetric(slowQueriesInterface, instanceEntity, "PostgresSlowQueries")
 }
 
 func IngestWaitEventMetrics(waitEventMetrics []datamodels.WaitEventQuery, instanceEntity *integration.Entity) {
@@ -54,7 +54,7 @@ func IngestWaitEventMetrics(waitEventMetrics []datamodels.WaitEventQuery, instan
 	for i, v := range waitEventMetricsInterface {
 		waitEventMetricsInterface[i] = v
 	}
-	IngestMetric(waitEventMetricsInterface, instanceEntity)
+	IngestMetric(waitEventMetricsInterface, instanceEntity, "PostgresWaitEvents")
 }
 
 func IngestIndividualQueryMetrics(individualQueryMetrics []datamodels.IndividualQuerySearch, instanceEntity *integration.Entity) {
@@ -62,7 +62,7 @@ func IngestIndividualQueryMetrics(individualQueryMetrics []datamodels.Individual
 	for i, v := range individualQueryMetricsInterface {
 		individualQueryMetricsInterface[i] = v
 	}
-	IngestMetric(individualQueryMetricsInterface, instanceEntity)
+	IngestMetric(individualQueryMetricsInterface, instanceEntity, "PostgresIndividualQueries")
 }
 
 func IngestExecutionPlanMetrics(executionPlanMetrics []datamodels.QueryExecutionPlanMetrics, instanceEntity *integration.Entity) {
@@ -70,13 +70,13 @@ func IngestExecutionPlanMetrics(executionPlanMetrics []datamodels.QueryExecution
 	for i, v := range executionPlanMetricsInterface {
 		executionPlanMetricsInterface[i] = v
 	}
-	IngestMetric(executionPlanMetricsInterface, instanceEntity)
+	IngestMetric(executionPlanMetricsInterface, instanceEntity, "PostgresExecutionPlanMetrics")
 }
 
-func IngestBlockIoMetrics(blockIoMetrics []datamodels.BlockingQuery, instanceEntity *integration.Entity) {
+func IngestBlockSessionMetrics(blockIoMetrics []datamodels.BlockingQuery, instanceEntity *integration.Entity) {
 	blockIoMetricsInterface := make([]interface{}, len(blockIoMetrics))
 	for i, v := range blockIoMetricsInterface {
 		blockIoMetricsInterface[i] = v
 	}
-	IngestMetric(blockIoMetricsInterface, instanceEntity)
+	IngestMetric(blockIoMetricsInterface, instanceEntity, "PostgresBlockingQueries")
 }

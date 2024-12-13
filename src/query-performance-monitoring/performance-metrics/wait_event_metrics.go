@@ -8,7 +8,6 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/queries"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/validations"
-	"reflect"
 )
 
 func GetWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection) ([]datamodels.WaitEventQuery, error) {
@@ -52,22 +51,23 @@ func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *performa
 	}
 	log.Info("Populate wait event : %+v", waitQueries)
 
-	for _, model := range waitQueries {
-		metricSet := instanceEntity.NewMetricSet("PostgresWaitEvents")
-		modelValue := reflect.ValueOf(model)
-		modelType := reflect.TypeOf(model)
-		for i := 0; i < modelValue.NumField(); i++ {
-			field := modelValue.Field(i)
-			fieldType := modelType.Field(i)
-			metricName := fieldType.Tag.Get("metric_name")
-			sourceType := fieldType.Tag.Get("source_type")
-			if field.Kind() == reflect.Ptr && !field.IsNil() {
-				common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
-			} else if field.Kind() != reflect.Ptr {
-				common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
-			}
-		}
-		log.Info("Metrics set for wait event queryId: %s in database: %s", *model.QueryID, *model.DatabaseName)
-	}
+	common_utils.IngestWaitEventMetrics(waitQueries, instanceEntity)
+	//for _, model := range waitQueries {
+	//	metricSet := instanceEntity.NewMetricSet("PostgresWaitEvents")
+	//	modelValue := reflect.ValueOf(model)
+	//	modelType := reflect.TypeOf(model)
+	//	for i := 0; i < modelValue.NumField(); i++ {
+	//		field := modelValue.Field(i)
+	//		fieldType := modelType.Field(i)
+	//		metricName := fieldType.Tag.Get("metric_name")
+	//		sourceType := fieldType.Tag.Get("source_type")
+	//		if field.Kind() == reflect.Ptr && !field.IsNil() {
+	//			common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
+	//		} else if field.Kind() != reflect.Ptr {
+	//			common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
+	//		}
+	//	}
+	//	log.Info("Metrics set for wait event queryId: %s in database: %s", *model.QueryID, *model.DatabaseName)
+	//}
 
 }

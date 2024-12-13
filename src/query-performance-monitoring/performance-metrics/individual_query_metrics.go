@@ -9,7 +9,6 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/queries"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/validations"
-	"reflect"
 	"strings"
 )
 
@@ -30,26 +29,26 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *pe
 		return nil
 	}
 	log.Info("Populate individual queries: %+v forExecPlan : %+v", individualQueryMetrics, individualQueriesForExecPlan)
-
-	for _, model := range individualQueryMetrics {
-		metricSet := instanceEntity.NewMetricSet("PostgresIndividualQueries")
-
-		modelValue := reflect.ValueOf(model)
-		modelType := reflect.TypeOf(model)
-
-		for i := 0; i < modelValue.NumField(); i++ {
-			field := modelValue.Field(i)
-			fieldType := modelType.Field(i)
-			metricName := fieldType.Tag.Get("metric_name")
-			sourceType := fieldType.Tag.Get("source_type")
-
-			if field.Kind() == reflect.Ptr && !field.IsNil() {
-				common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
-			} else if field.Kind() != reflect.Ptr {
-				common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
-			}
-		}
-	}
+	common_utils.IngestIndividualQueryMetrics(individualQueryMetrics, instanceEntity)
+	//for _, model := range individualQueryMetrics {
+	//	metricSet := instanceEntity.NewMetricSet("PostgresIndividualQueries")
+	//
+	//	modelValue := reflect.ValueOf(model)
+	//	modelType := reflect.TypeOf(model)
+	//
+	//	for i := 0; i < modelValue.NumField(); i++ {
+	//		field := modelValue.Field(i)
+	//		fieldType := modelType.Field(i)
+	//		metricName := fieldType.Tag.Get("metric_name")
+	//		sourceType := fieldType.Tag.Get("source_type")
+	//
+	//		if field.Kind() == reflect.Ptr && !field.IsNil() {
+	//			common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
+	//		} else if field.Kind() != reflect.Ptr {
+	//			common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
+	//		}
+	//	}
+	//}
 	return individualQueriesForExecPlan
 }
 
