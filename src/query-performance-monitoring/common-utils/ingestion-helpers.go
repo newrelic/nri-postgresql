@@ -21,6 +21,9 @@ func SetMetric(metricSet *metric.Set, name string, value interface{}, sourceType
 func IngestMetric(slowQueries []interface{}, instanceEntity *integration.Entity, eventName string) {
 
 	for _, model := range slowQueries {
+		if model == nil {
+			continue
+		}
 		metricSet := instanceEntity.NewMetricSet(eventName)
 
 		modelValue := reflect.ValueOf(model)
