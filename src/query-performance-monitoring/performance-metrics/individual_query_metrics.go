@@ -22,6 +22,7 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *pe
 		log.Info("Extension 'pg_stat_monitor' is not enabled.")
 		return nil
 	}
+	log.Info("Extension 'pg_stat_monitor' enabled.")
 	individualQueries := GetIndividualQueryMetrics(conn, slowRunningQueries)
 	if len(individualQueries) == 0 {
 		log.Info("No individual queries found.")
