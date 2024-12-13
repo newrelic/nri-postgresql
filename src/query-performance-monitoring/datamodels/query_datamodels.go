@@ -41,6 +41,12 @@ type IndividualQuerySearch struct {
 	DatabaseName *string `json:"datname" db:"datname" metric_name:"queryplan.database" source_type:"attribute"`
 }
 
+type QueryCpuMetrics struct {
+	queryId      *string `db:"queryid" metric_name:"querycpu.queryid" source_type:"gauge"`
+	AvgCpuTime   *int64  `db:"avg_cpu_time" metric_name:"querycpu.avg_cpu_time" source_type:"gauge"`
+	DatabaseName *string `db:"datname" metric_name:"querycpu.database" source_type:"attribute"`
+}
+
 type QueryExecutionPlanMetrics struct {
 	NodeType            string  `mapstructure:"Node Type"           json:"Node Type"           metric_name:"executionplan.node_type"             source_type:"attribute"`
 	StartupCost         float64 `mapstructure:"Startup Cost"        json:"Startup Cost"        metric_name:"executionplan.startup_cost"          source_type:"gauge"`

@@ -22,5 +22,6 @@ func QueryPerformanceMain(instanceEntity *integration.Entity, args args.Argument
 	performance_metrics.PopulateBlockingMetrics(instanceEntity, newConnection)
 	individualQueries := performance_metrics.PopulateIndividualQueryMetrics(instanceEntity, newConnection, slowRunningQueries)
 	performance_metrics.PopulateExecutionPlanMetrics(instanceEntity, individualQueries, args)
+	performance_metrics.PopulateQueryCpuMetrics(instanceEntity, newConnection)
 	fmt.Println("Query analysis completed.")
 }

@@ -94,4 +94,7 @@ const (
 
 `
 	IndividualQuerySearch = `SELECT query, queryid, datname FROM pg_stat_monitor WHERE queryid IN (%s) limit 10;`
+
+	QueryCpuMetrics = `SELECT
+    				   queryid,AVG((cpu_user_time + cpu_sys_time) / NULLIF(calls, 0)) AS avg_cpu_time,datname FROM pg_stat_monitor WHERE queryid IS NOT NULL GROUP BY queryid,dataname;`
 )
