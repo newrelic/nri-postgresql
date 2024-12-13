@@ -24,7 +24,7 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *pe
 		return nil
 	}
 	log.Info("Extension 'pg_stat_monitor' enabled.")
-	individualQueriesForExecPlan, individualQueryMetrics := GetIndividualQueryMetrics(conn, slowRunningQueries)
+	individualQueryMetrics, individualQueriesForExecPlan := GetIndividualQueryMetrics(conn, slowRunningQueries)
 	if len(individualQueryMetrics) == 0 {
 		log.Info("No individual queries found.")
 		return nil
@@ -72,8 +72,8 @@ func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, sl
 	}
 	defer rows.Close()
 	anonymizedQueriesByDb := processForAnonymizeQueryMap(slowRunningQueries)
-	var individualQueryMetricsForExecPlan []datamodels.IndividualQuerySearch
-	var individualQueryMetrics []datamodels.IndividualQuerySearch
+	var individualQueryMetricsForExecPlanList []datamodels.IndividualQuerySearch
+	var individualQueryMetricsList []datamodels.IndividualQuerySearch
 	for rows.Next() {
 
 		var model datamodels.IndividualQuerySearch
@@ -85,10 +85,10 @@ func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, sl
 		anonymizedQueryText := anonymizedQueriesByDb[*model.DatabaseName][*model.QueryId]
 		individualQueryMetric.QueryText = &anonymizedQueryText
 
-		individualQueryMetrics = append(individualQueryMetrics, individualQueryMetric)
-		individualQueryMetricsForExecPlan = append(individualQueryMetricsForExecPlan, model)
+		individualQueryMetricsList = append(individualQueryMetricsList, individualQueryMetric)
+		individualQueryMetricsForExecPlanList = append(individualQueryMetricsForExecPlanList, model)
 	}
-	return individualQueryMetrics, individualQueryMetricsForExecPlan
+	return individualQueryMetricsList, individualQueryMetricsForExecPlanList
 
 }
 
