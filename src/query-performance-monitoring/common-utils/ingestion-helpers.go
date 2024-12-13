@@ -27,6 +27,13 @@ func IngestMetric(slowQueries []interface{}, instanceEntity *integration.Entity,
 		metricSet := instanceEntity.NewMetricSet(eventName)
 
 		modelValue := reflect.ValueOf(model)
+		if modelValue.Kind() == reflect.Ptr {
+			modelValue = modelValue.Elem()
+		}
+		if !modelValue.IsValid() || modelValue.Kind() != reflect.Struct {
+			continue
+		}
+
 		modelType := reflect.TypeOf(model)
 
 		for i := 0; i < modelValue.NumField(); i++ {
