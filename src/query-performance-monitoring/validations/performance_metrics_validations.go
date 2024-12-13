@@ -7,8 +7,8 @@ import (
 )
 
 func isExtensionEnabled(conn *performanceDbConnection.PGSQLConnection, extensionName string) (bool, error) {
-	rows, err := conn.Queryx(fmt.Sprintf("SELECT count(*) FROM pg_extension WHERE extname = %s", extensionName))
-	log.Info("Query for validation", fmt.Sprintf("SELECT count(*) FROM pg_extension WHERE extname = %s", extensionName))
+	rows, err := conn.Queryx(fmt.Sprintf("SELECT count(*) FROM pg_extension WHERE extname = '%s'", extensionName))
+	log.Info("Query for validation", fmt.Sprintf("SELECT count(*) FROM pg_extension WHERE extname = '%s'", extensionName))
 	if err != nil {
 		log.Error("Error executing query: ", err.Error())
 		return false, err
