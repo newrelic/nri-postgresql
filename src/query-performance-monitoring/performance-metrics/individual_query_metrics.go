@@ -72,7 +72,7 @@ func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, sl
 	}
 	defer rows.Close()
 	anonymizedQueriesByDb := processForAnonymizeQueryMap(slowRunningQueries)
-	var results []datamodels.IndividualQuerySearch
+	var individualQueryMetricsForExecPlan []datamodels.IndividualQuerySearch
 	var individualQueryMetrics []datamodels.IndividualQuerySearch
 	for rows.Next() {
 
@@ -85,10 +85,10 @@ func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, sl
 		anonymizedQueryText := anonymizedQueriesByDb[*model.DatabaseName][*model.QueryId]
 		individualQueryMetric.QueryText = &anonymizedQueryText
 
-		individualQueryMetrics = append(individualQueryMetrics, model)
-		results = append(results, model)
+		individualQueryMetrics = append(individualQueryMetrics, individualQueryMetric)
+		individualQueryMetricsForExecPlan = append(individualQueryMetricsForExecPlan, model)
 	}
-	return individualQueryMetrics, results
+	return individualQueryMetrics, individualQueryMetricsForExecPlan
 
 }
 
