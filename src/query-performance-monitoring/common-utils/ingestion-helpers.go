@@ -8,7 +8,7 @@ import (
 	"reflect"
 )
 
-const publishThreshold = 1
+const publishThreshold = 100
 
 func SetMetric(metricSet *metric.Set, name string, value interface{}, sourceType string) {
 	switch sourceType {
