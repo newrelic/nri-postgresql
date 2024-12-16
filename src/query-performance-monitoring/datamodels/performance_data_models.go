@@ -39,7 +39,7 @@ type IndividualQueryMetrics struct {
 	QueryText    *string `json:"query" db:"query" metric_name:"query" source_type:"attribute"`
 	QueryId      *int64  `json:"queryid" db:"queryid" metric_name:"query_id" source_type:"gauge"`
 	DatabaseName *string `json:"datname" db:"datname" metric_name:"database" source_type:"attribute"`
-	AvgTimeInMS  *string `json:"avg_time_in_ms" db:"avg_time_in_ms" metric_name:"avg_time_in_ms" source_type:"gauge"`
+	AvgTimeInMS  *string `json:"avg_cpu_time_ms" db:"avg_cpu_time_ms" metric_name:"avg_cpu_time_ms" source_type:"gauge"`
 	PlanId       *int64  `json:"planid" db:"planid" metric_name:"plan_id" source_type:"gauge"`
 }
 
