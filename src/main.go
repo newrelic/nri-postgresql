@@ -63,7 +63,8 @@ func main() {
 		log.Error("Error creating list of entities to collect: %s", err)
 		os.Exit(1)
 	}
-
+	log.Info("hostname:" + args.Hostname)
+	log.Info("port:" + args.Port)
 	instance, err := pgIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 	if err != nil {
 		log.Error("Error creating instance entity: %s", err.Error())
