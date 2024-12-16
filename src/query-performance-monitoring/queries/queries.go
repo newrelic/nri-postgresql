@@ -108,7 +108,7 @@ const (
 			FROM
 				pg_stat_monitor
 			WHERE
-				queryid IN (-2001372630136384825, -6123160913176773983, 440101247839410938, 9195076878166173550)
+				queryid IN (%s)
 			GROUP BY
 				query, queryid, datname, planid, cpu_user_time, cpu_sys_time, calls`
 )
