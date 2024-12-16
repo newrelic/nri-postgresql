@@ -100,11 +100,15 @@ const (
 	//-- 							AND bucket_start_time >= NOW() - INTERVAL '15 seconds';`
 
 	IndividualQuerySearch = `SELECT
-	query,
-	queryid,
-	datname,
-	planid,
-	ROUND(((cpu_user_time + cpu_sys_time) / NULLIF(calls, 0))::numeric, 3) AS avg_cpu_time_ms
-	FROM
-	pg_stat_monitor WHERE queryid IN (%s) group by queryid;`
+			query,
+			queryid,
+			datname,
+			planid,
+			ROUND(((cpu_user_time + cpu_sys_time) / NULLIF(calls, 0))::numeric, 3) AS avg_cpu_time_ms
+			FROM
+				pg_stat_monitor
+			WHERE
+				queryid IN (-2001372630136384825, -6123160913176773983, 440101247839410938, 9195076878166173550)
+			GROUP BY
+				query, queryid, datname, planid, cpu_user_time, cpu_sys_time, calls`
 )
