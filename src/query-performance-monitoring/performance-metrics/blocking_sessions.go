@@ -52,6 +52,6 @@ func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *performan
 		return
 	}
 	log.Info("Populate Blocking running: %+v", blockingQueriesMetricsList)
-	common_utils.IngestMetric(blockingQueriesMetricsList, instanceEntity, "PostgresBlockingQueries")
+	common_utils.IngestMetric(blockingQueriesMetricsList, instanceEntity, "PostgresBlockingSessions")
 
 }
