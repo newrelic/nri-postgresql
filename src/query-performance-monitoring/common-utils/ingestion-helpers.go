@@ -10,11 +10,20 @@ import (
 func SetMetric(metricSet *metric.Set, name string, value interface{}, sourceType string) {
 	switch sourceType {
 	case `gauge`:
-		metricSet.SetMetric(name, value, metric.GAUGE)
+		err := metricSet.SetMetric(name, value, metric.GAUGE)
+		if err != nil {
+			return
+		}
 	case `attribute`:
-		metricSet.SetMetric(name, value, metric.ATTRIBUTE)
+		err := metricSet.SetMetric(name, value, metric.ATTRIBUTE)
+		if err != nil {
+			return
+		}
 	default:
-		metricSet.SetMetric(name, value, metric.GAUGE)
+		err := metricSet.SetMetric(name, value, metric.GAUGE)
+		if err != nil {
+			return
+		}
 	}
 }
 
@@ -52,41 +61,41 @@ func IngestMetric(slowQueries []interface{}, instanceEntity *integration.Entity,
 }
 
 func IngestSlowQueryMetrics(slowQueryMetrics []datamodels.SlowRunningQuery, instanceEntity *integration.Entity) {
-	slowQueriesInterface := make([]interface{}, len(slowQueryMetrics))
-	for i, v := range slowQueryMetrics {
-		slowQueriesInterface[i] = v
+	slowQueriesInterface := make([]interface{}, 0)
+	for _, v := range slowQueryMetrics {
+		slowQueriesInterface = append(slowQueriesInterface, v)
 	}
 	IngestMetric(slowQueriesInterface, instanceEntity, "PostgresSlowQueries")
 }
 
 func IngestWaitEventMetrics(waitEventMetrics []datamodels.WaitEventQuery, instanceEntity *integration.Entity) {
-	waitEventMetricsInterface := make([]interface{}, len(waitEventMetrics))
-	for i, v := range waitEventMetricsInterface {
-		waitEventMetricsInterface[i] = v
+	waitEventMetricsInterface := make([]interface{}, 0)
+	for _, v := range waitEventMetrics {
+		waitEventMetricsInterface = append(waitEventMetricsInterface, v)
 	}
 	IngestMetric(waitEventMetricsInterface, instanceEntity, "PostgresWaitEvents")
 }
 
 func IngestIndividualQueryMetrics(individualQueryMetrics []datamodels.IndividualQuerySearch, instanceEntity *integration.Entity) {
-	individualQueryMetricsInterface := make([]interface{}, len(individualQueryMetrics))
-	for i, v := range individualQueryMetricsInterface {
-		individualQueryMetricsInterface[i] = v
+	individualQueryMetricsInterface := make([]interface{}, 0)
+	for _, v := range individualQueryMetrics {
+		individualQueryMetricsInterface = append(individualQueryMetricsInterface, v)
 	}
 	IngestMetric(individualQueryMetricsInterface, instanceEntity, "PostgresIndividualQueries")
 }
 
 func IngestExecutionPlanMetrics(executionPlanMetrics []datamodels.QueryExecutionPlanMetrics, instanceEntity *integration.Entity) {
-	executionPlanMetricsInterface := make([]interface{}, len(executionPlanMetrics))
-	for i, v := range executionPlanMetricsInterface {
-		executionPlanMetricsInterface[i] = v
+	executionPlanMetricsInterface := make([]interface{}, 0)
+	for _, v := range executionPlanMetrics {
+		executionPlanMetricsInterface = append(executionPlanMetricsInterface, v)
 	}
 	IngestMetric(executionPlanMetricsInterface, instanceEntity, "PostgresExecutionPlanMetrics")
 }
 
 func IngestBlockSessionMetrics(blockIoMetrics []datamodels.BlockingQuery, instanceEntity *integration.Entity) {
-	blockIoMetricsInterface := make([]interface{}, len(blockIoMetrics))
-	for i, v := range blockIoMetricsInterface {
-		blockIoMetricsInterface[i] = v
+	blockIoMetricsInterface := make([]interface{}, 0)
+	for _, v := range blockIoMetrics {
+		blockIoMetricsInterface = append(blockIoMetricsInterface, v)
 	}
 	IngestMetric(blockIoMetricsInterface, instanceEntity, "PostgresBlockingQueries")
 }
