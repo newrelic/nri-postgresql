@@ -23,12 +23,12 @@ func PopulateIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnectio
 		return nil
 	}
 	log.Info("Extension 'pg_stat_monitor' enabled.")
-	individualQueryMetrics, individualQueryMetricsInterface, individualQueriesForExecPlan := GetIndividualQueryMetrics(conn, slowRunningQueries)
-	if len(individualQueryMetrics) == 0 {
+	individualQueryMetricsInterface, individualQueriesForExecPlan := GetIndividualQueryMetrics(conn, slowRunningQueries)
+	if len(individualQueryMetricsInterface) == 0 {
 		log.Info("No individual queries found.")
 		return nil
 	}
-	log.Info("Populate individual queries: %+v forExecPlan : %+v", individualQueryMetrics, individualQueriesForExecPlan)
+	log.Info("Populate individual queries: %+v forExecPlan : %+v", individualQueryMetricsInterface, individualQueriesForExecPlan)
 	common_utils.IngestMetric(individualQueryMetricsInterface, "PostgresIndividualQueriesV5", pgIntegration)
 	return individualQueriesForExecPlan
 }
@@ -43,17 +43,16 @@ func ConstructIndividualQuery(slowRunningQueries []datamodels.SlowRunningQueryMe
 	return query
 }
 
-func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics) ([]datamodels.IndividualQueryMetrics, []interface{}, []datamodels.IndividualQueryMetrics) {
+func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics) ([]interface{}, []datamodels.IndividualQueryMetrics) {
 	query := ConstructIndividualQuery(slowRunningQueries)
 	log.Info("Individual query :", query)
 	rows, err := conn.Queryx(query)
 	if err != nil {
-		return nil, nil, nil
+		return nil, nil
 	}
 	defer rows.Close()
 	anonymizedQueriesByDb := processForAnonymizeQueryMap(slowRunningQueries)
 	var individualQueryMetricsForExecPlanList []datamodels.IndividualQueryMetrics
-	var individualQueryMetricsList []datamodels.IndividualQueryMetrics
 	var individualQueryMetricsListInterface []interface{}
 	for rows.Next() {
 
@@ -66,11 +65,10 @@ func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, sl
 		anonymizedQueryText := anonymizedQueriesByDb[*model.DatabaseName][*model.QueryId]
 		individualQueryMetric.QueryText = &anonymizedQueryText
 
-		individualQueryMetricsList = append(individualQueryMetricsList, individualQueryMetric)
 		individualQueryMetricsForExecPlanList = append(individualQueryMetricsForExecPlanList, model)
 		individualQueryMetricsListInterface = append(individualQueryMetricsListInterface, model)
 	}
-	return individualQueryMetricsList, individualQueryMetricsListInterface, individualQueryMetricsForExecPlanList
+	return individualQueryMetricsListInterface, individualQueryMetricsForExecPlanList
 
 }
 
