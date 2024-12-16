@@ -1,6 +1,7 @@
 package common_utils
 
 import (
+	"fmt"
 	"github.com/newrelic/infra-integrations-sdk/v3/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
@@ -67,7 +68,9 @@ func IngestMetric(metricList []interface{}, instanceEntity *integration.Entity, 
 		if metricCount == publishThreshold || metricCount == lenOfMetricList {
 			metricCount = 0
 			err := pgIntegration.Publish()
-			pgIntegration.Entities = append(pgIntegration.Entities, instanceEntity)
+			//pgIntegration.Entities = append(pgIntegration.Entities, instanceEntity)
+			instanceEntity, err = pgIntegration.Entity(fmt.Sprintf("%s:%s", "localhost", 5432), "pg-instance")
+
 			if err != nil {
 				log.Error("Error publishing metrics: %v", err)
 				return
@@ -77,6 +80,8 @@ func IngestMetric(metricList []interface{}, instanceEntity *integration.Entity, 
 
 	err := pgIntegration.Publish()
 	pgIntegration.Entities = append(pgIntegration.Entities, instanceEntity)
+	instanceEntity, err = pgIntegration.Entity(fmt.Sprintf("%s:%s", "localhost", 5432), "pg-instance")
+
 	if err != nil {
 		log.Error("Error publishing metrics: %v", err)
 		return
