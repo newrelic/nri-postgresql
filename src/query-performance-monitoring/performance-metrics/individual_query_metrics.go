@@ -29,7 +29,7 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *pe
 		return nil
 	}
 	log.Info("Populate individual queries: %+v forExecPlan : %+v", individualQueryMetrics, individualQueriesForExecPlan)
-	common_utils.IngestMetric(individualQueryMetricsInterface, instanceEntity, "PostgresIndividualQueries", pgIntegration)
+	common_utils.IngestMetric(individualQueryMetricsInterface, instanceEntity, "PostgresIndividualQueriesV5", pgIntegration)
 	return individualQueriesForExecPlan
 }
 
