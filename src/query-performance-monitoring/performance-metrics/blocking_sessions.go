@@ -11,7 +11,7 @@ import (
 )
 
 func GetBlockingMetrics(conn *performanceDbConnection.PGSQLConnection) ([]interface{}, error) {
-	var blockingQueries []interface{}
+	var blockingQueriesMetricsList []interface{}
 	var query = queries.BlockingQueries
 	rows, err := conn.Queryx(query)
 	if err != nil {
@@ -20,14 +20,14 @@ func GetBlockingMetrics(conn *performanceDbConnection.PGSQLConnection) ([]interf
 	defer rows.Close()
 
 	for rows.Next() {
-		var blockingQuery datamodels.BlockingQuery
-		if err := rows.StructScan(&blockingQuery); err != nil {
+		var blockingQueryMetric datamodels.BlockingSessionMetrics
+		if err := rows.StructScan(&blockingQueryMetric); err != nil {
 			return nil, err
 		}
-		blockingQueries = append(blockingQueries, blockingQuery)
+		blockingQueriesMetricsList = append(blockingQueriesMetricsList, blockingQueryMetric)
 	}
 
-	return blockingQueries, nil
+	return blockingQueriesMetricsList, nil
 }
 
 func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection) {
@@ -41,17 +41,17 @@ func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *performan
 		return
 	}
 	log.Info("Extension 'pg_stat_statements' enabled.")
-	blockingQueries, err := GetBlockingMetrics(conn)
+	blockingQueriesMetricsList, err := GetBlockingMetrics(conn)
 	if err != nil {
 		log.Error("Error fetching Blocking queries: %v", err)
 		return
 	}
 
-	if len(blockingQueries) == 0 {
+	if len(blockingQueriesMetricsList) == 0 {
 		log.Info("No Blocking queries found.")
 		return
 	}
-	log.Info("Populate Blocking running: %+v", blockingQueries)
-	common_utils.IngestMetric(blockingQueries, instanceEntity, "PostgresBlockingQueries")
+	log.Info("Populate Blocking running: %+v", blockingQueriesMetricsList)
+	common_utils.IngestMetric(blockingQueriesMetricsList, instanceEntity, "PostgresBlockingQueries")
 
 }

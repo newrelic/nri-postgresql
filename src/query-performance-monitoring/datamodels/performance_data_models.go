@@ -1,6 +1,6 @@
 package datamodels
 
-type SlowRunningQuery struct {
+type SlowRunningQueryMetrics struct {
 	QueryID             *int64   `db:"query_id"              metric_name:"query_id"                   source_type:"gauge"`
 	QueryText           *string  `db:"query_text"            metric_name:"query_text"                 source_type:"attribute"`
 	DatabaseName        *string  `db:"database_name"         metric_name:"database_name"              source_type:"attribute"`
@@ -13,7 +13,7 @@ type SlowRunningQuery struct {
 	StatementType       *string  `db:"statement_type"        metric_name:"statement_type"             source_type:"attribute"`
 	CollectionTimestamp *string  `db:"collection_timestamp"  metric_name:"collection_timestamp"       source_type:"attribute"`
 }
-type WaitEventQuery struct {
+type WaitEventMetrics struct {
 	WaitEventName       *string  `db:"wait_event_name"       metric_name:"wait_event_name"            source_type:"attribute"`
 	WaitCategory        *string  `db:"wait_category"         metric_name:"wait_category"              source_type:"attribute"`
 	TotalWaitTimeMs     *float64 `db:"total_wait_time_ms"    metric_name:"total_wait_time_ms"         source_type:"gauge"`
@@ -23,7 +23,7 @@ type WaitEventQuery struct {
 	QueryText           *string  `db:"query_text"            metric_name:"query_text"                 source_type:"attribute"`
 	DatabaseName        *string  `db:"database_name"         metric_name:"database_name"              source_type:"attribute"`
 }
-type BlockingQuery struct {
+type BlockingSessionMetrics struct {
 	BlockedPid         *int64  `db:"blocked_pid"          metric_name:"blocked_pid"          source_type:"gauge"`
 	BlockedQuery       *string `db:"blocked_query"        metric_name:"blocked_query"        source_type:"attribute"`
 	BlockedQueryId     *string `db:"blocked_query_id"     metric_name:"blocked_query_id"     source_type:"attribute"`
@@ -35,16 +35,10 @@ type BlockingQuery struct {
 	BlockingQueryStart *string `db:"blocking_query_start" metric_name:"blocking_query_start" source_type:"attribute"`
 }
 
-type IndividualQuerySearch struct {
+type IndividualQueryMetrics struct {
 	QueryText    *string `json:"query" db:"query" metric_name:"query" source_type:"attribute"`
 	QueryId      *int64  `json:"queryid" db:"queryid" metric_name:"query_id" source_type:"gauge"`
 	DatabaseName *string `json:"datname" db:"datname" metric_name:"database" source_type:"attribute"`
-}
-
-type QueryCpuMetrics struct {
-	QueryId      *int64   `db:"queryid" metric_name:"querycpu.queryid" source_type:"gauge"`
-	AvgCpuTime   *float64 `db:"avg_cpu_time" metric_name:"querycpu.avg_cpu_time" source_type:"gauge"`
-	DatabaseName *string  `db:"datname" metric_name:"querycpu.database" source_type:"attribute"`
 }
 
 type QueryExecutionPlanMetrics struct {

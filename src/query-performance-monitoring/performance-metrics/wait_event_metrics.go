@@ -11,7 +11,7 @@ import (
 )
 
 func GetWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection) ([]interface{}, error) {
-	var waitEventMetrics []interface{}
+	var waitEventMetricsList []interface{}
 	var query = queries.WaitEvents
 	rows, err := conn.Queryx(query)
 	if err != nil {
@@ -20,13 +20,13 @@ func GetWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection) ([]inter
 	defer rows.Close()
 
 	for rows.Next() {
-		var waitQuery datamodels.WaitEventQuery
-		if err := rows.StructScan(&waitQuery); err != nil {
+		var waitEvent datamodels.WaitEventMetrics
+		if err := rows.StructScan(&waitEvent); err != nil {
 			return nil, err
 		}
-		waitEventMetrics = append(waitEventMetrics, waitQuery)
+		waitEventMetricsList = append(waitEventMetricsList, waitEvent)
 	}
-	return waitEventMetrics, nil
+	return waitEventMetricsList, nil
 }
 
 func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection) {
@@ -40,18 +40,18 @@ func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *performa
 		return
 	}
 	log.Info("Extension 'pg_wait_sampling' enabled.")
-	waitQueries, err := GetWaitEventMetrics(conn)
+	waitEventMetricsList, err := GetWaitEventMetrics(conn)
 	if err != nil {
 		log.Error("Error fetching wait event queries: %v", err)
 		return
 	}
 
-	if len(waitQueries) == 0 {
+	if len(waitEventMetricsList) == 0 {
 		log.Info("No wait event queries found.")
 		return
 	}
-	log.Info("Populate wait event : %+v", waitQueries)
+	log.Info("Populate wait event : %+v", waitEventMetricsList)
 
-	common_utils.IngestMetric(waitQueries, instanceEntity, "PostgresWaitEvents")
+	common_utils.IngestMetric(waitEventMetricsList, instanceEntity, "PostgresWaitEvents")
 
 }

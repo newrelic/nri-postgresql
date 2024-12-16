@@ -12,7 +12,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
 )
 
-func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, results []datamodels.IndividualQuerySearch, args args.ArgumentList) {
+func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, results []datamodels.IndividualQueryMetrics, args args.ArgumentList) {
 
 	if len(results) == 0 {
 		log.Info("No individual queries found.")
@@ -27,7 +27,7 @@ func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, results []
 	common_utils.IngestMetric(executionDetailsList, instanceEntity, "PostgresExecutionPlanMetrics")
 }
 
-func GetExecutionPlanMetrics(results []datamodels.IndividualQuerySearch, args args.ArgumentList) []interface{} {
+func GetExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, args args.ArgumentList) []interface{} {
 
 	var executionPlanMetricsList []interface{}
 
@@ -47,7 +47,7 @@ func GetExecutionPlanMetrics(results []datamodels.IndividualQuerySearch, args ar
 
 }
 
-func processExecutionPlanOfQueries(individualQueriesList []datamodels.IndividualQuerySearch, dbConn *performanceDbConnection.PGSQLConnection, executionPlanMetricsList *[]interface{}) {
+func processExecutionPlanOfQueries(individualQueriesList []datamodels.IndividualQueryMetrics, dbConn *performanceDbConnection.PGSQLConnection, executionPlanMetricsList *[]interface{}) {
 	for _, individualQuery := range individualQueriesList {
 		log.Info("individualQuery", "")
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
@@ -88,8 +88,8 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 	}
 }
 
-func GroupQueriesByDatabase(results []datamodels.IndividualQuerySearch) map[string][]datamodels.IndividualQuerySearch {
-	databaseMap := make(map[string][]datamodels.IndividualQuerySearch)
+func GroupQueriesByDatabase(results []datamodels.IndividualQueryMetrics) map[string][]datamodels.IndividualQueryMetrics {
+	databaseMap := make(map[string][]datamodels.IndividualQueryMetrics)
 
 	for _, query := range results {
 		dbName := *query.DatabaseName

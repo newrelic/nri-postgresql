@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQuery) []datamodels.IndividualQuerySearch {
+func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics) []datamodels.IndividualQueryMetrics {
 	isExtensionEnabled, err := validations.CheckPgStatMonitorExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -23,17 +23,17 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *pe
 		return nil
 	}
 	log.Info("Extension 'pg_stat_monitor' enabled.")
-	individualQueryMetrics, individualQueryMetricsInteface, individualQueriesForExecPlan := GetIndividualQueryMetrics(conn, slowRunningQueries)
+	individualQueryMetrics, individualQueryMetricsInterface, individualQueriesForExecPlan := GetIndividualQueryMetrics(conn, slowRunningQueries)
 	if len(individualQueryMetrics) == 0 {
 		log.Info("No individual queries found.")
 		return nil
 	}
 	log.Info("Populate individual queries: %+v forExecPlan : %+v", individualQueryMetrics, individualQueriesForExecPlan)
-	common_utils.IngestMetric(individualQueryMetricsInteface, instanceEntity, "PostgresIndividualQueries")
+	common_utils.IngestMetric(individualQueryMetricsInterface, instanceEntity, "PostgresIndividualQueries")
 	return individualQueriesForExecPlan
 }
 
-func ConstructIndividualQuery(slowRunningQueries []datamodels.SlowRunningQuery) string {
+func ConstructIndividualQuery(slowRunningQueries []datamodels.SlowRunningQueryMetrics) string {
 	var queryIDs []string
 	for _, query := range slowRunningQueries {
 		queryIDs = append(queryIDs, fmt.Sprintf("%d", *query.QueryID))
@@ -43,7 +43,7 @@ func ConstructIndividualQuery(slowRunningQueries []datamodels.SlowRunningQuery) 
 	return query
 }
 
-func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQuery) ([]datamodels.IndividualQuerySearch, []interface{}, []datamodels.IndividualQuerySearch) {
+func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics) ([]datamodels.IndividualQueryMetrics, []interface{}, []datamodels.IndividualQueryMetrics) {
 	query := ConstructIndividualQuery(slowRunningQueries)
 	log.Info("Individual query :", query)
 	rows, err := conn.Queryx(query)
@@ -52,12 +52,12 @@ func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, sl
 	}
 	defer rows.Close()
 	anonymizedQueriesByDb := processForAnonymizeQueryMap(slowRunningQueries)
-	var individualQueryMetricsForExecPlanList []datamodels.IndividualQuerySearch
-	var individualQueryMetricsList []datamodels.IndividualQuerySearch
+	var individualQueryMetricsForExecPlanList []datamodels.IndividualQueryMetrics
+	var individualQueryMetricsList []datamodels.IndividualQueryMetrics
 	var individualQueryMetricsListInterface []interface{}
 	for rows.Next() {
 
-		var model datamodels.IndividualQuerySearch
+		var model datamodels.IndividualQueryMetrics
 		if err := rows.StructScan(&model); err != nil {
 			log.Error("Could not scan row: ", err)
 			continue
@@ -74,7 +74,7 @@ func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, sl
 
 }
 
-func processForAnonymizeQueryMap(queryCpuMetricsList []datamodels.SlowRunningQuery) map[string]map[int64]string {
+func processForAnonymizeQueryMap(queryCpuMetricsList []datamodels.SlowRunningQueryMetrics) map[string]map[int64]string {
 	anonymizeQueryMapByDb := make(map[string]map[int64]string)
 
 	for _, metric := range queryCpuMetricsList {
