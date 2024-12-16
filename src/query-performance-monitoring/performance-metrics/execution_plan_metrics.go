@@ -62,18 +62,10 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 			continue
 		}
 		var execPlanJSON string
-		//var execPlanModal datamodels.IndividualQueryMetrics
 		if err := rows.Scan(&execPlanJSON); err != nil {
 			log.Error("Error scanning row: ", err.Error())
 			continue
 		}
-
-		//if err := rows.StructScan(&execPlanModal); err != nil {
-		//	log.Error("Error scanning row: ", err.Error())
-		//	continue
-		//}
-		//
-		//log.Info("execPlanModal", execPlanModal)
 
 		var execPlan []map[string]interface{}
 		err = json.Unmarshal([]byte(execPlanJSON), &execPlan)
