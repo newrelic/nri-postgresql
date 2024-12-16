@@ -97,4 +97,8 @@ const (
           AND blocking_statements.query NOT LIKE 'EXPLAIN (FORMAT JSON) %'
       LIMIT 10;
 `
+	IndividualQuerySearch = `SELECT query, queryid, datname 
+          FROM pg_stat_monitor 
+          WHERE queryid IN (%s) 
+    		  AND bucket_start_time >= NOW() - INTERVAL '15 seconds';`
 )
