@@ -80,7 +80,7 @@ func IngestMetric(metricList []interface{}, instanceEntity *integration.Entity, 
 
 	err := pgIntegration.Publish()
 	pgIntegration.Entities = append(pgIntegration.Entities, instanceEntity)
-	instanceEntity, err = pgIntegration.Entity(fmt.Sprintf("%s:%s", "localhost", 5432), "pg-instance")
+	instanceEntity, err = pgIntegration.Entity(fmt.Sprintf("%s:%s", "localhost", "5432"), "pg-instance")
 
 	if err != nil {
 		log.Error("Error publishing metrics: %v", err)
