@@ -30,25 +30,6 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *pe
 	}
 	log.Info("Populate individual queries: %+v forExecPlan : %+v", individualQueryMetrics, individualQueriesForExecPlan)
 	common_utils.IngestMetric(individualQueryMetricsInteface, instanceEntity, "PostgresIndividualQueries")
-	//for _, model := range individualQueryMetrics {
-	//	metricSet := instanceEntity.NewMetricSet("PostgresIndividualQueries")
-	//
-	//	modelValue := reflect.ValueOf(model)
-	//	modelType := reflect.TypeOf(model)
-	//
-	//	for i := 0; i < modelValue.NumField(); i++ {
-	//		field := modelValue.Field(i)
-	//		fieldType := modelType.Field(i)
-	//		metricName := fieldType.Tag.Get("metric_name")
-	//		sourceType := fieldType.Tag.Get("source_type")
-	//
-	//		if field.Kind() == reflect.Ptr && !field.IsNil() {
-	//			common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
-	//		} else if field.Kind() != reflect.Ptr {
-	//			common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
-	//		}
-	//	}
-	//}
 	return individualQueriesForExecPlan
 }
 

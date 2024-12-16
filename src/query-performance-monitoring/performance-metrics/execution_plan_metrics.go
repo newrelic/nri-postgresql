@@ -25,26 +25,6 @@ func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, results []
 	log.Info("executionDetailsList", executionDetailsList)
 
 	common_utils.IngestMetric(executionDetailsList, instanceEntity, "PostgresExecutionPlanMetrics")
-	//for _, model := range executionDetailsList {
-	//	metricSet := instanceEntity.NewMetricSet("PostgresExecutionPlanMetricsSample")
-	//
-	//	modelValue := reflect.ValueOf(model)
-	//	modelType := reflect.TypeOf(model)
-	//
-	//	for i := 0; i < modelValue.NumField(); i++ {
-	//		field := modelValue.Field(i)
-	//		fieldType := modelType.Field(i)
-	//		metricName := fieldType.Tag.Get("metric_name")
-	//		sourceType := fieldType.Tag.Get("source_type")
-	//
-	//		if field.Kind() == reflect.Ptr && !field.IsNil() {
-	//			common_utils.SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
-	//		} else if field.Kind() != reflect.Ptr {
-	//			log.Info("fielddddd", field.Interface())
-	//			common_utils.SetMetric(metricSet, metricName, field.Interface(), sourceType)
-	//		}
-	//	}
-	//}
 }
 
 func GetExecutionPlanMetrics(results []datamodels.IndividualQuerySearch, args args.ArgumentList) []interface{} {
