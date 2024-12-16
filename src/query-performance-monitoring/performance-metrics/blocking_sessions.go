@@ -30,7 +30,7 @@ func GetBlockingMetrics(conn *performanceDbConnection.PGSQLConnection) ([]interf
 	return blockingQueriesMetricsList, nil
 }
 
-func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection) {
+func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration) {
 	isExtensionEnabled, err := validations.CheckPgStatStatementsExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -52,6 +52,6 @@ func PopulateBlockingMetrics(instanceEntity *integration.Entity, conn *performan
 		return
 	}
 	log.Info("Populate Blocking running: %+v", blockingQueriesMetricsList)
-	common_utils.IngestMetric(blockingQueriesMetricsList, instanceEntity, "PostgresBlockingQueries")
+	common_utils.IngestMetric(blockingQueriesMetricsList, instanceEntity, "PostgresBlockingQueries", pgIntegration)
 
 }

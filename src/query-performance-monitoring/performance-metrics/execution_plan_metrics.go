@@ -12,7 +12,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
 )
 
-func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, results []datamodels.IndividualQueryMetrics, args args.ArgumentList) {
+func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, results []datamodels.IndividualQueryMetrics, args args.ArgumentList, pgIntegration *integration.Integration) {
 
 	if len(results) == 0 {
 		log.Info("No individual queries found.")
@@ -24,7 +24,7 @@ func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, results []
 
 	log.Info("executionDetailsList", executionDetailsList)
 
-	common_utils.IngestMetric(executionDetailsList, instanceEntity, "PostgresExecutionPlanMetrics")
+	common_utils.IngestMetric(executionDetailsList, instanceEntity, "PostgresExecutionPlanMetrics", pgIntegration)
 }
 
 func GetExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, args args.ArgumentList) []interface{} {

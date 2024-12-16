@@ -3,8 +3,11 @@ package common_utils
 import (
 	"github.com/newrelic/infra-integrations-sdk/v3/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
+	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"reflect"
 )
+
+const publishThreshold = 10
 
 func SetMetric(metricSet *metric.Set, name string, value interface{}, sourceType string) {
 	switch sourceType {
@@ -26,12 +29,16 @@ func SetMetric(metricSet *metric.Set, name string, value interface{}, sourceType
 	}
 }
 
-func IngestMetric(metricList []interface{}, instanceEntity *integration.Entity, eventName string) {
+func IngestMetric(metricList []interface{}, instanceEntity *integration.Entity, eventName string, pgIntegration *integration.Integration) {
+
+	metricCount := 0
+	lenOfMetricList := len(metricList)
 
 	for _, model := range metricList {
 		if model == nil {
 			continue
 		}
+		metricCount += 1
 		metricSet := instanceEntity.NewMetricSet(eventName)
 
 		modelValue := reflect.ValueOf(model)
@@ -54,6 +61,15 @@ func IngestMetric(metricList []interface{}, instanceEntity *integration.Entity, 
 				SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)
 			} else if field.Kind() != reflect.Ptr {
 				SetMetric(metricSet, metricName, field.Interface(), sourceType)
+			}
+		}
+
+		if metricCount == publishThreshold || metricCount == lenOfMetricList {
+			metricCount = 0
+			err := pgIntegration.Publish()
+			if err != nil {
+				log.Error("Error publishing metrics: %v", err)
+				return
 			}
 		}
 	}

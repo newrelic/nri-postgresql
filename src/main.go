@@ -87,7 +87,7 @@ func main() {
 		}
 	}
 	if args.EnableQueryMonitoring {
-		query_performance_monitoring.QueryPerformanceMain(instance, args)
+		query_performance_monitoring.QueryPerformanceMain(instance, args, pgIntegration)
 	}
 
 	if err = pgIntegration.Publish(); err != nil {
