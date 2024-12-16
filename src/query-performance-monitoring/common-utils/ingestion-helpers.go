@@ -3,7 +3,6 @@ package common_utils
 import (
 	"github.com/newrelic/infra-integrations-sdk/v3/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
-	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
 	"reflect"
 )
 
@@ -27,9 +26,9 @@ func SetMetric(metricSet *metric.Set, name string, value interface{}, sourceType
 	}
 }
 
-func IngestMetric(slowQueries []interface{}, instanceEntity *integration.Entity, eventName string) {
+func IngestMetric(metricList []interface{}, instanceEntity *integration.Entity, eventName string) {
 
-	for _, model := range slowQueries {
+	for _, model := range metricList {
 		if model == nil {
 			continue
 		}
@@ -58,44 +57,4 @@ func IngestMetric(slowQueries []interface{}, instanceEntity *integration.Entity,
 			}
 		}
 	}
-}
-
-func IngestSlowQueryMetrics(slowQueryMetrics []datamodels.SlowRunningQuery, instanceEntity *integration.Entity) {
-	slowQueriesInterface := make([]interface{}, 0)
-	for _, v := range slowQueryMetrics {
-		slowQueriesInterface = append(slowQueriesInterface, v)
-	}
-	IngestMetric(slowQueriesInterface, instanceEntity, "PostgresSlowQueries")
-}
-
-func IngestWaitEventMetrics(waitEventMetrics []datamodels.WaitEventQuery, instanceEntity *integration.Entity) {
-	waitEventMetricsInterface := make([]interface{}, 0)
-	for _, v := range waitEventMetrics {
-		waitEventMetricsInterface = append(waitEventMetricsInterface, v)
-	}
-	IngestMetric(waitEventMetricsInterface, instanceEntity, "PostgresWaitEvents")
-}
-
-func IngestIndividualQueryMetrics(individualQueryMetrics []datamodels.IndividualQuerySearch, instanceEntity *integration.Entity) {
-	individualQueryMetricsInterface := make([]interface{}, 0)
-	for _, v := range individualQueryMetrics {
-		individualQueryMetricsInterface = append(individualQueryMetricsInterface, v)
-	}
-	IngestMetric(individualQueryMetricsInterface, instanceEntity, "PostgresIndividualQueries")
-}
-
-func IngestExecutionPlanMetrics(executionPlanMetrics []datamodels.QueryExecutionPlanMetrics, instanceEntity *integration.Entity) {
-	executionPlanMetricsInterface := make([]interface{}, 0)
-	for _, v := range executionPlanMetrics {
-		executionPlanMetricsInterface = append(executionPlanMetricsInterface, v)
-	}
-	IngestMetric(executionPlanMetricsInterface, instanceEntity, "PostgresExecutionPlanMetrics")
-}
-
-func IngestBlockSessionMetrics(blockIoMetrics []datamodels.BlockingQuery, instanceEntity *integration.Entity) {
-	blockIoMetricsInterface := make([]interface{}, 0)
-	for _, v := range blockIoMetrics {
-		blockIoMetricsInterface = append(blockIoMetricsInterface, v)
-	}
-	IngestMetric(blockIoMetricsInterface, instanceEntity, "PostgresBlockingQueries")
 }

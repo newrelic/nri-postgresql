@@ -10,22 +10,23 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/validations"
 )
 
-func GetWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection) ([]datamodels.WaitEventQuery, error) {
-	var waitQueries []datamodels.WaitEventQuery
+func GetWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection) ([]interface{}, error) {
+	var waitEventMetrics []interface{}
 	var query = queries.WaitEvents
 	rows, err := conn.Queryx(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
+
 	for rows.Next() {
 		var waitQuery datamodels.WaitEventQuery
 		if err := rows.StructScan(&waitQuery); err != nil {
 			return nil, err
 		}
-		waitQueries = append(waitQueries, waitQuery)
+		waitEventMetrics = append(waitEventMetrics, waitQuery)
 	}
-	return waitQueries, nil
+	return waitEventMetrics, nil
 }
 
 func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection) {
@@ -51,7 +52,7 @@ func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *performa
 	}
 	log.Info("Populate wait event : %+v", waitQueries)
 
-	common_utils.IngestWaitEventMetrics(waitQueries, instanceEntity)
+	common_utils.IngestMetric(waitQueries, instanceEntity, "PostgresWaitEvents")
 	//for _, model := range waitQueries {
 	//	metricSet := instanceEntity.NewMetricSet("PostgresWaitEvents")
 	//	modelValue := reflect.ValueOf(model)

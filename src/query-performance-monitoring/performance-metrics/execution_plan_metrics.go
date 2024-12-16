@@ -24,7 +24,7 @@ func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, results []
 
 	log.Info("executionDetailsList", executionDetailsList)
 
-	common_utils.IngestExecutionPlanMetrics(executionDetailsList, instanceEntity)
+	common_utils.IngestMetric(executionDetailsList, instanceEntity, "PostgresExecutionPlanMetrics")
 	//for _, model := range executionDetailsList {
 	//	metricSet := instanceEntity.NewMetricSet("PostgresExecutionPlanMetricsSample")
 	//
@@ -47,9 +47,9 @@ func PopulateExecutionPlanMetrics(instanceEntity *integration.Entity, results []
 	//}
 }
 
-func GetExecutionPlanMetrics(results []datamodels.IndividualQuerySearch, args args.ArgumentList) []datamodels.QueryExecutionPlanMetrics {
+func GetExecutionPlanMetrics(results []datamodels.IndividualQuerySearch, args args.ArgumentList) []interface{} {
 
-	var executionPlanMetricsList []datamodels.QueryExecutionPlanMetrics
+	var executionPlanMetricsList []interface{}
 
 	var groupIndividualQueriesByDatabase = GroupQueriesByDatabase(results)
 
@@ -67,7 +67,7 @@ func GetExecutionPlanMetrics(results []datamodels.IndividualQuerySearch, args ar
 
 }
 
-func processExecutionPlanOfQueries(individualQueriesList []datamodels.IndividualQuerySearch, dbConn *performanceDbConnection.PGSQLConnection, executionPlanMetricsList *[]datamodels.QueryExecutionPlanMetrics) {
+func processExecutionPlanOfQueries(individualQueriesList []datamodels.IndividualQuerySearch, dbConn *performanceDbConnection.PGSQLConnection, executionPlanMetricsList *[]interface{}) {
 	for _, individualQuery := range individualQueriesList {
 		log.Info("individualQuery", "")
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
