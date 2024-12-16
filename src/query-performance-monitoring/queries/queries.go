@@ -93,8 +93,18 @@ const (
       WHERE NOT blocked_locks.granted;
 
 `
-	IndividualQuerySearch = `SELECT query, queryid, datname 
-							FROM pg_stat_monitor 
-							WHERE queryid IN (%s) 
--- 							AND bucket_start_time >= NOW() - INTERVAL '15 seconds';`
+	//	IndividualQuerySearch = `SELECT query, queryid, datname,planid,
+	//							ROUND((cpu_user_time + cpu_sys_time) / NULLIF(total_calls, 0), 3) AS avg_cpu_time_ms
+	//							FROM pg_stat_monitor
+	//							WHERE queryid IN (%s)
+	//-- 							AND bucket_start_time >= NOW() - INTERVAL '15 seconds';`
+
+	IndividualQuerySearch = `SELECT
+	query,
+	queryid,
+	datname,
+	planid,
+	ROUND(((cpu_user_time + cpu_sys_time) / NULLIF(calls, 0))::numeric, 3) AS avg_cpu_time_ms
+	FROM
+	pg_stat_monitor WHERE queryid IN (%s) group by queryid;`
 )
