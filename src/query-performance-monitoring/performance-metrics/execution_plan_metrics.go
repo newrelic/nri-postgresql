@@ -82,6 +82,7 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 		execPlanMetrics.QueryText = *individualQuery.QueryText
 		execPlanMetrics.QueryId = *individualQuery.QueryId
 		execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
+		execPlanMetrics.PlanId = *individualQuery.PlanId
 
 		fmt.Printf("executionPlanMetrics: %+v\n", execPlanMetrics)
 		*executionPlanMetricsList = append(*executionPlanMetricsList, execPlanMetrics)
