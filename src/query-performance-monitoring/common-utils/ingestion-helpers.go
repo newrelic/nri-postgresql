@@ -7,7 +7,7 @@ import (
 	"reflect"
 )
 
-const publishThreshold = 10
+const publishThreshold = 1
 
 func SetMetric(metricSet *metric.Set, name string, value interface{}, sourceType string) {
 	switch sourceType {
@@ -73,4 +73,11 @@ func IngestMetric(metricList []interface{}, instanceEntity *integration.Entity, 
 			}
 		}
 	}
+
+	err := pgIntegration.Publish()
+	if err != nil {
+		log.Error("Error publishing metrics: %v", err)
+		return
+	}
+
 }
