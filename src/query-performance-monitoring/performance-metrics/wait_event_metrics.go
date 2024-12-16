@@ -29,7 +29,7 @@ func GetWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection) ([]inter
 	return waitEventMetricsList, nil
 }
 
-func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration) {
+func PopulateWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration) {
 	isExtensionEnabled, err := validations.CheckPgWaitSamplingExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -52,6 +52,6 @@ func PopulateWaitEventMetrics(instanceEntity *integration.Entity, conn *performa
 	}
 	log.Info("Populate wait event : %+v", waitEventMetricsList)
 
-	common_utils.IngestMetric(waitEventMetricsList, instanceEntity, "PostgresWaitEventsV5", pgIntegration)
+	common_utils.IngestMetric(waitEventMetricsList, "PostgresWaitEventsV5", pgIntegration)
 
 }

@@ -17,10 +17,10 @@ func QueryPerformanceMain(instanceEntity *integration.Entity, args args.Argument
 		fmt.Println("Error creating connection: ", err)
 		return
 	}
-	slowRunningQueries := performance_metrics.PopulateSlowRunningMetrics(instanceEntity, newConnection, pgIntegration)
-	performance_metrics.PopulateWaitEventMetrics(instanceEntity, newConnection, pgIntegration)
-	performance_metrics.PopulateBlockingMetrics(instanceEntity, newConnection, pgIntegration)
-	individualQueries := performance_metrics.PopulateIndividualQueryMetrics(instanceEntity, newConnection, slowRunningQueries, pgIntegration)
-	performance_metrics.PopulateExecutionPlanMetrics(instanceEntity, individualQueries, args, pgIntegration)
+	slowRunningQueries := performance_metrics.PopulateSlowRunningMetrics(newConnection, pgIntegration)
+	performance_metrics.PopulateWaitEventMetrics(newConnection, pgIntegration)
+	performance_metrics.PopulateBlockingMetrics(newConnection, pgIntegration)
+	individualQueries := performance_metrics.PopulateIndividualQueryMetrics(newConnection, slowRunningQueries, pgIntegration)
+	performance_metrics.PopulateExecutionPlanMetrics(individualQueries, args, pgIntegration)
 	fmt.Println("Query analysis completed.")
 }

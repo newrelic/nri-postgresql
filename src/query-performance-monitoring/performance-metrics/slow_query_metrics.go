@@ -35,7 +35,7 @@ func GetSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection) ([]dat
 	return slowQueryMetricsList, slowQueryMetricsListInterface, nil
 }
 
-func PopulateSlowRunningMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration) []datamodels.SlowRunningQueryMetrics {
+func PopulateSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration) []datamodels.SlowRunningQueryMetrics {
 	isExtensionEnabled, err := validations.CheckPgStatStatementsExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -58,7 +58,7 @@ func PopulateSlowRunningMetrics(instanceEntity *integration.Entity, conn *perfor
 		return nil
 	}
 	log.Info("Populate-slow running: %+v", slowQueryMetricsList)
-	common_utils.IngestMetric(slowQueryMetricsListInterface, instanceEntity, "PostgresSlowQueriesV5", pgIntegration)
+	common_utils.IngestMetric(slowQueryMetricsListInterface, "PostgresSlowQueriesV5", pgIntegration)
 	return slowQueryMetricsList
 
 }

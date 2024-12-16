@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *performanceDbConnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics, pgIntegration *integration.Integration) []datamodels.IndividualQueryMetrics {
+func PopulateIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics, pgIntegration *integration.Integration) []datamodels.IndividualQueryMetrics {
 	isExtensionEnabled, err := validations.CheckPgStatMonitorExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -29,7 +29,7 @@ func PopulateIndividualQueryMetrics(instanceEntity *integration.Entity, conn *pe
 		return nil
 	}
 	log.Info("Populate individual queries: %+v forExecPlan : %+v", individualQueryMetrics, individualQueriesForExecPlan)
-	common_utils.IngestMetric(individualQueryMetricsInterface, instanceEntity, "PostgresIndividualQueriesV5", pgIntegration)
+	common_utils.IngestMetric(individualQueryMetricsInterface, "PostgresIndividualQueriesV5", pgIntegration)
 	return individualQueriesForExecPlan
 }
 
