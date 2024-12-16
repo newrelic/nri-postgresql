@@ -66,7 +66,7 @@ func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, sl
 		individualQueryMetric.QueryText = &anonymizedQueryText
 
 		individualQueryMetricsForExecPlanList = append(individualQueryMetricsForExecPlanList, model)
-		individualQueryMetricsListInterface = append(individualQueryMetricsListInterface, model)
+		individualQueryMetricsListInterface = append(individualQueryMetricsListInterface, individualQueryMetric)
 	}
 	return individualQueryMetricsListInterface, individualQueryMetricsForExecPlanList
 
