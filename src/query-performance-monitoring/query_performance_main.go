@@ -10,7 +10,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/performance-metrics"
 )
 
-func QueryPerformanceMain(instanceEntity *integration.Entity, args args.ArgumentList, pgIntegration *integration.Integration) {
+func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Integration) {
 	connectionInfo := performanceDbConnection.DefaultConnectionInfo(&args)
 	newConnection, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
 	if err != nil {
