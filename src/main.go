@@ -30,7 +30,6 @@ func main() {
 	var args args.ArgumentList
 	// Create Integration
 	pgIntegration, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
-	//query_monitoring.PrintQueryOutput(args)
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
