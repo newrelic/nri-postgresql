@@ -66,9 +66,8 @@ func IngestMetric(metricList []interface{}, instanceEntity *integration.Entity, 
 
 		if metricCount == publishThreshold || metricCount == lenOfMetricList {
 			metricCount = 0
-			entity := instanceEntity
 			err := pgIntegration.Publish()
-			pgIntegration.Entities = append(pgIntegration.Entities, entity)
+			pgIntegration.Entities = append(pgIntegration.Entities, instanceEntity)
 			if err != nil {
 				log.Error("Error publishing metrics: %v", err)
 				return
@@ -77,6 +76,7 @@ func IngestMetric(metricList []interface{}, instanceEntity *integration.Entity, 
 	}
 
 	err := pgIntegration.Publish()
+	pgIntegration.Entities = append(pgIntegration.Entities, instanceEntity)
 	if err != nil {
 		log.Error("Error publishing metrics: %v", err)
 		return
