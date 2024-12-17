@@ -67,6 +67,7 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
 		rows, err := dbConn.Queryx(query)
 		if err != nil {
+			log.Info("Error executing query: %v", err)
 			continue
 		}
 		defer rows.Close()
