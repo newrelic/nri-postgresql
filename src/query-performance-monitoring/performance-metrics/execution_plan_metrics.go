@@ -18,7 +18,7 @@ func PopulateExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, a
 		log.Info("No individual queries found.")
 		return
 	}
-	log.Info("Populate individual queries: %+v", results)
+	log.Info("PopulateExecutionPlanMetrics queries: %+v", results)
 
 	executionDetailsList := GetExecutionPlanMetrics(results, args)
 
@@ -50,7 +50,7 @@ func GetExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, args a
 func processExecutionPlanOfQueries(individualQueriesList []datamodels.IndividualQueryMetrics, dbConn *performanceDbConnection.PGSQLConnection, executionPlanMetricsList *[]interface{}) {
 
 	for _, individualQuery := range individualQueriesList {
-		log.Info("individualQuery", "")
+		log.Info("individualQueryForExecutionPlan", "")
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
 		rows, err := dbConn.Queryx(query)
 		if err != nil {
@@ -83,7 +83,9 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 		execPlanMetrics.QueryText = *individualQuery.QueryText
 		execPlanMetrics.QueryId = *individualQuery.QueryId
 		execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
-		execPlanMetrics.PlanId = *individualQuery.PlanId
+		if individualQuery.PlanId != nil {
+			execPlanMetrics.PlanId = *individualQuery.PlanId
+		}
 
 		fmt.Printf("executionPlanMetrics: %+v\n", execPlanMetrics)
 		*executionPlanMetricsList = append(*executionPlanMetricsList, execPlanMetrics)
