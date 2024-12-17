@@ -24,7 +24,7 @@ func PopulateExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, a
 
 	log.Info("executionDetailsList", executionDetailsList)
 
-	common_utils.IngestMetric(executionDetailsList, "PostgresExecutionPlanMetricsV5", pgIntegration)
+	common_utils.IngestMetric(executionDetailsList, "PostgresExecutionPlanMetrics", pgIntegration)
 }
 
 func GetExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, args args.ArgumentList) []interface{} {

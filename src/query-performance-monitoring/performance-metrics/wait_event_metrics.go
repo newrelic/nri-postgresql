@@ -52,6 +52,6 @@ func PopulateWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection, pgI
 	}
 	log.Info("Populate wait event : %+v", waitEventMetricsList)
 
-	common_utils.IngestMetric(waitEventMetricsList, "PostgresWaitEventsV5", pgIntegration)
+	common_utils.IngestMetric(waitEventMetricsList, "PostgresWaitEvents", pgIntegration)
 
 }
