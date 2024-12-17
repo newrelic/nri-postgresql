@@ -3,6 +3,7 @@ package performance_metrics
 import (
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
+	"github.com/newrelic/nri-postgresql/src/args"
 	common_utils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	performanceDbConnection "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/connections"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
@@ -29,7 +30,7 @@ func GetWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection) ([]inter
 	return waitEventMetricsList, nil
 }
 
-func PopulateWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration) {
+func PopulateWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration, args args.ArgumentList) {
 	isExtensionEnabled, err := validations.CheckPgWaitSamplingExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -52,6 +53,6 @@ func PopulateWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection, pgI
 	}
 	log.Info("Populate wait event : %+v", waitEventMetricsList)
 
-	common_utils.IngestMetric(waitEventMetricsList, "PostgresWaitEvents", pgIntegration)
+	common_utils.IngestMetric(waitEventMetricsList, "PostgresWaitEvents", pgIntegration, args)
 
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
+	"github.com/newrelic/nri-postgresql/src/args"
 	common_utils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	performanceDbConnection "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/connections"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
@@ -12,7 +13,7 @@ import (
 	"strings"
 )
 
-func PopulateIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics, pgIntegration *integration.Integration) []datamodels.IndividualQueryMetrics {
+func PopulateIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics, pgIntegration *integration.Integration, args args.ArgumentList) []datamodels.IndividualQueryMetrics {
 	isExtensionEnabled, err := validations.CheckPgStatMonitorExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -29,7 +30,7 @@ func PopulateIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnectio
 		return nil
 	}
 	log.Info("Populate individual queries: %+v forExecPlan : %+v", individualQueryMetricsInterface, individualQueriesForExecPlan)
-	common_utils.IngestMetric(individualQueryMetricsInterface, "PostgresIndividualQueries", pgIntegration)
+	common_utils.IngestMetric(individualQueryMetricsInterface, "PostgresIndividualQueries", pgIntegration, args)
 	return individualQueriesForExecPlan
 }
 

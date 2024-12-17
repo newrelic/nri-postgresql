@@ -15,7 +15,7 @@ import (
 
 var supportedStatements = map[string]bool{"SELECT": true, "INSERT": true, "UPDATE": true, "DELETE": true, "WITH": true}
 
-func PopulateExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, args args.ArgumentList, pgIntegration *integration.Integration) {
+func PopulateExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, pgIntegration *integration.Integration, args args.ArgumentList) {
 
 	if len(results) == 0 {
 		log.Info("No individual queries found.")
@@ -27,7 +27,7 @@ func PopulateExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, a
 
 	log.Info("executionDetailsList", executionDetailsList)
 
-	common_utils.IngestMetric(executionDetailsList, "PostgresExecutionPlanMetrics", pgIntegration)
+	common_utils.IngestMetric(executionDetailsList, "PostgresExecutionPlanMetrics", pgIntegration, args)
 }
 
 func GetExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, args args.ArgumentList) []interface{} {

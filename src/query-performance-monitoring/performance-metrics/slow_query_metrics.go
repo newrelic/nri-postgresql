@@ -3,6 +3,7 @@ package performance_metrics
 import (
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
+	"github.com/newrelic/nri-postgresql/src/args"
 	common_utils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	performanceDbConnection "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/connections"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
@@ -29,13 +30,10 @@ func GetSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection) ([]dat
 		slowQueryMetricsListInterface = append(slowQueryMetricsListInterface, slowQuery)
 	}
 
-	for _, query := range slowQueryMetricsList {
-		log.Info("Slow Query: %+v", query)
-	}
 	return slowQueryMetricsList, slowQueryMetricsListInterface, nil
 }
 
-func PopulateSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration) []datamodels.SlowRunningQueryMetrics {
+func PopulateSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration, args args.ArgumentList) []datamodels.SlowRunningQueryMetrics {
 	isExtensionEnabled, err := validations.CheckPgStatStatementsExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -58,7 +56,7 @@ func PopulateSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, p
 		return nil
 	}
 	log.Info("Populate-slow running: %+v", slowQueryMetricsList)
-	common_utils.IngestMetric(slowQueryMetricsListInterface, "PostgresSlowQueries", pgIntegration)
+	common_utils.IngestMetric(slowQueryMetricsListInterface, "PostgresSlowQueries", pgIntegration, args)
 	return slowQueryMetricsList
 
 }

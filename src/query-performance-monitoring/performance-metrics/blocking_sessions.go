@@ -3,6 +3,7 @@ package performance_metrics
 import (
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
+	"github.com/newrelic/nri-postgresql/src/args"
 	common_utils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	performanceDbConnection "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/connections"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
@@ -30,7 +31,7 @@ func GetBlockingMetrics(conn *performanceDbConnection.PGSQLConnection) ([]interf
 	return blockingQueriesMetricsList, nil
 }
 
-func PopulateBlockingMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration) {
+func PopulateBlockingMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration, args args.ArgumentList) {
 	isExtensionEnabled, err := validations.CheckPgStatStatementsExtensionEnabled(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -52,6 +53,6 @@ func PopulateBlockingMetrics(conn *performanceDbConnection.PGSQLConnection, pgIn
 		return
 	}
 	log.Info("Populate Blocking running: %+v", blockingQueriesMetricsList)
-	common_utils.IngestMetric(blockingQueriesMetricsList, "PostgresBlockingSessions", pgIntegration)
+	common_utils.IngestMetric(blockingQueriesMetricsList, "PostgresBlockingSessions", pgIntegration, args)
 
 }

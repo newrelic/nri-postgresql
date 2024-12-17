@@ -5,6 +5,7 @@ import (
 	"github.com/newrelic/infra-integrations-sdk/v3/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
+	"github.com/newrelic/nri-postgresql/src/args"
 	"reflect"
 )
 
@@ -30,11 +31,11 @@ func SetMetric(metricSet *metric.Set, name string, value interface{}, sourceType
 	}
 }
 
-func IngestMetric(metricList []interface{}, eventName string, pgIntegration *integration.Integration) {
+func IngestMetric(metricList []interface{}, eventName string, pgIntegration *integration.Integration, args args.ArgumentList) {
 
 	metricCount := 0
 	lenOfMetricList := len(metricList)
-	instanceEntity, err := pgIntegration.Entity(fmt.Sprintf("%s:%s", "localhost", "5432"), "pg-instance")
+	instanceEntity, err := pgIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 
 	for _, model := range metricList {
 		if model == nil {
