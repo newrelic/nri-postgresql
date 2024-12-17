@@ -85,6 +85,8 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 		execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
 		if individualQuery.PlanId != nil {
 			execPlanMetrics.PlanId = *individualQuery.PlanId
+		} else {
+			execPlanMetrics.PlanId = 999
 		}
 
 		fmt.Printf("executionPlanMetrics: %+v\n", execPlanMetrics)
