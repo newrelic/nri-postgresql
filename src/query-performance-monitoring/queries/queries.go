@@ -24,10 +24,12 @@ const (
         pg_stat_statements pss
     JOIN
         pg_database pd ON pss.dbid = pd.oid
+    WHERE 
+        pss.query NOT LIKE 'EXPLAIN (FORMAT JSON) %'    
     ORDER BY
         avg_elapsed_time_ms DESC -- Order by the average elapsed time in descending order
     LIMIT
-        5;`
+        10;`
 
 	WaitEvents = `WITH wait_history AS (
         SELECT
@@ -61,10 +63,12 @@ const (
         query_text,
         database_name
     FROM wait_history
-    WHERE duration IS NOT NULL AND query_id IS NOT NULL AND event_type IS NOT NULL
+    WHERE query_text NOT LIKE 'EXPLAIN (FORMAT JSON) %' AND query_id IS NOT NULL AND event_type IS NOT NULL
     GROUP BY event_type, event, query_id, query_text, database_name
     ORDER BY total_wait_time_ms DESC
     LIMIT 10;`
+
+    
 	BlockingQueries = `SELECT
           blocked_activity.pid AS blocked_pid,
           blocked_statements.query AS blocked_query,
@@ -90,8 +94,10 @@ const (
           AND blocked_locks.pid <> blocking_locks.pid
       JOIN pg_stat_activity AS blocking_activity ON blocking_locks.pid = blocking_activity.pid
       JOIN pg_stat_statements as blocking_statements on blocking_activity.query_id = blocking_statements.queryid
-      WHERE NOT blocked_locks.granted;
-
+      WHERE NOT blocked_locks.granted
+          AND blocked_statements.query NOT LIKE 'EXPLAIN (FORMAT JSON) %'
+          AND blocking_statements.query NOT LIKE 'EXPLAIN (FORMAT JSON) %'
+      LIMIT 10;
 `
 	//	IndividualQuerySearch = `SELECT query, queryid, datname,planid,
 	//							ROUND((cpu_user_time + cpu_sys_time) / NULLIF(total_calls, 0), 3) AS avg_cpu_time_ms
