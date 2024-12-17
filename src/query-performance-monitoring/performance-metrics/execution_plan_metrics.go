@@ -10,7 +10,10 @@ import (
 	common_utils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	performanceDbConnection "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/connections"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
+	"strings"
 )
+
+var supportedStatements = map[string]bool{"SELECT": true, "INSERT": true, "UPDATE": true, "DELETE": true, "WITH": true}
 
 func PopulateExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, args args.ArgumentList, pgIntegration *integration.Integration) {
 
@@ -50,7 +53,17 @@ func GetExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, args a
 func processExecutionPlanOfQueries(individualQueriesList []datamodels.IndividualQueryMetrics, dbConn *performanceDbConnection.PGSQLConnection, executionPlanMetricsList *[]interface{}) {
 
 	for _, individualQuery := range individualQueriesList {
+
 		log.Info("individualQueryForExecutionPlan", "")
+
+		queryText := strings.TrimSpace(*individualQuery.QueryText)
+		upperQueryText := strings.ToUpper(queryText)
+
+		if !supportedStatements[strings.Split(upperQueryText, " ")[0]] {
+			log.Debug("Skipping unsupported query for EXPLAIN: %s", queryText)
+			continue
+		}
+
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
 		rows, err := dbConn.Queryx(query)
 		if err != nil {
