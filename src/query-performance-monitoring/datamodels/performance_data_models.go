@@ -36,9 +36,9 @@ type BlockingSessionMetrics struct {
 }
 
 type IndividualQueryMetrics struct {
-	QueryText    *string `json:"query" db:"query" metric_name:"query" source_type:"attribute"`
+	QueryText    *string `json:"query" db:"query" metric_name:"queryquery_text" source_type:"attribute"`
 	QueryId      *int64  `json:"queryid" db:"queryid" metric_name:"query_id" source_type:"gauge"`
-	DatabaseName *string `json:"datname" db:"datname" metric_name:"database" source_type:"attribute"`
+	DatabaseName *string `json:"datname" db:"datname" metric_name:"database_name" source_type:"attribute"`
 	AvgTimeInMS  *string `json:"avg_cpu_time_ms" db:"avg_cpu_time_ms" metric_name:"avg_cpu_time_ms" source_type:"gauge"`
 	PlanId       *int64  `json:"planid" db:"planid" metric_name:"plan_id" source_type:"gauge"`
 }
@@ -62,8 +62,8 @@ type QueryExecutionPlanMetrics struct {
 	LocalWrittenBlocks  int64   `mapstructure:"Local Written Blocks" json:"Local Written Blocks" metric_name:"local_written_blocks"  source_type:"gauge"`
 	TempReadBlocks      int64   `mapstructure:"Temp Read Blocks"    json:"Temp Read Blocks"    metric_name:"temp_read_blocks"      source_type:"gauge"`
 	TempWrittenBlocks   int64   `mapstructure:"Temp Written Blocks" json:"Temp Written Blocks" metric_name:"temp_written_blocks"   source_type:"gauge"`
-	DatabaseName        string  `mapstructure:"Database"            json:"Database"            metric_name:"database"              source_type:"attribute"`
-	QueryText           string  `mapstructure:"Query"               json:"Query"               metric_name:"query"                 source_type:"attribute"`
+	DatabaseName        string  `mapstructure:"Database"            json:"Database"            metric_name:"database_name"              source_type:"attribute"`
+	QueryText           string  `mapstructure:"Query"               json:"Query"               metric_name:"query_text"                 source_type:"attribute"`
 	QueryId             int64   `mapstructure:"Query Id"            json:"Query Id"            metric_name:"query_id"              source_type:"gauge"`
 	PlanId              int64   `mapstructure:"Plan Id"             json:"Plan Id"             metric_name:"plan_id"               source_type:"gauge"`
 }
