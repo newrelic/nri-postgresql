@@ -1,7 +1,7 @@
 // Package queries contains the collection methods to parse and build the collection schema
 package queries
 
-var (
+const (
 	SlowQueries = `SELECT
         pss.queryid AS query_id,
         pss.query AS query_text,
@@ -63,10 +63,10 @@ var (
         query_text,
         database_name
     FROM wait_history
-    WHERE query_text NOT LIKE 'EXPLAIN (FORMAT JSON) %' AND query_id IS NOT NULL AND event_type IS NOT NULL
+    WHERE query_text NOT LIKE 'EXPLAIN (FORMAT JSON) %%' AND query_id IS NOT NULL AND event_type IS NOT NULL
     GROUP BY event_type, event, query_id, query_text, database_name
     ORDER BY total_wait_time_ms DESC
-    LIMIT %d;`
+    LIMIT %d ;`
 
 	BlockingQueries = `SELECT
           blocked_activity.pid AS blocked_pid,

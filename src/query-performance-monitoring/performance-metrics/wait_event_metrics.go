@@ -15,9 +15,8 @@ import (
 
 func GetWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection, args args.ArgumentList) ([]interface{}, error) {
 	var waitEventMetricsList []interface{}
-	//var test  queries.WaitEvents
-	var query = fmt.Sprintf(queries.WaitEvents, args.QueryCountThreshold)
-	log.Info("Formatted Query: %s", query)
+	query := fmt.Sprintf(queries.WaitEvents, args.QueryCountThreshold)
+	fmt.Print("Query: ", query)
 	rows, err := conn.Queryx(query)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
