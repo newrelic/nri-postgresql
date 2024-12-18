@@ -130,6 +130,7 @@ func fetchNestedExecutionPlanDetails(individualQuery datamodels.IndividualQueryM
 	execPlanMetrics.QueryText = *individualQuery.QueryText
 	execPlanMetrics.QueryId = *individualQuery.QueryId
 	execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
+	execPlanMetrics.Level = level
 	if individualQuery.PlanId != nil {
 		execPlanMetrics.PlanId = *individualQuery.PlanId
 	} else {
