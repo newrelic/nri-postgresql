@@ -29,7 +29,7 @@ const (
     ORDER BY
         avg_elapsed_time_ms DESC -- Order by the average elapsed time in descending order
     LIMIT
-        10;`
+        20;`
 
 	WaitEvents = `WITH wait_history AS (
         SELECT
@@ -68,7 +68,6 @@ const (
     ORDER BY total_wait_time_ms DESC
     LIMIT 10;`
 
-    
 	BlockingQueries = `SELECT
           blocked_activity.pid AS blocked_pid,
           blocked_statements.query AS blocked_query,
