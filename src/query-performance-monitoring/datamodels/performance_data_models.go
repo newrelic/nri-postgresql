@@ -66,4 +66,5 @@ type QueryExecutionPlanMetrics struct {
 	QueryText           string  `mapstructure:"Query"               json:"Query"               metric_name:"query_text"                 source_type:"attribute"`
 	QueryId             int64   `mapstructure:"Query Id"            json:"Query Id"            metric_name:"query_id"              source_type:"gauge"`
 	PlanId              int64   `mapstructure:"Plan Id"             json:"Plan Id"             metric_name:"plan_id"               source_type:"gauge"`
+	Level               int     `mapstructure:"Level"               json:"Level"             metric_name:"level_id"               source_type:"gauge"`
 }
