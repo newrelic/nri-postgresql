@@ -32,7 +32,8 @@ type ArgumentList struct {
 	CollectBloatMetrics          bool   `default:"true" help:"Enable collecting bloat metrics which can be performance intensive"`
 	ShowVersion                  bool   `default:"false" help:"Print build information and exit"`
 	EnableQueryMonitoring        bool   `default:"true" help:"Query monitoring is enabled by default. Set to false to disable."`
-	QueryCountThreshold          int    `default:"20"`
+	QueryCountThreshold          int    `default:"20" helps:"The number of queries to collect"`
+	QueryResponseTimeThreshold   int    `default:"1" help:"The minimum response time of a query to be collected"`
 }
 
 // Validate validates PostgreSQl arguments
