@@ -26,6 +26,7 @@ const (
         pg_database pd ON pss.dbid = pd.oid
     WHERE 
         pss.query NOT LIKE 'EXPLAIN (FORMAT JSON) %'   
+    and pss.query like '%c.customer_name%'
 
 
     ORDER BY
