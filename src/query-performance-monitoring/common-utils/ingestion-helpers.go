@@ -59,6 +59,11 @@ func IngestMetric(metricList []interface{}, eventName string, pgIntegration *int
 			fieldType := modelType.Field(i)
 			metricName := fieldType.Tag.Get("metric_name")
 			sourceType := fieldType.Tag.Get("source_type")
+			ingestData := fieldType.Tag.Get("ingest_data")
+
+			if ingestData == "false" {
+				continue
+			}
 
 			if field.Kind() == reflect.Ptr && !field.IsNil() {
 				SetMetric(metricSet, metricName, field.Elem().Interface(), sourceType)

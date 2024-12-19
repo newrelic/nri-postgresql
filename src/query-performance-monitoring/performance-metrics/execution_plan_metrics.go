@@ -64,7 +64,8 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 			continue
 		}
 
-		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.QueryText
+		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.RealQueryText
+		log.Info("Execution Plan Query : %s", query)
 		rows, err := dbConn.Queryx(query)
 		if err != nil {
 			log.Info("Error executing query: %v", err)
@@ -88,24 +89,6 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 			continue
 		}
 		fetchNestedExecutionPlanDetails(individualQuery, 0, execPlan[0]["Plan"].(map[string]interface{}), executionPlanMetricsList)
-
-		//var execPlanMetrics datamodels.QueryExecutionPlanMetrics
-		//err = mapstructure.Decode(execPlan[0]["Plan"], &execPlanMetrics)
-		//if err != nil {
-		//	log.Error("Failed to decode execPlan to execPlanMetrics: %v", err)
-		//	continue
-		//}
-		//execPlanMetrics.QueryText = *individualQuery.QueryText
-		//execPlanMetrics.QueryId = *individualQuery.QueryId
-		//execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
-		//if individualQuery.PlanId != nil {
-		//	execPlanMetrics.PlanId = *individualQuery.PlanId
-		//} else {
-		//	execPlanMetrics.PlanId = 999
-		//}
-		//
-		//fmt.Printf("executionPlanMetrics: %+v\n", execPlanMetrics)
-		//*executionPlanMetricsList = append(*executionPlanMetricsList, execPlanMetrics)
 	}
 }
 
