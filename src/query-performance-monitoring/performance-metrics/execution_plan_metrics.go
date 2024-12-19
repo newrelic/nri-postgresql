@@ -58,9 +58,9 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 
 		queryText := strings.TrimSpace(*individualQuery.QueryText)
 		upperQueryText := strings.ToUpper(queryText)
-
+		log.Info("Query Text: %s", !supportedStatements[strings.Split(upperQueryText, " ")[0]])
 		if !supportedStatements[strings.Split(upperQueryText, " ")[0]] {
-			log.Debug("Skipping unsupported query for EXPLAIN: %s", queryText)
+			log.Info("Skipping unsupported query for EXPLAIN: %s", queryText)
 			continue
 		}
 
