@@ -1,6 +1,8 @@
 package performance_metrics
 
 import (
+	"fmt"
+
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"github.com/newrelic/nri-postgresql/src/args"
@@ -11,10 +13,11 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/validations"
 )
 
-func GetSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection) ([]datamodels.SlowRunningQueryMetrics, []interface{}, error) {
+func GetSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, args args.ArgumentList) ([]datamodels.SlowRunningQueryMetrics, []interface{}, error) {
 	var slowQueryMetricsList []datamodels.SlowRunningQueryMetrics
 	var slowQueryMetricsListInterface []interface{}
-	var query = queries.SlowQueries
+	query := fmt.Sprintf(queries.SlowQueries, args.QueryCountThreshold)
+	log.Info("Query: %s", query)
 	rows, err := conn.Queryx(query)
 	if err != nil {
 		return nil, nil, err
@@ -45,7 +48,7 @@ func PopulateSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, p
 	}
 
 	log.Info("Extension 'pg_stat_statements' enabled.")
-	slowQueryMetricsList, slowQueryMetricsListInterface, err := GetSlowRunningMetrics(conn)
+	slowQueryMetricsList, slowQueryMetricsListInterface, err := GetSlowRunningMetrics(conn, args)
 	if err != nil {
 		log.Error("Error fetching slow-running queries: %v", err)
 		return nil
