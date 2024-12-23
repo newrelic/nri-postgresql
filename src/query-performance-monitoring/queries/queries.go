@@ -57,7 +57,7 @@ const (
             ELSE 'Other'
         END AS wait_category,
         EXTRACT(EPOCH FROM SUM(duration)) * 1000 AS total_wait_time_ms,  -- Convert duration to milliseconds
-        COUNT(*) AS waiting_tasks_count,
+        COUNT(DISTINCT pid) AS waiting_tasks_count,
         to_char(NOW() AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS collection_timestamp,
         query_id,
         query_text,
