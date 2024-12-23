@@ -6,6 +6,7 @@ import (
 )
 
 func generateDatabaseDefinitions(databases collection.DatabaseList, version *semver.Version) []*QueryDefinition {
+	log.info("test")
 	queryDefinitions := make([]*QueryDefinition, 0, 2)
 	if len(databases) == 0 {
 		return queryDefinitions
