@@ -53,8 +53,6 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 
 	for _, individualQuery := range individualQueriesList {
 
-		log.Info("individualQueryForExecutionPlan", "")
-
 		//queryText := strings.TrimSpace(*individualQuery.QueryText)
 		//upperQueryText := strings.ToUpper(queryText)
 		//log.Info("Query Text: %s", strings.Split(upperQueryText, " ")[0])
