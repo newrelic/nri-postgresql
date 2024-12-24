@@ -13,10 +13,10 @@ const (
         pss.shared_blks_read / pss.calls AS avg_disk_reads,
         pss.shared_blks_written / pss.calls AS avg_disk_writes,
         CASE
-            WHEN pss.query ILIKE 'SELECT%' THEN 'SELECT'
-            WHEN pss.query ILIKE 'INSERT%' THEN 'INSERT'
-            WHEN pss.query ILIKE 'UPDATE%' THEN 'UPDATE'
-            WHEN pss.query ILIKE 'DELETE%' THEN 'DELETE'
+            WHEN pss.query ILIKE 'SELECT%%' THEN 'SELECT'
+            WHEN pss.query ILIKE 'INSERT%%' THEN 'INSERT'
+            WHEN pss.query ILIKE 'UPDATE%%' THEN 'UPDATE'
+            WHEN pss.query ILIKE 'DELETE%%' THEN 'DELETE'
             ELSE 'OTHER'
         END AS statement_type,
         to_char(NOW() AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS collection_timestamp
@@ -25,12 +25,11 @@ const (
     JOIN
         pg_database pd ON pss.dbid = pd.oid
     WHERE 
-        pss.query NOT LIKE 'EXPLAIN (FORMAT JSON) %' 
---         pss.query LIKE 'select * from actor%'
+        pss.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%'    
     ORDER BY
         avg_elapsed_time_ms DESC -- Order by the average elapsed time in descending order
     LIMIT
-        20;`
+        %d;`
 
 	WaitEvents = `WITH wait_history AS (
         SELECT
@@ -58,16 +57,16 @@ const (
             ELSE 'Other'
         END AS wait_category,
         EXTRACT(EPOCH FROM SUM(duration)) * 1000 AS total_wait_time_ms,  -- Convert duration to milliseconds
-        COUNT(*) AS waiting_tasks_count,
+        COUNT(DISTINCT pid) AS waiting_tasks_count,
         to_char(NOW() AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS collection_timestamp,
         query_id,
         query_text,
         database_name
     FROM wait_history
-    WHERE query_text NOT LIKE 'EXPLAIN (FORMAT JSON) %' AND query_id IS NOT NULL AND event_type IS NOT NULL
+    WHERE query_text NOT LIKE 'EXPLAIN (FORMAT JSON) %%' AND query_id IS NOT NULL AND event_type IS NOT NULL
     GROUP BY event_type, event, query_id, query_text, database_name
     ORDER BY total_wait_time_ms DESC
-    LIMIT 10;`
+    LIMIT %d ;`
 
 	BlockingQueries = `SELECT
           blocked_activity.pid AS blocked_pid,
@@ -95,9 +94,9 @@ const (
       JOIN pg_stat_activity AS blocking_activity ON blocking_locks.pid = blocking_activity.pid
       JOIN pg_stat_statements as blocking_statements on blocking_activity.query_id = blocking_statements.queryid
       WHERE NOT blocked_locks.granted
-          AND blocked_statements.query NOT LIKE 'EXPLAIN (FORMAT JSON) %'
-          AND blocking_statements.query NOT LIKE 'EXPLAIN (FORMAT JSON) %'
-      LIMIT 10;
+          AND blocked_statements.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%'
+          AND blocking_statements.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%'
+      LIMIT %d;
 `
 	//	IndividualQuerySearch = `SELECT query, queryid, datname,planid,
 	//							ROUND((cpu_user_time + cpu_sys_time) / NULLIF(total_calls, 0), 3) AS avg_cpu_time_ms
@@ -110,11 +109,13 @@ const (
 			queryid,
 			datname,
 			planid,
+            ROUND((total_exec_time / calls)::numeric, 3) AS avg_elapsed_time_ms,
 			ROUND(((cpu_user_time + cpu_sys_time) / NULLIF(calls, 0))::numeric, 3) AS avg_cpu_time_ms
 			FROM
 				pg_stat_monitor
-			WHERE
-				queryid IN (%s)
+			WHERE queryid IN (%s)
+                AND avg_elapsed_time_ms > %d
+                AND bucket_start_time >= NOW() - INTERVAL '15 seconds'
 			GROUP BY
-				query, queryid, datname, planid, cpu_user_time, cpu_sys_time, calls`
+				query, queryid, datname, planid, total_exec_time, cpu_user_time, cpu_sys_time, calls;`
 )
