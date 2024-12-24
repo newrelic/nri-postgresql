@@ -10,7 +10,6 @@ import (
 	common_utils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	performanceDbConnection "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/connections"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
-	"strings"
 )
 
 var supportedStatements = map[string]bool{"SELECT": true, "INSERT": true, "UPDATE": true, "DELETE": true, "WITH": true}
@@ -56,9 +55,9 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 
 		log.Info("individualQueryForExecutionPlan", "")
 
-		queryText := strings.TrimSpace(*individualQuery.QueryText)
-		upperQueryText := strings.ToUpper(queryText)
-		log.Info("Query Text: %s", strings.Split(upperQueryText, " ")[0])
+		//queryText := strings.TrimSpace(*individualQuery.QueryText)
+		//upperQueryText := strings.ToUpper(queryText)
+		//log.Info("Query Text: %s", strings.Split(upperQueryText, " ")[0])
 		//if !supportedStatements[strings.Split(upperQueryText, " ")[0]] {
 		//	log.Info("Skipping unsupported query for EXPLAIN: %s", queryText)
 		//	continue

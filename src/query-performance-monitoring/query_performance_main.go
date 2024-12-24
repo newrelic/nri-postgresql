@@ -12,7 +12,6 @@ import (
 
 func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Integration) {
 	connectionInfo := performanceDbConnection.DefaultConnectionInfo(&args)
-	//newConnection, err := performanceDbConnection.OpenDB(args, args.Database)
 	newConnection, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
 	if err != nil {
 		fmt.Println("Error creating connection: ", err)
