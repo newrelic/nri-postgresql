@@ -27,14 +27,23 @@ func isExtensionEnabled(conn *performanceDbConnection.PGSQLConnection, extension
 	return count > 0, nil
 }
 
-func CheckPgWaitSamplingExtensionEnabled(conn *performanceDbConnection.PGSQLConnection) (bool, error) {
-	return isExtensionEnabled(conn, "pg_wait_sampling")
-}
-
-func CheckPgStatStatementsExtensionEnabled(conn *performanceDbConnection.PGSQLConnection) (bool, error) {
+func CheckSlowQueryMetricsFetchEligibility(conn *performanceDbConnection.PGSQLConnection) (bool, error) {
 	return isExtensionEnabled(conn, "pg_stat_statements")
 }
 
-func CheckPgStatMonitorExtensionEnabled(conn *performanceDbConnection.PGSQLConnection) (bool, error) {
+func CheckWaitEventMetricsFetchEligibility(conn *performanceDbConnection.PGSQLConnection) (bool, error) {
+	pgWaitExtension, err := isExtensionEnabled(conn, "pg_wait_sampling")
+	pgStatExtension, err := isExtensionEnabled(conn, "pg_stat_statements")
+	if err != nil {
+		return false, err
+	}
+	return pgWaitExtension && pgStatExtension, nil
+}
+
+func CheckBlockingSessionMetricsFetchEligibility(conn *performanceDbConnection.PGSQLConnection) (bool, error) {
+	return isExtensionEnabled(conn, "pg_stat_statements")
+}
+
+func CheckIndividualQueryMetricsFetchEligibility(conn *performanceDbConnection.PGSQLConnection) (bool, error) {
 	return isExtensionEnabled(conn, "pg_stat_monitor")
 }

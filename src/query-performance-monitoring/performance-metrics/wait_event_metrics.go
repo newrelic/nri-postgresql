@@ -35,7 +35,7 @@ func GetWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection, args arg
 }
 
 func PopulateWaitEventMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration, args args.ArgumentList) {
-	isExtensionEnabled, err := validations.CheckPgWaitSamplingExtensionEnabled(conn)
+	isExtensionEnabled, err := validations.CheckWaitEventMetricsFetchEligibility(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
 		return

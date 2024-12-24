@@ -37,7 +37,7 @@ func GetSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, args a
 }
 
 func PopulateSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration, args args.ArgumentList) []datamodels.SlowRunningQueryMetrics {
-	isExtensionEnabled, err := validations.CheckPgStatStatementsExtensionEnabled(conn)
+	isExtensionEnabled, err := validations.CheckSlowQueryMetricsFetchEligibility(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
 		return nil

@@ -35,13 +35,13 @@ func GetBlockingMetrics(conn *performanceDbConnection.PGSQLConnection, args args
 }
 
 func PopulateBlockingMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration, args args.ArgumentList) {
-	isExtensionEnabled, err := validations.CheckPgStatStatementsExtensionEnabled(conn)
+	isExtensionEnabled, err := validations.CheckBlockingSessionMetricsFetchEligibility(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
 		return
 	}
 	if !isExtensionEnabled {
-		log.Info("Extension 'pg_stat_statements' is not enabled.")
+		log.Info("Ineligible to collect Blocking session metrics")
 		return
 	}
 	log.Info("Extension 'pg_stat_statements' enabled.")

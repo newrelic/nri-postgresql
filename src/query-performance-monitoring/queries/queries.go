@@ -27,7 +27,7 @@ const (
     WHERE 
         pss.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%'    
     ORDER BY
-        avg_elapsed_time_ms DESC -- Order by the average elapsed time in descending order
+        avg_elapsed_time_ms DESC
     LIMIT
         %d;`
 
