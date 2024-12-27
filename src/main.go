@@ -1,12 +1,7 @@
-//go:generate goversioninfo
 package main
 
 import (
 	"fmt"
-	"os"
-	"runtime"
-	"strings"
-
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"github.com/newrelic/nri-postgresql/src/args"
@@ -14,6 +9,10 @@ import (
 	"github.com/newrelic/nri-postgresql/src/connection"
 	"github.com/newrelic/nri-postgresql/src/inventory"
 	"github.com/newrelic/nri-postgresql/src/metrics"
+	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring"
+	"os"
+	"runtime"
+	"strings"
 )
 
 const (
@@ -27,9 +26,11 @@ var (
 )
 
 func main() {
+
 	var args args.ArgumentList
 	// Create Integration
 	pgIntegration, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
+	//query_monitoring.PrintQueryOutput(args)
 	if err != nil {
 		log.Error(err.Error())
 		os.Exit(1)
@@ -62,7 +63,8 @@ func main() {
 		log.Error("Error creating list of entities to collect: %s", err)
 		os.Exit(1)
 	}
-
+	log.Info("hostname:" + args.Hostname)
+	log.Info("port:" + args.Port)
 	instance, err := pgIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 	if err != nil {
 		log.Error("Error creating instance entity: %s", err.Error())
@@ -89,4 +91,9 @@ func main() {
 	if err = pgIntegration.Publish(); err != nil {
 		log.Error(err.Error())
 	}
+
+	if args.EnableQueryMonitoring {
+		query_performance_monitoring.QueryPerformanceMain(args, pgIntegration)
+	}
+
 }

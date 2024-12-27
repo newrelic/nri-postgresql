@@ -1,11 +1,10 @@
 // Package connection contains the PGSQLConnection type and methods for manipulating and querying a PostgreSQL connection
-package connection
+package performanceDbConnection
 
 import (
 	"fmt"
-	"net/url"
-
 	"github.com/jmoiron/sqlx"
+	"net/url"
 	// pq is required for postgreSQL driver but isn't used in code
 	_ "github.com/lib/pq"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
@@ -170,6 +169,7 @@ func createConnectionURL(ci *connectionInfo, database string) string {
 	}
 
 	connectionURL.RawQuery = query.Encode()
+
 	return connectionURL.String()
 }
 
@@ -188,4 +188,14 @@ func addSSLQueries(query url.Values, ci *connectionInfo) {
 		query.Add("sslmode", "verify-full")
 		query.Add("sslrootcert", ci.SSLRootCertLocation)
 	}
+}
+
+func OpenDB(args args.ArgumentList, dbName string) (*PGSQLConnection, error) {
+	connStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		args.Hostname, args.Port, args.Username, args.Password, dbName)
+	db, err := sqlx.Open("postgres", connStr)
+	if err != nil {
+		return nil, err
+	}
+	return &PGSQLConnection{connection: db}, nil
 }
