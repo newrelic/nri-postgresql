@@ -41,8 +41,8 @@ func GetExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, args a
 			log.Error("Error opening database connection: %v", err)
 			continue
 		}
-		defer dbConn.Close()
 		processExecutionPlanOfQueries(individualQueriesList, dbConn, &executionPlanMetricsList)
+		dbConn.Close()
 	}
 
 	return executionPlanMetricsList
