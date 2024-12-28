@@ -39,8 +39,8 @@ func ConstructIndividualQuery(slowRunningQueries []datamodels.SlowRunningQueryMe
 	for _, query := range slowRunningQueries {
 		queryIDs = append(queryIDs, fmt.Sprintf("%d", *query.QueryID))
 	}
-	//query := fmt.Sprintf(queries.IndividualQuerySearch, strings.Join(queryIDs, ","), args.QueryResponseTimeThreshold)
-	query := fmt.Sprintf(queries.IndividualQuerySearchTest, strings.Join(queryIDs, ","))
+	query := fmt.Sprintf(queries.IndividualQuerySearch, strings.Join(queryIDs, ","), args.QueryResponseTimeThreshold)
+
 	log.Info("query:", query)
 	return query
 }
