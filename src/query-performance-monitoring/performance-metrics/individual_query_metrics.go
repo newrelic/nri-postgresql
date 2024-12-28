@@ -49,6 +49,7 @@ func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, ar
 	query := ConstructIndividualQuery(slowRunningQueries, args)
 	rows, err := conn.Queryx(query)
 	if err != nil {
+		log.Info("Error executing query: %v", err)
 		return nil, nil
 	}
 	defer rows.Close()
