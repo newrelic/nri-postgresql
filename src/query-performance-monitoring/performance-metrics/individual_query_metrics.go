@@ -88,6 +88,5 @@ func processForAnonymizeQueryMap(queryCpuMetricsList []datamodels.SlowRunningQue
 		}
 		anonymizeQueryMapByDb[dbName][queryID] = anonymizedQuery
 	}
-	log.Info("Anonymize Query Map By Db: %+v", anonymizeQueryMapByDb)
 	return anonymizeQueryMapByDb
 }
