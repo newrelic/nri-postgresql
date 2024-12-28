@@ -115,7 +115,6 @@ const (
 				pg_stat_monitor
 			WHERE queryid IN (%s)
                 AND avg_elapsed_time_ms > %d
-                AND bucket_start_time >= NOW() - INTERVAL '15 seconds'
 			GROUP BY
 				query, queryid, datname, planid, total_exec_time, cpu_user_time, cpu_sys_time, calls;`
 )
