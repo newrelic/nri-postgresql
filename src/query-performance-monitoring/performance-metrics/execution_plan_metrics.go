@@ -2,7 +2,6 @@ package performance_metrics
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/mitchellh/mapstructure"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
@@ -16,16 +15,13 @@ var supportedStatements = map[string]bool{"SELECT": true, "INSERT": true, "UPDAT
 
 func PopulateExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, pgIntegration *integration.Integration, args args.ArgumentList) {
 
-	if len(results) == 0 {
+	if results == nil || len(results) == 0 {
 		log.Info("No individual queries found.")
 		return
 	}
-	log.Info("PopulateExecutionPlanMetrics queries: %+v", results)
 
 	executionDetailsList := GetExecutionPlanMetrics(results, args)
-
-	log.Info("executionDetailsList", executionDetailsList)
-
+	log.Info("ExecutionPlanList len:", len(executionDetailsList))
 	common_utils.IngestMetric(executionDetailsList, "PostgresExecutionPlanMetrics", pgIntegration, args)
 }
 
@@ -62,7 +58,6 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 		//}
 
 		query := "EXPLAIN (FORMAT JSON) " + *individualQuery.RealQueryText
-		log.Info("Execution Plan Query : %s", query)
 		rows, err := dbConn.Queryx(query)
 		if err != nil {
 			log.Info("Error executing query: %v", err)
@@ -85,7 +80,8 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 			log.Error("Failed to unmarshal execution plan: %v", err)
 			continue
 		}
-		fetchNestedExecutionPlanDetails(individualQuery, 0, execPlan[0]["Plan"].(map[string]interface{}), executionPlanMetricsList)
+		level := 0
+		fetchNestedExecutionPlanDetails(individualQuery, &level, execPlan[0]["Plan"].(map[string]interface{}), executionPlanMetricsList)
 	}
 }
 
@@ -100,7 +96,7 @@ func GroupQueriesByDatabase(results []datamodels.IndividualQueryMetrics) map[str
 	return databaseMap
 }
 
-func fetchNestedExecutionPlanDetails(individualQuery datamodels.IndividualQueryMetrics, level int, execPlan map[string]interface{}, executionPlanMetricsList *[]interface{}) {
+func fetchNestedExecutionPlanDetails(individualQuery datamodels.IndividualQueryMetrics, level *int, execPlan map[string]interface{}, executionPlanMetricsList *[]interface{}) {
 	var execPlanMetrics datamodels.QueryExecutionPlanMetrics
 	err := mapstructure.Decode(execPlan, &execPlanMetrics)
 	if err != nil {
@@ -110,20 +106,20 @@ func fetchNestedExecutionPlanDetails(individualQuery datamodels.IndividualQueryM
 	execPlanMetrics.QueryText = *individualQuery.QueryText
 	execPlanMetrics.QueryId = *individualQuery.QueryId
 	execPlanMetrics.DatabaseName = *individualQuery.DatabaseName
-	execPlanMetrics.Level = level
+	execPlanMetrics.Level = *level
+	*level = *level + 1
 	if individualQuery.PlanId != nil {
 		execPlanMetrics.PlanId = *individualQuery.PlanId
 	} else {
 		execPlanMetrics.PlanId = 999
 	}
 
-	fmt.Printf("executionPlanMetrics: %+v\n", execPlanMetrics)
 	*executionPlanMetricsList = append(*executionPlanMetricsList, execPlanMetrics)
 
 	if nestedPlans, ok := execPlan["Plans"].([]interface{}); ok {
 		for _, nestedPlan := range nestedPlans {
 			if nestedPlanMap, ok := nestedPlan.(map[string]interface{}); ok {
-				fetchNestedExecutionPlanDetails(individualQuery, level+1, nestedPlanMap, executionPlanMetricsList)
+				fetchNestedExecutionPlanDetails(individualQuery, level, nestedPlanMap, executionPlanMetricsList)
 			}
 		}
 	}

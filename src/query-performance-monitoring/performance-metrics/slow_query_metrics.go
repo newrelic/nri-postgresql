@@ -17,7 +17,6 @@ func GetSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, args a
 	var slowQueryMetricsList []datamodels.SlowRunningQueryMetrics
 	var slowQueryMetricsListInterface []interface{}
 	query := fmt.Sprintf(queries.SlowQueries, args.QueryCountThreshold)
-	log.Info("Query: %s", query)
 	rows, err := conn.Queryx(query)
 	if err != nil {
 		return nil, nil, err
@@ -39,15 +38,15 @@ func GetSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, args a
 func PopulateSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration, args args.ArgumentList) []datamodels.SlowRunningQueryMetrics {
 	isExtensionEnabled, err := validations.CheckSlowQueryMetricsFetchEligibility(conn)
 	if err != nil {
-		log.Error("Error executing query: %v", err)
+		log.Error("Error validating eligibility for slow queries: %v", err)
 		return nil
 	}
 	if !isExtensionEnabled {
-		log.Info("Extension 'pg_stat_statements' is not enabled.")
+		log.Info("PopulateSlowRunningMetrics not eligible")
 		return nil
 	}
 
-	log.Info("Extension 'pg_stat_statements' enabled.")
+	log.Info("Extension for PopulateSlowRunningMetrics is enabled.")
 	slowQueryMetricsList, slowQueryMetricsListInterface, err := GetSlowRunningMetrics(conn, args)
 	if err != nil {
 		log.Error("Error fetching slow-running queries: %v", err)
@@ -58,7 +57,6 @@ func PopulateSlowRunningMetrics(conn *performanceDbConnection.PGSQLConnection, p
 		log.Info("No slow-running queries found.")
 		return nil
 	}
-	log.Info("Populate-slow running: %+v", slowQueryMetricsList)
 	common_utils.IngestMetric(slowQueryMetricsListInterface, "PostgresSlowQueries", pgIntegration, args)
 	return slowQueryMetricsList
 

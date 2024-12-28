@@ -16,7 +16,6 @@ import (
 func GetBlockingMetrics(conn *performanceDbConnection.PGSQLConnection, args args.ArgumentList) ([]interface{}, error) {
 	var blockingQueriesMetricsList []interface{}
 	query := fmt.Sprintf(queries.BlockingQueries, args.QueryCountThreshold)
-	log.Info("Query: %s", query)
 	rows, err := conn.Queryx(query)
 	if err != nil {
 		return nil, err
@@ -37,14 +36,14 @@ func GetBlockingMetrics(conn *performanceDbConnection.PGSQLConnection, args args
 func PopulateBlockingMetrics(conn *performanceDbConnection.PGSQLConnection, pgIntegration *integration.Integration, args args.ArgumentList) {
 	isExtensionEnabled, err := validations.CheckBlockingSessionMetricsFetchEligibility(conn)
 	if err != nil {
-		log.Error("Error executing query: %v", err)
+		log.Error("Error validating eligibility for BlockingSessions: %v", err)
 		return
 	}
 	if !isExtensionEnabled {
 		log.Info("Ineligible to collect Blocking session metrics")
 		return
 	}
-	log.Info("Extension 'pg_stat_statements' enabled.")
+	log.Info("Extension for PopulateBlockingMetrics enabled.")
 	blockingQueriesMetricsList, err := GetBlockingMetrics(conn, args)
 	if err != nil {
 		log.Error("Error fetching Blocking queries: %v", err)
@@ -55,7 +54,6 @@ func PopulateBlockingMetrics(conn *performanceDbConnection.PGSQLConnection, pgIn
 		log.Info("No Blocking queries found.")
 		return
 	}
-	log.Info("Populate Blocking running: %+v", blockingQueriesMetricsList)
 	common_utils.IngestMetric(blockingQueriesMetricsList, "PostgresBlockingSessions", pgIntegration, args)
 
 }

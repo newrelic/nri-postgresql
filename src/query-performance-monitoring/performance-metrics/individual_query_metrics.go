@@ -17,20 +17,19 @@ import (
 func PopulateIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics, pgIntegration *integration.Integration, args args.ArgumentList) []datamodels.IndividualQueryMetrics {
 	isExtensionEnabled, err := validations.CheckIndividualQueryMetricsFetchEligibility(conn)
 	if err != nil {
-		log.Error("Error executing query: %v", err)
+		log.Error("Error validating eligibility for IndividualQueryMetrics: %v", err)
 		return nil
 	}
 	if !isExtensionEnabled {
-		log.Info("Extension 'pg_stat_monitor' is not enabled.")
+		log.Info("Extensions for PopulateIndividualQueryMetrics is not enabled.")
 		return nil
 	}
-	log.Info("Extension 'pg_stat_monitor' enabled.")
+	log.Info("Extensions for PopulateIndividualQueryMetrics is enabled.")
 	individualQueryMetricsInterface, individualQueriesForExecPlan := GetIndividualQueryMetrics(conn, args, slowRunningQueries)
 	if len(individualQueryMetricsInterface) == 0 {
 		log.Info("No individual queries found.")
 		return nil
 	}
-	log.Info("Populate individual queries: %+v forExecPlan : %+v", individualQueryMetricsInterface, individualQueriesForExecPlan)
 	common_utils.IngestMetric(individualQueryMetricsInterface, "PostgresIndividualQueries", pgIntegration, args)
 	return individualQueriesForExecPlan
 }
@@ -41,13 +40,11 @@ func ConstructIndividualQuery(slowRunningQueries []datamodels.SlowRunningQueryMe
 		queryIDs = append(queryIDs, fmt.Sprintf("%d", *query.QueryID))
 	}
 	query := fmt.Sprintf(queries.IndividualQuerySearch, strings.Join(queryIDs, ","), args.QueryResponseTimeThreshold)
-	log.Info("Individual query :", query)
 	return query
 }
 
 func GetIndividualQueryMetrics(conn *performanceDbConnection.PGSQLConnection, args args.ArgumentList, slowRunningQueries []datamodels.SlowRunningQueryMetrics) ([]interface{}, []datamodels.IndividualQueryMetrics) {
 	query := ConstructIndividualQuery(slowRunningQueries, args)
-	log.Info("Individual query :", query)
 	rows, err := conn.Queryx(query)
 	if err != nil {
 		return nil, nil
