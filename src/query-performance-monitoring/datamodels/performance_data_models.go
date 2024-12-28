@@ -36,12 +36,13 @@ type BlockingSessionMetrics struct {
 }
 
 type IndividualQueryMetrics struct {
-	QueryText     *string `json:"query" db:"query" metric_name:"query_text" source_type:"attribute"`
-	QueryId       *int64  `json:"queryid" db:"queryid" metric_name:"query_id" source_type:"gauge"`
-	DatabaseName  *string `json:"datname" db:"datname" metric_name:"database_name" source_type:"attribute"`
-	AvgTimeInMS   *string `json:"avg_cpu_time_ms" db:"avg_cpu_time_ms" metric_name:"avg_cpu_time_ms" source_type:"gauge"`
-	PlanId        *int64  `json:"planid" db:"planid" metric_name:"plan_id" source_type:"gauge"`
-	RealQueryText *string `ingestData:"false"`
+	QueryText          *string `json:"query" db:"query" metric_name:"query_text" source_type:"attribute"`
+	QueryId            *int64  `json:"queryid" db:"queryid" metric_name:"query_id" source_type:"gauge"`
+	DatabaseName       *string `json:"datname" db:"datname" metric_name:"database_name" source_type:"attribute"`
+	AvgTimeInMS        *string `json:"avg_cpu_time_ms" db:"avg_cpu_time_ms" metric_name:"avg_cpu_time_ms" source_type:"gauge"`
+	AvgElapsedTimeInMs *string `json:"avg_elapsed_time_ms" db:"avg_elapsed_time_ms" metric_name:"avg_elapsed_time_ms" source_type:"gauge"`
+	PlanId             *int64  `json:"planid" db:"planid" metric_name:"plan_id" source_type:"gauge"`
+	RealQueryText      *string `ingestData:"false"`
 }
 
 type QueryExecutionPlanMetrics struct {
