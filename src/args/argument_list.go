@@ -33,7 +33,7 @@ type ArgumentList struct {
 	ShowVersion                  bool   `default:"false" help:"Print build information and exit"`
 	EnableQueryMonitoring        bool   `default:"true" help:"Query monitoring is enabled by default. Set to false to disable."`
 	QueryCountThreshold          int    `default:"20" helps:"The number of queries to collect"`
-	QueryResponseTimeThreshold   int    `default:"0" help:"The minimum response time of a query to be collected"`
+	QueryResponseTimeThreshold   int    `default:"1" help:"The minimum response time of a query to be collected"`
 }
 
 // Validate validates PostgreSQl arguments
