@@ -60,8 +60,6 @@ func IngestMetric(metricList []interface{}, eventName string, pgIntegration *int
 			metricName := fieldType.Tag.Get("metric_name")
 			sourceType := fieldType.Tag.Get("source_type")
 			ingestData := fieldType.Tag.Get("ingest_data")
-			log.Info("Ingesting metric: %s", metricName)
-			log.Info("Source type: %s", sourceType)
 			if ingestData == "false" {
 				continue
 			}
