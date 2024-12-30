@@ -1,0 +1,4 @@
+package commonutils
+
+const MAX_QUERY_THRESHOLD = 30
+const MAX_INDIVIDUAL_QUERY_THRESHOLD = 10
