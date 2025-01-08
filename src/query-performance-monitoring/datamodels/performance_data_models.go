@@ -17,7 +17,6 @@ type WaitEventMetrics struct {
 	WaitEventName       *string  `db:"wait_event_name"       metric_name:"wait_event_name"            source_type:"attribute"`
 	WaitCategory        *string  `db:"wait_category"         metric_name:"wait_category"              source_type:"attribute"`
 	TotalWaitTimeMs     *float64 `db:"total_wait_time_ms"    metric_name:"total_wait_time_ms"         source_type:"gauge"`
-	WaitingTasksCount   *int64   `db:"waiting_tasks_count"   metric_name:"waiting_tasks_count"        source_type:"gauge"`
 	CollectionTimestamp *string  `db:"collection_timestamp"  metric_name:"collection_timestamp"       source_type:"attribute"`
 	QueryID             *string  `db:"query_id"              metric_name:"query_id"                   source_type:"attribute"`
 	QueryText           *string  `db:"query_text"            metric_name:"query_text"                 source_type:"attribute"`
