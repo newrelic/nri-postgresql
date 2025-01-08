@@ -35,7 +35,6 @@ func PopulateIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnectio
 func ConstructIndividualQuery(slowRunningQueries datamodels.SlowRunningQueryMetrics, args args.ArgumentList, databaseNames string, versionSpecificQuery string) string {
 
 	query := fmt.Sprintf(versionSpecificQuery, *slowRunningQueries.QueryID, databaseNames, args.QueryResponseTimeThreshold, min(args.QueryCountThreshold, commonutils.MAX_INDIVIDUAL_QUERY_THRESHOLD))
-	log.Info("Query: ", query)
 	return query
 }
 

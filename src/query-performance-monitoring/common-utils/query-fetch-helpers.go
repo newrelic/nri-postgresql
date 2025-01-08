@@ -1,6 +1,7 @@
 package commonutils
 
 import (
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -19,13 +20,14 @@ func FetchVersion(conn *performancedbconnection.PGSQLConnection) (int, error) {
 	}
 	defer rows.Close()
 
-	if rows.Next() {
-		if err := rows.Scan(&versionStr); err != nil {
-			log.Error("Error scanning version: %v", err)
-			return 0, err
-		}
+	if !rows.Next() {
+		return 0, errors.New("no rows returned from version query")
 	}
-	re := regexp.MustCompile(`PostgreSQL (\d+)\.`)
+	if err := rows.Scan(&versionStr); err != nil {
+		log.Error("Error scanning version: %v", err)
+		return 0, err
+	}
+	re := regexp.MustCompile(VERSION_REGEX)
 	matches := re.FindStringSubmatch(versionStr)
 	if len(matches) < 2 {
 		log.Error("Unable to parse PostgreSQL version from string: %s", versionStr)

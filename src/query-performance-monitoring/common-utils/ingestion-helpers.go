@@ -1,36 +1,34 @@
 package commonutils
 
 import (
-	"crypto/rand"
+	"errors"
 	"fmt"
 	_ "github.com/lib/pq"
 	"github.com/newrelic/infra-integrations-sdk/v3/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"github.com/newrelic/nri-postgresql/src/args"
-	"math/big"
 	"reflect"
-	"time"
 )
-
-const publishThreshold = 100
-const randomIntRange = 1000000
 
 func SetMetric(metricSet *metric.Set, name string, value interface{}, sourceType string) {
 	switch sourceType {
 	case `gauge`:
 		err := metricSet.SetMetric(name, value, metric.GAUGE)
 		if err != nil {
+			log.Error("Error setting metric: %v", err)
 			return
 		}
 	case `attribute`:
 		err := metricSet.SetMetric(name, value, metric.ATTRIBUTE)
 		if err != nil {
+			log.Error("Error setting metric: %v", err)
 			return
 		}
 	default:
 		err := metricSet.SetMetric(name, value, metric.GAUGE)
 		if err != nil {
+			log.Error("Error setting metric: %v", err)
 			return
 		}
 	}
@@ -53,9 +51,13 @@ func IngestMetric(metricList []interface{}, eventName string, pgIntegration *int
 		metricCount += 1
 		metricSet := instanceEntity.NewMetricSet(eventName)
 
-		processModel(model, metricSet)
+		processErr := processModel(model, metricSet)
+		if processErr != nil {
+			log.Error("Error processing model: %v", processErr)
+			continue
+		}
 
-		if metricCount == publishThreshold || metricCount == lenOfMetricList {
+		if metricCount == PUBLISH_THRESHOLD || metricCount == lenOfMetricList {
 			metricCount = 0
 			if err := publishMetrics(pgIntegration, &instanceEntity, args); err != nil {
 				log.Error("Error publishing metrics: %v", err)
@@ -75,13 +77,14 @@ func createEntity(pgIntegration *integration.Integration, args args.ArgumentList
 	return pgIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 }
 
-func processModel(model interface{}, metricSet *metric.Set) {
+func processModel(model interface{}, metricSet *metric.Set) error {
 	modelValue := reflect.ValueOf(model)
 	if modelValue.Kind() == reflect.Ptr {
 		modelValue = modelValue.Elem()
 	}
 	if !modelValue.IsValid() || modelValue.Kind() != reflect.Struct {
-		return
+		log.Error("Invalid model type: %v", modelValue.Kind())
+		return errors.New("invalid model type:" + modelValue.Kind().String())
 	}
 
 	modelType := reflect.TypeOf(model)
@@ -103,6 +106,7 @@ func processModel(model interface{}, metricSet *metric.Set) {
 			SetMetric(metricSet, metricName, field.Interface(), sourceType)
 		}
 	}
+	return nil
 }
 
 func publishMetrics(pgIntegration *integration.Integration, instanceEntity **integration.Entity, args args.ArgumentList) error {
@@ -112,14 +116,4 @@ func publishMetrics(pgIntegration *integration.Integration, instanceEntity **int
 	var err error
 	*instanceEntity, err = pgIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 	return err
-}
-
-func GenerateRandomIntegerString(queryID string) *string {
-	randomInt, err := rand.Int(rand.Reader, big.NewInt(randomIntRange))
-	if err != nil {
-		return nil
-	}
-	currentTime := time.Now().Format("20060102150405")
-	result := fmt.Sprintf("%s-%d-%s", queryID, randomInt.Int64(), currentTime)
-	return &result
 }
