@@ -1,8 +1,6 @@
 package commonutils
 
 import (
-	"errors"
-	"fmt"
 	"regexp"
 	"strconv"
 
@@ -21,17 +19,17 @@ func FetchVersion(conn *performancedbconnection.PGSQLConnection) (int, error) {
 	defer rows.Close()
 
 	if !rows.Next() {
-		return 0, errors.New("no rows returned from version query")
+		return 0, ErrVersionFetchError
 	}
-	if err := rows.Scan(&versionStr); err != nil {
+	if scanErr := rows.Scan(&versionStr); scanErr != nil {
 		log.Error("Error scanning version: %v", err)
 		return 0, err
 	}
-	re := regexp.MustCompile(VERSION_REGEX)
+	re := regexp.MustCompile(VersionRegex)
 	matches := re.FindStringSubmatch(versionStr)
-	if len(matches) < 2 {
+	if len(matches) < VersionIndex {
 		log.Error("Unable to parse PostgreSQL version from string: %s", versionStr)
-		return 0, fmt.Errorf("unable to parse PostgreSQL version from string: %s", versionStr)
+		return 0, ErrParseVersion
 	}
 
 	version, err := strconv.Atoi(matches[1])
@@ -49,12 +47,12 @@ func FetchVersionSpecificSlowQueries(conn *performancedbconnection.PGSQLConnecti
 		return "", err
 	}
 	switch {
-	case version == 12:
+	case version == PostgresVersion12:
 		return queries.SlowQueriesForV12, nil
-	case version >= 13:
+	case version >= PostgresVersion13:
 		return queries.SlowQueriesForV13AndAbove, nil
 	default:
-		return "", fmt.Errorf("unsupported PostgreSQL version %d", version)
+		return "", ErrUnsupportedVersion
 	}
 }
 
@@ -64,12 +62,12 @@ func FetchVersionSpecificBlockingQueries(conn *performancedbconnection.PGSQLConn
 		return "", err
 	}
 	switch {
-	case version == 12, version == 13:
+	case version == PostgresVersion12, version == PostgresVersion13:
 		return queries.BlockingQueriesForV12AndV13, nil
-	case version >= 14:
+	case version >= PostgresVersion14:
 		return queries.BlockingQueriesForV14AndAbove, nil
 	default:
-		return "", fmt.Errorf("unsupported PostgreSQL version: %d", version)
+		return "", ErrUnsupportedVersion
 	}
 }
 
@@ -79,11 +77,11 @@ func FetchVersionSpecificIndividualQueries(conn *performancedbconnection.PGSQLCo
 		return "", err
 	}
 	switch {
-	case version == 12:
+	case version == PostgresVersion12:
 		return queries.IndividualQuerySearchV12, nil
-	case version >= 13:
+	case version >= PostgresVersion12:
 		return queries.IndividualQuerySearchV13AndAbove, nil
 	default:
-		return "", fmt.Errorf("unsupported PostgreSQL version %d", version)
+		return "", ErrUnsupportedVersion
 	}
 }
