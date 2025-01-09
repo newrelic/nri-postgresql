@@ -12,7 +12,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/validations"
 )
 
-func PopulateIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics, pgIntegration *integration.Integration, args args.ArgumentList, databaseNames string) []datamodels.IndividualQueryMetrics {
+func PopulateIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics, pgIntegration *integration.Integration, args args.ArgumentList, databaseNames string, version uint64) []datamodels.IndividualQueryMetrics {
 	isExtensionEnabled, err := validations.CheckIndividualQueryMetricsFetchEligibility(conn)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
@@ -23,7 +23,7 @@ func PopulateIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnectio
 		return nil
 	}
 	log.Debug("Extension 'pg_stat_monitor' enabled.")
-	individualQueryMetricsInterface, individualQueriesForExecPlan := GetIndividualQueryMetrics(conn, slowRunningQueries, args, databaseNames)
+	individualQueryMetricsInterface, individualQueriesForExecPlan := GetIndividualQueryMetrics(conn, slowRunningQueries, args, databaseNames, version)
 	if len(individualQueryMetricsInterface) == 0 {
 		log.Debug("No individual queries found.")
 		return nil
@@ -37,7 +37,7 @@ func ConstructIndividualQuery(slowRunningQueries datamodels.SlowRunningQueryMetr
 	return query
 }
 
-func GetIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics, args args.ArgumentList, databaseNames string) ([]interface{}, []datamodels.IndividualQueryMetrics) {
+func GetIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics, args args.ArgumentList, databaseNames string, version uint64) ([]interface{}, []datamodels.IndividualQueryMetrics) {
 	if len(slowRunningQueries) == 0 {
 		log.Debug("No slow running queries found.")
 		return nil, nil
@@ -45,7 +45,7 @@ func GetIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, sl
 	var individualQueryMetricsForExecPlanList []datamodels.IndividualQueryMetrics
 	var individualQueryMetricsListInterface []interface{}
 	anonymizedQueriesByDB := processForAnonymizeQueryMap(slowRunningQueries)
-	versionSpecificIndividualQuery, err := commonutils.FetchVersionSpecificIndividualQueries(conn)
+	versionSpecificIndividualQuery, err := commonutils.FetchVersionSpecificIndividualQueries(version)
 	if err != nil {
 		log.Error("Unsupported postgres version: %v", err)
 		return nil, nil
