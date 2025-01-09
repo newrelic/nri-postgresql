@@ -12,11 +12,11 @@ import (
 )
 
 func getQuotedStringFromArray(array []string) string {
-	var quotedDatabaseNames = make([]string, 0)
+	var quotedNames = make([]string, 0)
 	for _, name := range array {
-		quotedDatabaseNames = append(quotedDatabaseNames, fmt.Sprintf("'%s'", name))
+		quotedNames = append(quotedNames, fmt.Sprintf("'%s'", name))
 	}
-	return strings.Join(quotedDatabaseNames, ",")
+	return strings.Join(quotedNames, ",")
 }
 
 func GetDatabaseListInString(dbList collection.DatabaseList) string {
@@ -36,7 +36,8 @@ func AnonymizeQueryText(query string) string {
 	return anonymizedQuery
 }
 
-func GenerateRandomIntegerString(queryID string) *string {
+// This function is used to generate a unique plan ID for a query
+func GeneratePlanID(queryID string) *string {
 	randomInt, err := rand.Int(rand.Reader, big.NewInt(RANDOM_INT_RANGE))
 	if err != nil {
 		return nil
