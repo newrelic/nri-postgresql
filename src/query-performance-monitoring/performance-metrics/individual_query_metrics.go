@@ -79,7 +79,7 @@ func getIndividualQueriesByGroupedQuery(conn *performancedbconnection.PGSQLConne
 		individualQueryMetric := model
 		anonymizedQueryText := anonymizedQueriesByDB[*model.DatabaseName][*model.QueryID]
 		individualQueryMetric.QueryText = &anonymizedQueryText
-		generatedPlanID := commonutils.GenerateRandomIntegerString(*model.QueryID)
+		generatedPlanID := commonutils.GeneratePlanID(*model.QueryID)
 		individualQueryMetric.PlanID = generatedPlanID
 		model.PlanID = generatedPlanID
 		model.RealQueryText = model.QueryText
