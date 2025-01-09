@@ -1,14 +1,13 @@
 package commonutils
 
 import (
-	"errors"
 	"fmt"
-	_ "github.com/lib/pq"
+	"reflect"
+
 	"github.com/newrelic/infra-integrations-sdk/v3/data/metric"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"github.com/newrelic/nri-postgresql/src/args"
-	"reflect"
 )
 
 func SetMetric(metricSet *metric.Set, name string, value interface{}, sourceType string) {
@@ -57,7 +56,7 @@ func IngestMetric(metricList []interface{}, eventName string, pgIntegration *int
 			continue
 		}
 
-		if metricCount == PUBLISH_THRESHOLD || metricCount == lenOfMetricList {
+		if metricCount == PublishThreshold || metricCount == lenOfMetricList {
 			metricCount = 0
 			if err := publishMetrics(pgIntegration, &instanceEntity, args); err != nil {
 				log.Error("Error publishing metrics: %v", err)
@@ -84,7 +83,7 @@ func processModel(model interface{}, metricSet *metric.Set) error {
 	}
 	if !modelValue.IsValid() || modelValue.Kind() != reflect.Struct {
 		log.Error("Invalid model type: %v", modelValue.Kind())
-		return errors.New("invalid model type:" + modelValue.Kind().String())
+		return ErrInvalidModelType
 	}
 
 	modelType := reflect.TypeOf(model)

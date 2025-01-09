@@ -42,7 +42,7 @@ func GetBlockingMetrics(conn *performancedbconnection.PGSQLConnection, args args
 		log.Error("Unsupported postgres version: %v", err)
 		return nil, err
 	}
-	var query = fmt.Sprintf(versionSpecificBlockingQuery, databaseName, min(args.QueryCountThreshold, commonutils.MAX_QUERY_THRESHOLD))
+	var query = fmt.Sprintf(versionSpecificBlockingQuery, databaseName, min(args.QueryCountThreshold, commonutils.MaxQueryThreshold))
 	rows, err := conn.Queryx(query)
 	if err != nil {
 		log.Error("Failed to execute query: %v", err)
@@ -58,7 +58,7 @@ func GetBlockingMetrics(conn *performancedbconnection.PGSQLConnection, args args
 		if scanError := rows.StructScan(&blockingQueryMetric); scanError != nil {
 			return nil, scanError
 		}
-		if version == 13 || version == 12 {
+		if version == commonutils.PostgresVersion13 || version == commonutils.PostgresVersion12 {
 			*blockingQueryMetric.BlockedQuery = commonutils.AnonymizeQueryText(*blockingQueryMetric.BlockedQuery)
 			*blockingQueryMetric.BlockingQuery = commonutils.AnonymizeQueryText(*blockingQueryMetric.BlockingQuery)
 		}

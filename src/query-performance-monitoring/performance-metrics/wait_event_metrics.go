@@ -38,7 +38,7 @@ func PopulateWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, pgI
 
 func GetWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, args args.ArgumentList, databaseNames string) ([]interface{}, error) {
 	var waitEventMetricsList []interface{}
-	var query = fmt.Sprintf(queries.WaitEvents, databaseNames, min(args.QueryCountThreshold, commonutils.MAX_QUERY_THRESHOLD))
+	var query = fmt.Sprintf(queries.WaitEvents, databaseNames, min(args.QueryCountThreshold, commonutils.MaxQueryThreshold))
 	rows, err := conn.Queryx(query)
 	if err != nil {
 		return nil, err
