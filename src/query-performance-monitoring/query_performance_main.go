@@ -4,14 +4,13 @@ package queryperformancemonitoring
 import (
 	"time"
 
-	"github.com/newrelic/nri-postgresql/src/collection"
-	commonutils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
-
-	"github.com/newrelic/infra-integrations-sdk/v3/log"
-	performancedbconnection "github.com/newrelic/nri-postgresql/src/connection"
-
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
+	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"github.com/newrelic/nri-postgresql/src/args"
+	"github.com/newrelic/nri-postgresql/src/collection"
+	performancedbconnection "github.com/newrelic/nri-postgresql/src/connection"
+	"github.com/newrelic/nri-postgresql/src/metrics"
+	commonutils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	performancemetrics "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/performance-metrics"
 )
 
@@ -22,15 +21,23 @@ func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Int
 		log.Debug("No databases found")
 		return
 	}
+
 	newConnection, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
 	if err != nil {
 		log.Debug("Error creating connection: ", err)
 		return
 	}
 
+	version, versionErr := metrics.CollectVersion(newConnection)
+	versionInt := version.Major
+	if versionErr != nil {
+		log.Debug("Error fetching version: ", versionErr)
+		return
+	}
+
 	start := time.Now()
 	log.Debug("Starting PopulateSlowRunningMetrics at ", start)
-	slowRunningQueries := performancemetrics.PopulateSlowRunningMetrics(newConnection, pgIntegration, args, databaseStringList)
+	slowRunningQueries := performancemetrics.PopulateSlowRunningMetrics(newConnection, pgIntegration, args, databaseStringList, versionInt)
 	log.Debug("PopulateSlowRunningMetrics completed in ", time.Since(start))
 
 	start = time.Now()
@@ -40,12 +47,12 @@ func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Int
 
 	start = time.Now()
 	log.Debug("Starting PopulateBlockingMetrics at ", start)
-	performancemetrics.PopulateBlockingMetrics(newConnection, pgIntegration, args, databaseStringList)
+	performancemetrics.PopulateBlockingMetrics(newConnection, pgIntegration, args, databaseStringList, versionInt)
 	log.Debug("PopulateBlockingMetrics completed in ", time.Since(start))
 
 	start = time.Now()
 	log.Debug("Starting PopulateIndividualQueryMetrics at ", start)
-	individualQueries := performancemetrics.PopulateIndividualQueryMetrics(newConnection, slowRunningQueries, pgIntegration, args, databaseStringList)
+	individualQueries := performancemetrics.PopulateIndividualQueryMetrics(newConnection, slowRunningQueries, pgIntegration, args, databaseStringList, versionInt)
 	log.Debug("PopulateIndividualQueryMetrics completed in ", time.Since(start))
 
 	start = time.Now()

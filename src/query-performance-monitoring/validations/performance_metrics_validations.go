@@ -5,6 +5,7 @@ import (
 
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	performancedbconnection "github.com/newrelic/nri-postgresql/src/connection"
+	commonutils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 )
 
 func isExtensionEnabled(conn *performancedbconnection.PGSQLConnection, extensionName string) (bool, error) {
@@ -44,7 +45,10 @@ func CheckWaitEventMetricsFetchEligibility(conn *performancedbconnection.PGSQLCo
 	return pgWaitExtension && pgStatExtension, nil
 }
 
-func CheckBlockingSessionMetricsFetchEligibility(conn *performancedbconnection.PGSQLConnection) (bool, error) {
+func CheckBlockingSessionMetricsFetchEligibility(conn *performancedbconnection.PGSQLConnection, version uint64) (bool, error) {
+	if version == commonutils.PostgresVersion12 || version == commonutils.PostgresVersion13 {
+		return true, nil
+	}
 	return isExtensionEnabled(conn, "pg_stat_statements")
 }
 
