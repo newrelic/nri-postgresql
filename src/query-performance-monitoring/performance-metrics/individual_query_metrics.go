@@ -96,6 +96,9 @@ func processForAnonymizeQueryMap(queryCPUMetricsList []datamodels.SlowRunningQue
 	anonymizeQueryMapByDB := make(map[string]map[string]string)
 
 	for _, metric := range queryCPUMetricsList {
+		if metric.DatabaseName == nil || metric.QueryID == nil || metric.QueryText == nil {
+			continue
+		}
 		dbName := *metric.DatabaseName
 		queryID := *metric.QueryID
 		anonymizedQuery := *metric.QueryText
