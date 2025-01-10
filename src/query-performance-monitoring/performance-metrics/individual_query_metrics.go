@@ -95,10 +95,10 @@ func getIndividualQueriesByGroupedQuery(conn *performancedbconnection.PGSQLConne
 	}
 }
 
-func processForAnonymizeQueryMap(queryCPUMetricsList []datamodels.SlowRunningQueryMetrics) map[string]map[string]string {
+func processForAnonymizeQueryMap(slowRunningMetricList []datamodels.SlowRunningQueryMetrics) map[string]map[string]string {
 	anonymizeQueryMapByDB := make(map[string]map[string]string)
 
-	for _, metric := range queryCPUMetricsList {
+	for _, metric := range slowRunningMetricList {
 		if metric.DatabaseName == nil || metric.QueryID == nil || metric.QueryText == nil {
 			continue
 		}
