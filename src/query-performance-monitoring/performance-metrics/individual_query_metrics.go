@@ -52,6 +52,9 @@ func GetIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, sl
 	}
 
 	for _, slowRunningMetric := range slowRunningQueries {
+		if slowRunningMetric.QueryID == nil {
+			continue
+		}
 		getIndividualQueriesByGroupedQuery(conn, slowRunningMetric, args, databaseNames, anonymizedQueriesByDB, &individualQueryMetricsForExecPlanList, &individualQueryMetricsListInterface, versionSpecificIndividualQuery)
 	}
 	return individualQueryMetricsListInterface, individualQueryMetricsForExecPlanList
