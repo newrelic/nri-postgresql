@@ -27,7 +27,7 @@ func GetSlowRunningMetrics(conn *performancedbconnection.PGSQLConnection, args a
 	}
 	for rows.Next() {
 		var slowQuery datamodels.SlowRunningQueryMetrics
-		if err := rows.StructScan(&slowQuery); err != nil {
+		if scanErr := rows.StructScan(&slowQuery); scanErr != nil {
 			return nil, nil, err
 		}
 		slowQueryMetricsList = append(slowQueryMetricsList, slowQuery)

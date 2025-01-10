@@ -55,12 +55,12 @@ func GetIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, sl
 		if slowRunningMetric.QueryID == nil {
 			continue
 		}
-		getIndividualQueriesByGroupedQuery(conn, slowRunningMetric, args, databaseNames, anonymizedQueriesByDB, &individualQueryMetricsForExecPlanList, &individualQueryMetricsListInterface, versionSpecificIndividualQuery)
+		getIndividualQueriesSamples(conn, slowRunningMetric, args, databaseNames, anonymizedQueriesByDB, &individualQueryMetricsForExecPlanList, &individualQueryMetricsListInterface, versionSpecificIndividualQuery)
 	}
 	return individualQueryMetricsListInterface, individualQueryMetricsForExecPlanList
 }
 
-func getIndividualQueriesByGroupedQuery(conn *performancedbconnection.PGSQLConnection, slowRunningQueries datamodels.SlowRunningQueryMetrics, args args.ArgumentList, databaseNames string, anonymizedQueriesByDB map[string]map[string]string, individualQueryMetricsForExecPlanList *[]datamodels.IndividualQueryMetrics, individualQueryMetricsListInterface *[]interface{}, versionSpecificIndividualQuery string) {
+func getIndividualQueriesSamples(conn *performancedbconnection.PGSQLConnection, slowRunningQueries datamodels.SlowRunningQueryMetrics, args args.ArgumentList, databaseNames string, anonymizedQueriesByDB map[string]map[string]string, individualQueryMetricsForExecPlanList *[]datamodels.IndividualQueryMetrics, individualQueryMetricsListInterface *[]interface{}, versionSpecificIndividualQuery string) {
 	query := ConstructIndividualQuery(slowRunningQueries, args, databaseNames, versionSpecificIndividualQuery)
 	if query == "" {
 		log.Debug("Error constructing individual query")
@@ -75,6 +75,10 @@ func getIndividualQueriesByGroupedQuery(conn *performancedbconnection.PGSQLConne
 		var model datamodels.IndividualQueryMetrics
 		if scanErr := rows.StructScan(&model); scanErr != nil {
 			log.Error("Could not scan row: ", scanErr)
+			continue
+		}
+		if model.QueryID == nil || model.DatabaseName == nil {
+			log.Error("QueryID or DatabaseName is nil")
 			continue
 		}
 		individualQueryMetric := model
