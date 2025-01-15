@@ -13,27 +13,28 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/validations"
 )
 
-func PopulateWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, pgIntegration *integration.Integration, args args.ArgumentList, databaseNames string) {
-	isExtensionEnabled, err := validations.CheckWaitEventMetricsFetchEligibility(conn)
+func PopulateWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, pgIntegration *integration.Integration, args args.ArgumentList, databaseNames string, version uint64) error {
+	isEligible, err := validations.CheckWaitEventMetricsFetchEligibility(conn, version)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
-		return
+		return commonutils.ErrUnExpectedError
 	}
-	if !isExtensionEnabled {
-		log.Debug("Extension 'pg_wait_sampling' or 'pg_stat_statement' is not enabled.")
-		return
+	if !isEligible {
+		log.Debug("Extension 'pg_wait_sampling' or 'pg_stat_statement' is not enabled or unsupported version.")
+		return commonutils.ErrNotEligible
 	}
 	waitEventMetricsList, err := GetWaitEventMetrics(conn, args, databaseNames)
 	if err != nil {
 		log.Error("Error fetching wait event queries: %v", err)
-		return
+		return commonutils.ErrUnExpectedError
 	}
 
 	if len(waitEventMetricsList) == 0 {
 		log.Debug("No wait event queries found.")
-		return
+		return nil
 	}
 	commonutils.IngestMetric(waitEventMetricsList, "PostgresWaitEvents", pgIntegration, args)
+	return nil
 }
 
 func GetWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, args args.ArgumentList, databaseNames string) ([]interface{}, error) {
