@@ -13,13 +13,13 @@ import (
 )
 
 func PopulateIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics, pgIntegration *integration.Integration, args args.ArgumentList, databaseNames string, version uint64) []datamodels.IndividualQueryMetrics {
-	isExtensionEnabled, err := validations.CheckIndividualQueryMetricsFetchEligibility(conn)
+	isEligible, err := validations.CheckIndividualQueryMetricsFetchEligibility(conn, version)
 	if err != nil {
 		log.Error("Error executing query: %v", err)
 		return nil
 	}
-	if !isExtensionEnabled {
-		log.Debug("Extension 'pg_stat_monitor' is not enabled.")
+	if !isEligible {
+		log.Debug("Extension 'pg_stat_monitor' is not enabled or unsupported version.")
 		return nil
 	}
 	log.Debug("Extension 'pg_stat_monitor' enabled.")

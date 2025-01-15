@@ -3,7 +3,7 @@ package performancemetrics
 import (
 	"encoding/json"
 
-	"github.com/mitchellh/mapstructure"
+	"github.com/go-viper/mapstructure/v2"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"github.com/newrelic/nri-postgresql/src/args"
@@ -72,7 +72,7 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 		}
 
 		level := 0
-		fetchNestedExecutionPlanDetails(individualQuery, &level, execPlan[0]["Plan"].(map[string]interface{}), executionPlanMetricsList)
+		FetchNestedExecutionPlanDetails(individualQuery, &level, execPlan[0]["Plan"].(map[string]interface{}), executionPlanMetricsList)
 	}
 }
 
@@ -88,7 +88,7 @@ func GroupQueriesByDatabase(results []datamodels.IndividualQueryMetrics) map[str
 	return databaseMap
 }
 
-func fetchNestedExecutionPlanDetails(individualQuery datamodels.IndividualQueryMetrics, level *int, execPlan map[string]interface{}, executionPlanMetricsList *[]interface{}) {
+func FetchNestedExecutionPlanDetails(individualQuery datamodels.IndividualQueryMetrics, level *int, execPlan map[string]interface{}, executionPlanMetricsList *[]interface{}) {
 	var execPlanMetrics datamodels.QueryExecutionPlanMetrics
 	err := mapstructure.Decode(execPlan, &execPlanMetrics)
 	if err != nil {
@@ -108,7 +108,7 @@ func fetchNestedExecutionPlanDetails(individualQuery datamodels.IndividualQueryM
 	if nestedPlans, ok := execPlan["Plans"].([]interface{}); ok {
 		for _, nestedPlan := range nestedPlans {
 			if nestedPlanMap, nestedOk := nestedPlan.(map[string]interface{}); nestedOk {
-				fetchNestedExecutionPlanDetails(individualQuery, level, nestedPlanMap, executionPlanMetricsList)
+				FetchNestedExecutionPlanDetails(individualQuery, level, nestedPlanMap, executionPlanMetricsList)
 			}
 		}
 	}

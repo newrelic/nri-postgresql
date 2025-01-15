@@ -29,11 +29,17 @@ func isExtensionEnabled(conn *performancedbconnection.PGSQLConnection, extension
 	return count > 0, nil
 }
 
-func CheckSlowQueryMetricsFetchEligibility(conn *performancedbconnection.PGSQLConnection) (bool, error) {
+func CheckSlowQueryMetricsFetchEligibility(conn *performancedbconnection.PGSQLConnection, version uint64) (bool, error) {
+	if version < commonutils.PostgresVersion12 {
+		return false, nil
+	}
 	return isExtensionEnabled(conn, "pg_stat_statements")
 }
 
-func CheckWaitEventMetricsFetchEligibility(conn *performancedbconnection.PGSQLConnection) (bool, error) {
+func CheckWaitEventMetricsFetchEligibility(conn *performancedbconnection.PGSQLConnection, version uint64) (bool, error) {
+	if version < commonutils.PostgresVersion12 {
+		return false, nil
+	}
 	pgWaitExtension, waitErr := isExtensionEnabled(conn, "pg_wait_sampling")
 	if waitErr != nil {
 		return false, waitErr
@@ -46,12 +52,18 @@ func CheckWaitEventMetricsFetchEligibility(conn *performancedbconnection.PGSQLCo
 }
 
 func CheckBlockingSessionMetricsFetchEligibility(conn *performancedbconnection.PGSQLConnection, version uint64) (bool, error) {
+	if version < commonutils.PostgresVersion12 {
+		return false, nil
+	}
 	if version == commonutils.PostgresVersion12 || version == commonutils.PostgresVersion13 {
 		return true, nil
 	}
 	return isExtensionEnabled(conn, "pg_stat_statements")
 }
 
-func CheckIndividualQueryMetricsFetchEligibility(conn *performancedbconnection.PGSQLConnection) (bool, error) {
+func CheckIndividualQueryMetricsFetchEligibility(conn *performancedbconnection.PGSQLConnection, version uint64) (bool, error) {
+	if version < commonutils.PostgresVersion12 {
+		return false, nil
+	}
 	return isExtensionEnabled(conn, "pg_stat_monitor")
 }

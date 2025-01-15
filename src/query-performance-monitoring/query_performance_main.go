@@ -42,12 +42,12 @@ func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Int
 
 	start = time.Now()
 	log.Debug("Starting PopulateWaitEventMetrics at ", start)
-	performancemetrics.PopulateWaitEventMetrics(newConnection, pgIntegration, args, databaseStringList)
+	_ = performancemetrics.PopulateWaitEventMetrics(newConnection, pgIntegration, args, databaseStringList, versionInt)
 	log.Debug("PopulateWaitEventMetrics completed in ", time.Since(start))
 
 	start = time.Now()
 	log.Debug("Starting PopulateBlockingMetrics at ", start)
-	performancemetrics.PopulateBlockingMetrics(newConnection, pgIntegration, args, databaseStringList, versionInt)
+	_ = performancemetrics.PopulateBlockingMetrics(newConnection, pgIntegration, args, databaseStringList, versionInt)
 	log.Debug("PopulateBlockingMetrics completed in ", time.Since(start))
 
 	start = time.Now()
