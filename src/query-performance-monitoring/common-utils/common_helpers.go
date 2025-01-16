@@ -11,6 +11,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/collection"
 )
 
+// re is a regular expression that matches single-quoted strings, numbers, or double-quoted strings
 var re = regexp.MustCompile(`'[^']*'|\d+|".*?"`)
 
 func GetQuotedStringFromArray(array []string) string {

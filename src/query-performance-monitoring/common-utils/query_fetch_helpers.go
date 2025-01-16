@@ -30,7 +30,7 @@ func FetchVersionSpecificIndividualQueries(version uint64) (string, error) {
 	switch {
 	case version == PostgresVersion12:
 		return queries.IndividualQuerySearchV12, nil
-	case version >= PostgresVersion12:
+	case version > PostgresVersion12:
 		return queries.IndividualQuerySearchV13AndAbove, nil
 	default:
 		return "", ErrUnsupportedVersion

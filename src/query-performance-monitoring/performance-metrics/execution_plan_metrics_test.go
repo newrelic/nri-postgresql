@@ -3,6 +3,8 @@ package performancemetrics_test
 import (
 	"testing"
 
+	global_variables "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/global-variables"
+
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/nri-postgresql/src/args"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
@@ -14,7 +16,9 @@ func TestPopulateExecutionPlanMetrics(t *testing.T) {
 	pgIntegration, _ := integration.New("test", "1.0.0")
 	args := args.ArgumentList{}
 	results := []datamodels.IndividualQueryMetrics{}
-	performancemetrics.PopulateExecutionPlanMetrics(results, pgIntegration, args)
+	gv := global_variables.SetGlobalVariables(args, uint64(13), "testdb")
+
+	performancemetrics.PopulateExecutionPlanMetrics(results, pgIntegration, gv)
 	assert.Empty(t, pgIntegration.Entities)
 }
 

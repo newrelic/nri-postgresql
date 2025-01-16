@@ -6,26 +6,26 @@ import (
 	"github.com/go-viper/mapstructure/v2"
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
-	"github.com/newrelic/nri-postgresql/src/args"
 	performancedbconnection "github.com/newrelic/nri-postgresql/src/connection"
 	commonutils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
+	globalvariables "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/global-variables"
 )
 
-func PopulateExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, pgIntegration *integration.Integration, args args.ArgumentList) {
+func PopulateExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, pgIntegration *integration.Integration, gv *globalvariables.GlobalVariables) {
 	if len(results) == 0 {
 		log.Debug("No individual queries found.")
 		return
 	}
-	executionDetailsList := GetExecutionPlanMetrics(results, args)
-	commonutils.IngestMetric(executionDetailsList, "PostgresExecutionPlanMetrics", pgIntegration, args)
+	executionDetailsList := GetExecutionPlanMetrics(results, gv)
+	commonutils.IngestMetric(executionDetailsList, "PostgresExecutionPlanMetrics", pgIntegration, gv)
 }
 
-func GetExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, args args.ArgumentList) []interface{} {
+func GetExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, gv *globalvariables.GlobalVariables) []interface{} {
 	var executionPlanMetricsList []interface{}
 	var groupIndividualQueriesByDatabase = GroupQueriesByDatabase(results)
 	for dbName, individualQueriesList := range groupIndividualQueriesByDatabase {
-		connectionInfo := performancedbconnection.DefaultConnectionInfo(&args)
+		connectionInfo := performancedbconnection.DefaultConnectionInfo(&gv.Arguments)
 		dbConn, err := connectionInfo.NewConnection(dbName)
 		if err != nil {
 			log.Error("Error opening database connection: %v", err)

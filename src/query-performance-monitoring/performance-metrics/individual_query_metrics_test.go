@@ -5,16 +5,16 @@ import (
 	"regexp"
 	"testing"
 
-	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/queries"
-	"gopkg.in/DATA-DOG/go-sqlmock.v1"
-
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/nri-postgresql/src/args"
 	"github.com/newrelic/nri-postgresql/src/connection"
 	commonutils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
+	global_variables "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/global-variables"
 	performancemetrics "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/performance-metrics"
+	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/queries"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/DATA-DOG/go-sqlmock.v1"
 )
 
 func TestPopulateIndividualQueryMetrics(t *testing.T) {
@@ -23,11 +23,10 @@ func TestPopulateIndividualQueryMetrics(t *testing.T) {
 	args := args.ArgumentList{QueryCountThreshold: 10}
 	databaseName := "testdb"
 	version := uint64(13)
-	// Mock the extension check
+	gv := global_variables.SetGlobalVariables(args, version, databaseName)
 	mock.ExpectQuery(regexp.QuoteMeta("SELECT count(*) FROM pg_extension WHERE extname = 'pg_stat_monitor'")).WillReturnRows(sqlmock.NewRows([]string{"count"}).AddRow(1))
 	mockQueryID := "-123"
 	mockQueryText := "SELECT 1"
-	// Mock the individual query
 	query := fmt.Sprintf(queries.IndividualQuerySearchV13AndAbove, mockQueryID, databaseName, args.QueryResponseTimeThreshold, min(args.QueryCountThreshold, commonutils.MaxIndividualQueryThreshold))
 	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(sqlmock.NewRows([]string{
 		"newrelic", "query", "queryid", "datname", "planid", "avg_cpu_time_ms", "avg_exec_time_ms",
@@ -43,25 +42,10 @@ func TestPopulateIndividualQueryMetrics(t *testing.T) {
 		},
 	}
 
-	individualQueryMetrics := performancemetrics.PopulateIndividualQueryMetrics(conn, slowRunningQueries, pgIntegration, args, databaseName, version)
+	individualQueryMetrics := performancemetrics.PopulateIndividualQueryMetrics(conn, slowRunningQueries, pgIntegration, gv)
 
 	assert.Len(t, individualQueryMetrics, 1)
 	assert.NoError(t, mock.ExpectationsWereMet())
-}
-
-func TestConstructIndividualQuery(t *testing.T) {
-	mockQueryID := "-123"
-	slowRunningQuery := datamodels.SlowRunningQueryMetrics{
-		QueryID: &mockQueryID,
-	}
-	args := args.ArgumentList{QueryResponseTimeThreshold: 100}
-	databaseName := "testdb"
-	versionSpecificQuery := queries.IndividualQuerySearchV13AndAbove
-
-	actual := performancemetrics.ConstructIndividualQuery(slowRunningQuery, args, databaseName, versionSpecificQuery)
-	expected := fmt.Sprintf(versionSpecificQuery, *slowRunningQuery.QueryID, databaseName, args.QueryResponseTimeThreshold, min(args.QueryCountThreshold, commonutils.MaxIndividualQueryThreshold))
-
-	assert.Equal(t, actual, expected)
 }
 
 func TestGetIndividualQueryMetrics(t *testing.T) {
@@ -71,6 +55,7 @@ func TestGetIndividualQueryMetrics(t *testing.T) {
 	version := uint64(13)
 	mockQueryID := "-123"
 	mockQueryText := "SELECT 1"
+	gv := global_variables.SetGlobalVariables(args, version, databaseName)
 
 	// Mock the individual query
 	query := fmt.Sprintf(queries.IndividualQuerySearchV13AndAbove, mockQueryID, databaseName, args.QueryResponseTimeThreshold, min(args.QueryCountThreshold, commonutils.MaxIndividualQueryThreshold))
@@ -88,7 +73,7 @@ func TestGetIndividualQueryMetrics(t *testing.T) {
 		},
 	}
 
-	individualQueryMetricsInterface, individualQueryMetrics := performancemetrics.GetIndividualQueryMetrics(conn, slowRunningQueries, args, databaseName, version)
+	individualQueryMetricsInterface, individualQueryMetrics := performancemetrics.GetIndividualQueryMetrics(conn, slowRunningQueries, gv)
 
 	assert.Len(t, individualQueryMetricsInterface, 1)
 	assert.Len(t, individualQueryMetrics, 1)
