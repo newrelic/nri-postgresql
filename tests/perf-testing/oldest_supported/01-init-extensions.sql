@@ -1,0 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+
+CREATE EXTENSION IF NOT EXISTS pg_wait_sampling;
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_monitor;

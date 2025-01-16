@@ -1,0 +1,95 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": ["name", "protocol_version", "integration_version", "data"],
+    "properties": {
+      "name": {
+        "type": "string",
+        "const": "com.newrelic.postgresql"
+      },
+      "protocol_version": {
+        "type": "string"
+      },
+      "integration_version": {
+        "type": "string"
+      },
+      "data": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["entity", "metrics", "inventory", "events"],
+          "properties": {
+            "entity": {
+              "type": "object",
+              "required": ["name", "type", "id_attributes"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "const": "pg-instance"
+                },
+                "id_attributes": {
+                  "type": "array"
+                }
+              }
+            },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "collection_timestamp",
+                  "database_name",
+                  "event_type",
+                  "query_id",
+                  "query_text",
+                  "wait_category",
+                  "wait_event_name"
+                ],
+                "properties": {
+                  "collection_timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "database_name": {
+                    "type": "string"
+                  },
+                  "event_type": {
+                    "type": "string",
+                    "const": "PostgresWaitEvents"
+                  },
+                  "query_id": {
+                    "type": "string"
+                  },
+                  "query_text": {
+                    "type": "string"
+                  },
+                  "total_wait_time_ms": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "wait_category": {
+                    "type": "string"
+                  },
+                  "wait_event_name": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "additionalProperties": false
+  }

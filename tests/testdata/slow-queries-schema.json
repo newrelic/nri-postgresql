@@ -1,0 +1,121 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": [
+        "name",
+        "protocol_version",
+        "integration_version",
+        "data"
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "const": "com.newrelic.postgresql"
+        },
+        "protocol_version": {
+            "type": "string"
+        },
+        "integration_version": {
+            "type": "string"
+        },
+        "data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "entity",
+                    "metrics",
+                    "inventory",
+                    "events"
+                ],
+                "properties": {
+                    "entity": {
+                        "type": "object",
+                        "required": [
+                            "name",
+                            "type",
+                            "id_attributes"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "type": {
+                                "type": "string",
+                                "const": "pg-instance"
+                            },
+                            "id_attributes": {
+                                "type": "array"
+                            }
+                        }
+                    },
+                    "metrics": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "event_type",
+                                "query_id",
+                                "query_text",
+                                "database_name",
+                                "avg_elapsed_time_ms",
+                                "execution_count",
+                                "collection_timestamp"
+                            ],
+                            "properties": {
+                                "avg_disk_reads": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                },
+                                "avg_disk_writes": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                },
+                                "avg_elapsed_time_ms": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "collection_timestamp": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "database_name": {
+                                    "type": "string"
+                                },
+                                "event_type": {
+                                    "type": "string",
+                                    "const": "PostgresSlowQueries"
+                                },
+                                "execution_count": {
+                                    "type": "integer",
+                                    "minimum": 0
+                                },
+                                "query_id": {
+                                    "type": "string"
+                                },
+                                "query_text": {
+                                    "type": "string"
+                                },
+                                "schema_name": {
+                                    "type": "string"
+                                },
+                                "statement_type": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "inventory": {
+                        "type": "object"
+                    },
+                    "events": {
+                        "type": "array"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}
