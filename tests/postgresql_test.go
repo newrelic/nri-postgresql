@@ -17,31 +17,18 @@ import (
 	"github.com/xeipuuv/gojsonschema"
 )
 
+var (
+	defaultPassword = flag.String("password", "example", "Default password for postgres")
+	defaultUser     = flag.String("username", "postgres", "Default username for postgres")
+	defaultDB       = flag.String("database", "demo", "Default database name")
+	container       = flag.String("container", "nri-postgresql", "Container name for the integration")
+)
+
 const (
 	// docker compose service names
-	serviceNameNRI            = "nri-postgresql"
 	serviceNamePostgres96     = "postgres-9-6"
 	serviceNamePostgresLatest = "postgres-latest-supported"
 )
-
-func executeDockerCompose(serviceName string, envVars []string) (string, string, error) {
-	cmdLine := []string{"compose", "run"}
-	for i := range envVars {
-		cmdLine = append(cmdLine, "-e")
-		cmdLine = append(cmdLine, envVars[i])
-	}
-	cmdLine = append(cmdLine, serviceName)
-	fmt.Printf("executing: docker %s\n", strings.Join(cmdLine, " "))
-	cmd := exec.Command("docker", cmdLine...)
-	var outbuf, errbuf bytes.Buffer
-	cmd.Stdout = &outbuf
-	cmd.Stderr = &errbuf
-	err := cmd.Run()
-
-	stdout := outbuf.String()
-	stderr := errbuf.String()
-	return stdout, stderr, err
-}
 
 func TestMain(m *testing.M) {
 	flag.Parse()
@@ -51,35 +38,27 @@ func TestMain(m *testing.M) {
 
 func TestSuccessConnection(t *testing.T) {
 	t.Parallel()
-	defaultEnvVars := []string{
-		"USERNAME=postgres",
-		"PASSWORD=example",
-		"DATABASE=demo",
-		"COLLECTION_LIST=ALL",
-	}
 	testCases := []struct {
-		Name     string
-		Hostname string
-		Schema   string
-		EnvVars  []string
+		Name       string
+		Hostname   string
+		Schema     string
+		ExtraFlags []string
 	}{
 		{
 			Name:     "Testing Metrics and inventory for Postgres v9.6.x",
 			Hostname: serviceNamePostgres96,
 			Schema:   "jsonschema-latest.json",
-			EnvVars:  []string{},
 		},
 		{
 			Name:     "Testing Metrics and inventory for latest Postgres supported version",
 			Hostname: serviceNamePostgresLatest,
 			Schema:   "jsonschema-latest.json",
-			EnvVars:  []string{},
 		},
 		{
-			Name:     "Inventory only for latest Postgres supported version",
-			Hostname: serviceNamePostgresLatest,
-			Schema:   "jsonschema-inventory-latest.json",
-			EnvVars:  []string{"INVENTORY=true"},
+			Name:       "Inventory only for latest Postgres supported version",
+			Hostname:   serviceNamePostgresLatest,
+			Schema:     "jsonschema-inventory-latest.json",
+			ExtraFlags: []string{`-inventory=true`},
 		},
 	}
 
@@ -87,41 +66,38 @@ func TestSuccessConnection(t *testing.T) {
 		tc := tc
 		t.Run(tc.Name, func(t *testing.T) {
 			t.Parallel()
-			envVars := []string{
-				fmt.Sprintf("HOSTNAME=%s", tc.Hostname),
-			}
-			envVars = append(envVars, defaultEnvVars...)
-			envVars = append(envVars, tc.EnvVars...)
-			stdout, _, err := executeDockerCompose(serviceNameNRI, envVars)
-			assert.Nil(t, err)
+			args := append([]string{`-collection_list=all`}, tc.ExtraFlags...)
+			stdout, stderr, err := runIntegration(t, tc.Hostname, args...)
+			assert.Empty(t, stderr)
+			assert.NoError(t, err)
 			assert.NotEmpty(t, stdout)
 			err = validateJSONSchema(tc.Schema, stdout)
-			assert.Nil(t, err)
+			assert.NoError(t, err)
 		})
 	}
 }
 
 func TestMissingRequiredVars(t *testing.T) {
-	envVars := []string{
-		"HOSTNAME=" + serviceNamePostgresLatest,
-		"DATABASE=demo",
-	}
-	_, stderr, err := executeDockerCompose(serviceNameNRI, envVars)
-	assert.NotNil(t, err)
+	// Temporarily set username and password to nil to test missing credentials
+	origUser, origPsw := defaultUser, defaultPassword
+	defaultUser, defaultPassword = nil, nil
+	defer func() {
+		defaultUser, defaultPassword = origUser, origPsw
+	}()
+
+	_, stderr, err := runIntegration(t, serviceNamePostgresLatest)
+	assert.Error(t, err)
 	assert.Contains(t, stderr, "invalid configuration: must specify a username and password")
 }
 
 func TestIgnoringDB(t *testing.T) {
-	envVars := []string{
-		"HOSTNAME=" + serviceNamePostgresLatest,
-		"USERNAME=postgres",
-		"PASSWORD=example",
-		"DATABASE=demo",
-		"COLLECTION_LIST=ALL", // The instance has 2 DB: 'demo' and 'postgres'
-		`COLLECTION_IGNORE_DATABASE_LIST=["demo"]`,
+	args := []string{
+		`-collection_list=all`,
+		`-collection_ignore_database_list=["demo"]`,
 	}
-	stdout, _, err := executeDockerCompose(serviceNameNRI, envVars)
-	assert.Nil(t, err)
+	stdout, stderr, err := runIntegration(t, serviceNamePostgresLatest, args...)
+	assert.NoError(t, err)
+	assert.Empty(t, stderr)
 	assert.Contains(t, stdout, `"database:postgres"`)
 	assert.NotContains(t, stdout, `"database:demo"`)
 }
@@ -151,4 +127,66 @@ func validateJSONSchema(fileName string, input string) error {
 	}
 	fmt.Printf("\n")
 	return fmt.Errorf("The output of the integration doesn't have expected JSON format")
+}
+
+func ExecInContainer(container string, command []string, envVars ...string) (string, string, error) {
+	cmdLine := make([]string, 0, 3+len(command))
+	cmdLine = append(cmdLine, "exec", "-i")
+
+	for _, envVar := range envVars {
+		cmdLine = append(cmdLine, "-e", envVar)
+	}
+
+	cmdLine = append(cmdLine, container)
+	cmdLine = append(cmdLine, command...)
+
+	log.Debug("executing: docker %s", strings.Join(cmdLine, " "))
+
+	cmd := exec.Command("docker", cmdLine...)
+
+	var outbuf, errbuf bytes.Buffer
+	cmd.Stdout = &outbuf
+	cmd.Stderr = &errbuf
+
+	err := cmd.Run()
+	stdout := outbuf.String()
+	stderr := errbuf.String()
+
+	if err != nil {
+		return stdout, stderr, err
+	}
+
+	return stdout, stderr, nil
+}
+
+func runIntegration(t *testing.T, targetContainer string, args ...string) (string, string, error) {
+	t.Helper()
+
+	command := []string{"/nri-postgresql"}
+
+	if defaultUser != nil {
+		command = append(command, "-username", *defaultUser)
+	}
+	if defaultPassword != nil {
+		command = append(command, "-password", *defaultPassword)
+	}
+
+	// Always use port 5432 for integration runs
+	command = append(command, "-port", "5432")
+
+	if defaultDB != nil {
+		command = append(command, "-database", *defaultDB)
+	}
+	if targetContainer != "" {
+		command = append(command, "-hostname", targetContainer)
+	}
+
+	command = append(command, args...)
+
+	stdout, stderr, err := ExecInContainer(*container, command)
+	if stderr != "" {
+		log.Debug("Integration command Standard Error: ", stderr)
+	}
+
+	return stdout, stderr, err
 }
