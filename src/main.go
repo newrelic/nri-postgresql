@@ -1,3 +1,4 @@
+//go:generate goversioninfo
 package main
 
 import (
@@ -91,7 +92,7 @@ func main() {
 		log.Error(err.Error())
 	}
 
-	if args.EnableQueryMonitoring {
+	if args.EnableQueryMonitoring && args.HasMetrics() {
 		queryperformancemonitoring.QueryPerformanceMain(args, pgIntegration, collectionList)
 	}
 

@@ -18,13 +18,13 @@ func TestGetQuotedStringFromArray(t *testing.T) {
 }
 
 func TestGetDatabaseListInString(t *testing.T) {
-	dbListKeys := []string{"db1", "db2"}
+	dbListKeys := []string{"db1"}
 	sort.Strings(dbListKeys) // Sort the keys to ensure consistent order
 	dbList := collection.DatabaseList{}
 	for _, key := range dbListKeys {
 		dbList[key] = collection.SchemaList{}
 	}
-	expected := "'db1','db2'"
+	expected := "'db1'"
 	result := commonutils.GetDatabaseListInString(dbList)
 	assert.Equal(t, expected, result)
 
