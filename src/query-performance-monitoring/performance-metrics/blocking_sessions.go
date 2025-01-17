@@ -17,7 +17,7 @@ import (
 func PopulateBlockingMetrics(conn *performancedbconnection.PGSQLConnection, pgIntegration *integration.Integration, gv *globalvariables.GlobalVariables) error {
 	isEligible, enableCheckError := validations.CheckBlockingSessionMetricsFetchEligibility(conn, gv.Version)
 	if enableCheckError != nil {
-		log.Debug("Error executing query: %v in PopulateBlockingMetrics", enableCheckError)
+		log.Error("Error executing query: %v in PopulateBlockingMetrics", enableCheckError)
 		return commonutils.ErrUnExpectedError
 	}
 	if !isEligible {
