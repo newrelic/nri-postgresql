@@ -56,16 +56,6 @@
             # Note: requires that the `tablefunc` extension be installed on the public schema
             # of the database where lock metrics will be collected.
             COLLECT_DB_LOCK_METRICS: false
-
-            # True is query monitoring should be enabled - defaults to false
-            # ENABLE_QUERY_MONITORING : "false"
-
-            # The threshold in ms which a query must exceed response time to be considered for fetching execution plan - defaults to 1000ms
-            # QUERY_RESPONSE_TIME_THRESHOLD : "500"
-
-            # The no of records for each metric in a interval (max of slow queries can be 20 and for execution plan metrics it can be 30)
-            # QUERY_COUNT_THRESHOLD : "10"
-
             ENABLE_SSL: true
             # True if the SSL certificate should be trusted without validating.
             # Setting this to true may open up the monitoring service to MITM attacks.
