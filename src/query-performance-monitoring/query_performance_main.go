@@ -28,6 +28,7 @@ func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Int
 		log.Debug("Error creating connection: ", err)
 		return
 	}
+	defer newConnection.Close()
 
 	version, versionErr := metrics.CollectVersion(newConnection)
 	versionInt := version.Major

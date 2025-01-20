@@ -14,9 +14,9 @@ import (
 )
 
 func PopulateWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, pgIntegration *integration.Integration, gv *globalvariables.GlobalVariables) error {
-	isEligible, err := validations.CheckWaitEventMetricsFetchEligibility(conn, gv.Version)
-	if err != nil {
-		log.Error("Error executing query: %v", err)
+	isEligible, eligibleCheckErr := validations.CheckWaitEventMetricsFetchEligibility(conn, gv.Version)
+	if eligibleCheckErr != nil {
+		log.Error("Error executing query: %v", eligibleCheckErr)
 		return commonutils.ErrUnExpectedError
 	}
 	if !isEligible {
@@ -25,10 +25,9 @@ func PopulateWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, pgI
 	}
 	waitEventMetricsList, waitEventErr := GetWaitEventMetrics(conn, gv)
 	if waitEventErr != nil {
-		log.Error("Error fetching wait event queries: %v", err)
+		log.Error("Error fetching wait event queries: %v", waitEventErr)
 		return commonutils.ErrUnExpectedError
 	}
-
 	if len(waitEventMetricsList) == 0 {
 		log.Debug("No wait event queries found.")
 		return nil
