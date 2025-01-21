@@ -32,7 +32,7 @@ type ArgumentList struct {
 	CollectBloatMetrics          bool   `default:"true" help:"Enable collecting bloat metrics which can be performance intensive"`
 	ShowVersion                  bool   `default:"false" help:"Print build information and exit"`
 	EnableQueryMonitoring        bool   `default:"false" help:"Query monitoring is disabled by default. Set to true to enable."`
-	QueryResponseTimeThreshold   int    `default:"1000" help:"Threshold in milliseconds for query response time to fetch individual query performance metrics."`
+	QueryResponseTimeThreshold   int    `default:"500" help:"Threshold in milliseconds for query response time to fetch individual query performance metrics."`
 	QueryCountThreshold          int    `default:"20" help:"Query count limit for fetch query monitoring level metrics."`
 }
 
