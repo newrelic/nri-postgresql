@@ -49,7 +49,7 @@ func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Int
 
 	start = time.Now()
 	log.Debug("Starting PopulateBlockingMetrics at ", start)
-	_ = performancemetrics.PopulateBlockingMetrics(newConnection, pgIntegration, gv)
+	performancemetrics.PopulateBlockingMetrics(newConnection, pgIntegration, gv)
 	log.Debug("PopulateBlockingMetrics completed in ", time.Since(start))
 
 	start = time.Now()
