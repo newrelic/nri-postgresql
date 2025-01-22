@@ -25,7 +25,7 @@ func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Int
 
 	newConnection, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
 	if err != nil {
-		log.Debug("Error creating connection: ", err)
+		log.Error("Error creating connection: ", err)
 		return
 	}
 	defer newConnection.Close()
@@ -33,7 +33,7 @@ func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Int
 	version, versionErr := metrics.CollectVersion(newConnection)
 	versionInt := version.Major
 	if versionErr != nil {
-		log.Debug("Error fetching version: ", versionErr)
+		log.Error("Error fetching version: ", versionErr)
 		return
 	}
 	gv := global_variables.SetGlobalVariables(args, versionInt, commonutils.GetDatabaseListInString(databaseList))

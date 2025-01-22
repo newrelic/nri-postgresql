@@ -48,7 +48,7 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 		}
 		if individualQuery.QueryText == nil || individualQuery.QueryID == nil || individualQuery.DatabaseName == nil {
 			log.Error("QueryText, QueryID or Database Name is nil")
-			return
+			continue
 		}
 		if !rows.Next() {
 			log.Debug("Execution plan not found for queryId", *individualQuery.QueryID)
