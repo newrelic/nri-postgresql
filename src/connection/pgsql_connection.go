@@ -149,7 +149,7 @@ func (p PGSQLConnection) HaveExtensionInSchema(extensionName, schemaName string)
 	return true
 }
 
-// createConnectionURL creates the connection string. A list of paramters
+// createConnectionURL creates the connection string. A list of parameters
 // can be found here https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters
 func createConnectionURL(ci *connectionInfo, database string) string {
 	connectionURL := &url.URL{
@@ -170,7 +170,6 @@ func createConnectionURL(ci *connectionInfo, database string) string {
 	}
 
 	connectionURL.RawQuery = query.Encode()
-
 	return connectionURL.String()
 }
 

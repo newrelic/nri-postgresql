@@ -7,6 +7,8 @@ import (
 	"runtime"
 	"strings"
 
+	queryperformancemonitoring "github.com/newrelic/nri-postgresql/src/query-performance-monitoring"
+
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"github.com/newrelic/nri-postgresql/src/args"
@@ -27,6 +29,7 @@ var (
 )
 
 func main() {
+
 	var args args.ArgumentList
 	// Create Integration
 	pgIntegration, err := integration.New(integrationName, integrationVersion, integration.Args(&args))
@@ -62,7 +65,6 @@ func main() {
 		log.Error("Error creating list of entities to collect: %s", err)
 		os.Exit(1)
 	}
-
 	instance, err := pgIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 	if err != nil {
 		log.Error("Error creating instance entity: %s", err.Error())
@@ -89,4 +91,9 @@ func main() {
 	if err = pgIntegration.Publish(); err != nil {
 		log.Error(err.Error())
 	}
+
+	if args.EnableQueryMonitoring && args.HasMetrics() {
+		queryperformancemonitoring.QueryPerformanceMain(args, pgIntegration, collectionList)
+	}
+
 }
