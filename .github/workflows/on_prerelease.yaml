@@ -13,4 +13,5 @@ jobs:
     with:
       tag: ${{ github.event.release.tag_name }}
       integration: "postgresql"
+      dest_prefix: query-performance-monitoring-testing/
     secrets: inherit
