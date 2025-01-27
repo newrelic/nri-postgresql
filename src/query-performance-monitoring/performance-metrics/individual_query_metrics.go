@@ -92,7 +92,6 @@ func getIndividualQueriesSamples(conn *performancedbconnection.PGSQLConnection, 
 		log.Error("Error closing rows: %v", closeErr)
 		return
 	}
-
 }
 
 func processForAnonymizeQueryMap(slowRunningMetricList []datamodels.SlowRunningQueryMetrics) map[string]map[string]string {
