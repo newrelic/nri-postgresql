@@ -22,9 +22,9 @@ func GetQuotedStringFromArray(array []string) string {
 	return strings.Join(quotedNames, ",")
 }
 
-func GetDatabaseListInString(dbList collection.DatabaseList) string {
+func GetDatabaseListInString(dbMap collection.DatabaseList) string {
 	var databaseNames = make([]string, 0)
-	for dbName := range dbList {
+	for dbName := range dbMap {
 		databaseNames = append(databaseNames, dbName)
 	}
 	if len(databaseNames) == 0 {

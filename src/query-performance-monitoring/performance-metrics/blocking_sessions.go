@@ -55,6 +55,7 @@ func GetBlockingMetrics(conn *performancedbconnection.PGSQLConnection, gv *globa
 		if scanError := rows.StructScan(&blockingQueryMetric); scanError != nil {
 			return nil, scanError
 		}
+		// For PostgreSQL versions 13 and 12, anonymization of queries does not occur for blocking sessions, so it's necessary to explicitly anonymize them.
 		if gv.Version == commonutils.PostgresVersion13 || gv.Version == commonutils.PostgresVersion12 {
 			*blockingQueryMetric.BlockedQuery = commonutils.AnonymizeQueryText(*blockingQueryMetric.BlockedQuery)
 			*blockingQueryMetric.BlockingQuery = commonutils.AnonymizeQueryText(*blockingQueryMetric.BlockingQuery)
