@@ -60,9 +60,29 @@ func TestFetchNestedExecutionPlanDetails(t *testing.T) {
 		"Plan Rows":     100000,
 		"Plan Width":    4,
 	}
+	execPlanLevel2 := map[string]interface{}{
+		"Node Type":     "Seq Scan",
+		"Relation Name": "test_table",
+		"Alias":         "test_table",
+		"Startup Cost":  0.00,
+		"Total Cost":    1000.00,
+		"Plan Rows":     100000,
+		"Plan Width":    4,
+		"Plans":         []interface{}{execPlan},
+	}
+	execPlanLevel3 := map[string]interface{}{
+		"Node Type":     "Seq Scan",
+		"Relation Name": "test_table",
+		"Alias":         "test_table",
+		"Startup Cost":  0.00,
+		"Total Cost":    1000.00,
+		"Plan Rows":     100000,
+		"Plan Width":    4,
+		"Plans":         []interface{}{execPlanLevel2},
+	}
 	var executionPlanMetricsList []interface{}
 	level := 0
 
-	performancemetrics.FetchNestedExecutionPlanDetails(individualQuery, &level, execPlan, &executionPlanMetricsList)
-	assert.Len(t, executionPlanMetricsList, 1)
+	performancemetrics.FetchNestedExecutionPlanDetails(individualQuery, &level, execPlanLevel3, &executionPlanMetricsList)
+	assert.Len(t, executionPlanMetricsList, 3)
 }
