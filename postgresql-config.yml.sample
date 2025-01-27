@@ -50,13 +50,13 @@ integrations:
     # True if SSL is to be used. Defaults to false.
     ENABLE_SSL: "false"
 
-    # True is query monitoring should be enabled - defaults to false
+    # Enable query performance monitoring - Defaults to false
     # ENABLE_QUERY_MONITORING : "false"
 
-    # The threshold in ms which a query must exceed response time to be considered for fetching execution plan - defaults to 1000ms
+    # Threshold in milliseconds for query response time to fetch individual query performance metrics - Defaults to 500
     # QUERY_RESPONSE_TIME_THRESHOLD : "500"
 
-    # The no of records for each metric in a interval (max of slow queries can be 20 and for execution plan metrics it can be 30)
+    # The number of records for each query performance metrics (maximum slow query metrics can be 20 and execution plan metrics can be 30)
     # QUERY_COUNT_THRESHOLD : "10"
 
     # True if the SSL certificate should be trusted without validating.

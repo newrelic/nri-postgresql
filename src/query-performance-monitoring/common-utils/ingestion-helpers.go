@@ -43,7 +43,6 @@ func IngestMetric(metricList []interface{}, eventName string, pgIntegration *int
 	}
 
 	metricCount := 0
-	lenOfMetricList := len(metricList)
 
 	for _, model := range metricList {
 		if model == nil {
@@ -58,7 +57,7 @@ func IngestMetric(metricList []interface{}, eventName string, pgIntegration *int
 			continue
 		}
 
-		if metricCount == PublishThreshold || metricCount == lenOfMetricList {
+		if metricCount == PublishThreshold {
 			metricCount = 0
 			if err := PublishMetrics(pgIntegration, &instanceEntity, gv); err != nil {
 				log.Error("Error publishing metrics: %v", err)
