@@ -37,7 +37,7 @@ func PopulateMetrics(
 	}
 	defer con.Close()
 
-	version, err := collectVersion(con)
+	version, err := CollectVersion(con)
 	if err != nil {
 		log.Error("Metrics collection failed: error collecting version number: %s", err.Error())
 		return
@@ -223,7 +223,7 @@ type serverVersionRow struct {
 	Version string `db:"server_version"`
 }
 
-func collectVersion(connection *connection.PGSQLConnection) (*semver.Version, error) {
+func CollectVersion(connection *connection.PGSQLConnection) (*semver.Version, error) {
 	var versionRows []*serverVersionRow
 	if err := connection.Query(&versionRows, versionQuery); err != nil {
 		return nil, err
@@ -231,7 +231,6 @@ func collectVersion(connection *connection.PGSQLConnection) (*semver.Version, er
 
 	re := regexp.MustCompile(`[0-9]+\.[0-9]+(\.[0-9])?`)
 	version := re.FindString(versionRows[0].Version)
-
 	// special cases for ubuntu/debian parsing
 	//version := versionRows[0].Version
 	//if strings.Contains(version, "Ubuntu") {

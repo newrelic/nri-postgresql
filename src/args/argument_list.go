@@ -31,6 +31,9 @@ type ArgumentList struct {
 	CollectDbLockMetrics         bool   `default:"false" help:"If true, enables collection of lock metrics for the specified database. (Note: requires that the 'tablefunc' extension is installed)"` //nolint: stylecheck
 	CollectBloatMetrics          bool   `default:"true" help:"Enable collecting bloat metrics which can be performance intensive"`
 	ShowVersion                  bool   `default:"false" help:"Print build information and exit"`
+	EnableQueryMonitoring        bool   `default:"false" help:"Enable collection of detailed query performance metrics."`
+	QueryResponseTimeThreshold   int    `default:"500" help:"Threshold in milliseconds for query response time. If response time exceeds this threshold, the query will be considered slow."`
+	QueryCountThreshold          int    `default:"20" help:"Maximum number of queries returned in query analysis results."`
 }
 
 // Validate validates PostgreSQl arguments
