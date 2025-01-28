@@ -5,23 +5,15 @@ import (
 )
 
 type GlobalVariables struct {
-	QueryResponseTimeThreshold int
-	QueryCountThreshold        int
-	Version                    uint64
-	DatabaseString             string
-	Hostname                   string
-	Port                       string
-	Arguments                  args.ArgumentList
+	Version        uint64
+	DatabaseString string
+	Arguments      args.ArgumentList
 }
 
 func SetGlobalVariables(args args.ArgumentList, version uint64, databaseString string) *GlobalVariables {
 	return &GlobalVariables{
-		QueryResponseTimeThreshold: args.QueryResponseTimeThreshold,
-		QueryCountThreshold:        args.QueryCountThreshold,
-		Version:                    version,
-		DatabaseString:             databaseString,
-		Hostname:                   args.Hostname,
-		Port:                       args.Port,
-		Arguments:                  args,
+		Version:        version,
+		DatabaseString: databaseString,
+		Arguments:      args,
 	}
 }

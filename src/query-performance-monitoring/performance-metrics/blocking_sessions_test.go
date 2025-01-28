@@ -23,7 +23,7 @@ func TestGetBlockingMetrics(t *testing.T) {
 	gv := global_variables.SetGlobalVariables(args, version, databaseName)
 
 	expectedQuery := queries.BlockingQueriesForV12AndV13
-	query := fmt.Sprintf(expectedQuery, databaseName, min(args.QueryCountThreshold, commonutils.MaxQueryThreshold))
+	query := fmt.Sprintf(expectedQuery, databaseName, min(args.QueryCountThreshold, commonutils.MaxQueryCountThreshold))
 	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(sqlmock.NewRows([]string{
 		"newrelic", "blocked_pid", "blocked_query", "blocked_query_id", "blocked_query_start", "database_name",
 		"blocking_pid", "blocking_query", "blocking_query_id", "blocking_query_start",

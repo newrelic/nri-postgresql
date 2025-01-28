@@ -56,7 +56,7 @@ func GetIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, sl
 }
 
 func getIndividualQueriesSamples(conn *performancedbconnection.PGSQLConnection, slowRunningQueries datamodels.SlowRunningQueryMetrics, gv *globalvariables.GlobalVariables, anonymizedQueriesByDB map[string]map[string]string, individualQueryMetricsForExecPlanList *[]datamodels.IndividualQueryMetrics, individualQueryMetricsListInterface *[]interface{}, versionSpecificIndividualQuery string) {
-	query := fmt.Sprintf(versionSpecificIndividualQuery, *slowRunningQueries.QueryID, gv.DatabaseString, gv.QueryResponseTimeThreshold, min(gv.QueryCountThreshold, commonutils.MaxIndividualQueryThreshold))
+	query := fmt.Sprintf(versionSpecificIndividualQuery, *slowRunningQueries.QueryID, gv.DatabaseString, gv.Arguments.QueryResponseTimeThreshold, min(gv.Arguments.QueryCountThreshold, commonutils.MaxIndividualQueryCountThreshold))
 	if query == "" {
 		log.Debug("Error constructing individual query")
 		return

@@ -2,8 +2,13 @@ package commonutils
 
 import "errors"
 
-const MaxQueryThreshold = 30
-const MaxIndividualQueryThreshold = 10
+// The maximum number records that can be fetched in a single metrics
+const MaxQueryCountThreshold = 30
+
+// The maximum number of individual queries that can be fetched in a single metrics
+const MaxIndividualQueryCountThreshold = 10
+
+// The maximum number of metrics to be published in a single batch
 const PublishThreshold = 100
 const RandomIntRange = 1000000
 const TimeFormat = "20060102150405"

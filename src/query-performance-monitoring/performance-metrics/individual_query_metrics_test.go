@@ -26,7 +26,7 @@ func TestGetIndividualQueryMetrics(t *testing.T) {
 	gv := global_variables.SetGlobalVariables(args, version, databaseName)
 
 	// Mock the individual query
-	query := fmt.Sprintf(queries.IndividualQuerySearchV13AndAbove, mockQueryID, databaseName, args.QueryResponseTimeThreshold, min(args.QueryCountThreshold, commonutils.MaxIndividualQueryThreshold))
+	query := fmt.Sprintf(queries.IndividualQuerySearchV13AndAbove, mockQueryID, databaseName, args.QueryResponseTimeThreshold, min(args.QueryCountThreshold, commonutils.MaxIndividualQueryCountThreshold))
 	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(sqlmock.NewRows([]string{
 		"newrelic", "query", "queryid", "datname", "planid", "avg_cpu_time_ms", "avg_exec_time_ms",
 	}).AddRow(

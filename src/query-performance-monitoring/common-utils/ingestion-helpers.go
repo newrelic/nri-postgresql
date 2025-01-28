@@ -74,7 +74,7 @@ func IngestMetric(metricList []interface{}, eventName string, pgIntegration *int
 }
 
 func CreateEntity(pgIntegration *integration.Integration, gv *globalvariables.GlobalVariables) (*integration.Entity, error) {
-	return pgIntegration.Entity(fmt.Sprintf("%s:%s", gv.Hostname, gv.Port), "pg-instance")
+	return pgIntegration.Entity(fmt.Sprintf("%s:%s", gv.Arguments.Hostname, gv.Arguments.Port), "pg-instance")
 }
 
 func ProcessModel(model interface{}, metricSet *metric.Set) error {

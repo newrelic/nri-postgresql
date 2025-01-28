@@ -21,7 +21,7 @@ func TestGetWaitEventMetrics(t *testing.T) {
 	databaseName := "testdb"
 	gv := global_variables.SetGlobalVariables(args, uint64(14), databaseName)
 
-	var query = fmt.Sprintf(queries.WaitEvents, databaseName, min(args.QueryCountThreshold, commonutils.MaxQueryThreshold))
+	var query = fmt.Sprintf(queries.WaitEvents, databaseName, min(args.QueryCountThreshold, commonutils.MaxQueryCountThreshold))
 	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(sqlmock.NewRows([]string{
 		"wait_event_name", "wait_category", "total_wait_time_ms", "collection_timestamp", "query_id", "query_text", "database_name",
 	}).AddRow(
@@ -40,7 +40,7 @@ func TestGetWaitEventEmptyMetrics(t *testing.T) {
 	databaseName := "testdb"
 	gv := global_variables.SetGlobalVariables(args, uint64(14), databaseName)
 
-	var query = fmt.Sprintf(queries.WaitEvents, databaseName, min(args.QueryCountThreshold, commonutils.MaxQueryThreshold))
+	var query = fmt.Sprintf(queries.WaitEvents, databaseName, min(args.QueryCountThreshold, commonutils.MaxQueryCountThreshold))
 	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(sqlmock.NewRows([]string{
 		"wait_event_name", "wait_category", "total_wait_time_ms", "collection_timestamp", "query_id", "query_text", "database_name",
 	}))

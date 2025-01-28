@@ -21,7 +21,7 @@ func runSlowQueryTest(t *testing.T, query string, version uint64, expectedLength
 	databaseName := "testdb"
 	gv := global_variables.SetGlobalVariables(args, version, databaseName)
 
-	query = fmt.Sprintf(query, "testdb", min(args.QueryCountThreshold, commonutils.MaxQueryThreshold))
+	query = fmt.Sprintf(query, "testdb", min(args.QueryCountThreshold, commonutils.MaxQueryCountThreshold))
 	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(sqlmock.NewRows([]string{
 		"newrelic", "query_id", "query_text", "database_name", "schema_name", "execution_count",
 		"avg_elapsed_time_ms", "avg_disk_reads", "avg_disk_writes", "statement_type", "collection_timestamp",
@@ -50,7 +50,7 @@ func TestGetSlowRunningEmptyMetrics(t *testing.T) {
 	version := uint64(13)
 	gv := global_variables.SetGlobalVariables(args, version, databaseName)
 	expectedQuery := queries.SlowQueriesForV13AndAbove
-	query := fmt.Sprintf(expectedQuery, "testdb", min(args.QueryCountThreshold, commonutils.MaxQueryThreshold))
+	query := fmt.Sprintf(expectedQuery, "testdb", min(args.QueryCountThreshold, commonutils.MaxQueryCountThreshold))
 	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(sqlmock.NewRows([]string{
 		"newrelic", "query_id", "query_text", "database_name", "schema_name", "execution_count",
 		"avg_elapsed_time_ms", "avg_disk_reads", "avg_disk_writes", "statement_type", "collection_timestamp",
