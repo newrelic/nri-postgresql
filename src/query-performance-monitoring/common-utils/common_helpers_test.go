@@ -10,13 +10,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetQuotedStringFromArray(t *testing.T) {
-	input := []string{"db1", "db2", "db3"}
-	expected := "'db1','db2','db3'"
-	result := commonutils.GetQuotedStringFromArray(input)
-	assert.Equal(t, expected, result)
-}
-
 func TestGetDatabaseListInString(t *testing.T) {
 	dbListKeys := []string{"db1"}
 	sort.Strings(dbListKeys) // Sort the keys to ensure consistent order

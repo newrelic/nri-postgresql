@@ -14,23 +14,15 @@ import (
 // re is a regular expression that matches single-quoted strings, numbers, or double-quoted strings
 var re = regexp.MustCompile(`'[^']*'|\d+|".*?"`)
 
-func GetQuotedStringFromArray(array []string) string {
-	var quotedNames = make([]string, 0)
-	for _, name := range array {
-		quotedNames = append(quotedNames, fmt.Sprintf("'%s'", name))
-	}
-	return strings.Join(quotedNames, ",")
-}
-
 func GetDatabaseListInString(dbMap collection.DatabaseList) string {
-	var databaseNames = make([]string, 0)
-	for dbName := range dbMap {
-		databaseNames = append(databaseNames, dbName)
-	}
-	if len(databaseNames) == 0 {
+	if len(dbMap) == 0 {
 		return ""
 	}
-	return GetQuotedStringFromArray(databaseNames)
+	var quotedNames = make([]string, 0)
+	for dbName := range dbMap {
+		quotedNames = append(quotedNames, fmt.Sprintf("'%s'", dbName))
+	}
+	return strings.Join(quotedNames, ",")
 }
 
 func AnonymizeQueryText(query string) string {
