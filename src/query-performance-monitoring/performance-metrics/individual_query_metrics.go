@@ -69,6 +69,7 @@ func getIndividualQueriesSamples(conn *performancedbconnection.PGSQLConnection, 
 		log.Debug("Error executing query in individual query: %v", err)
 		return
 	}
+	defer rows.Close()
 	for rows.Next() {
 		var model datamodels.IndividualQueryMetrics
 		if scanErr := rows.StructScan(&model); scanErr != nil {
@@ -90,10 +91,6 @@ func getIndividualQueriesSamples(conn *performancedbconnection.PGSQLConnection, 
 
 		*individualQueryMetricsForExecPlanList = append(*individualQueryMetricsForExecPlanList, model)
 		*individualQueryMetricsListInterface = append(*individualQueryMetricsListInterface, individualQueryMetric)
-	}
-	if closeErr := rows.Close(); closeErr != nil {
-		log.Error("Error closing rows: %v", closeErr)
-		return
 	}
 }
 

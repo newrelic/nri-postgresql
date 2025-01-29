@@ -67,9 +67,16 @@ func processExecutionPlanOfQueries(individualQueriesList []datamodels.Individual
 			log.Error("Failed to unmarshal execution plan: %v", err)
 			continue
 		}
-
 		level := 0
-		FetchNestedExecutionPlanDetails(individualQuery, &level, execPlan[0]["Plan"].(map[string]interface{}), executionPlanMetricsList)
+		if len(execPlan) > 0 {
+			if plan, ok := execPlan[0]["Plan"].(map[string]interface{}); ok {
+				FetchNestedExecutionPlanDetails(individualQuery, &level, plan, executionPlanMetricsList)
+			} else {
+				log.Debug("execPlan is not in correct datatype")
+			}
+		} else {
+			log.Debug("execPlan is empty")
+		}
 	}
 }
 

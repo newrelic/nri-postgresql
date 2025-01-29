@@ -22,7 +22,6 @@ func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Int
 		log.Debug("No databases found")
 		return
 	}
-
 	newConnection, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
 	if err != nil {
 		log.Error("Error creating connection: ", err)
@@ -65,5 +64,4 @@ func populateQueryPerformanceMetrics(newConnection *performancedbconnection.PGSQ
 	log.Debug("Starting PopulateExecutionPlanMetrics at ", start)
 	performancemetrics.PopulateExecutionPlanMetrics(individualQueries, pgIntegration, gv)
 	log.Debug("PopulateExecutionPlanMetrics completed in ", time.Since(start))
-
 }
