@@ -1,3 +1,6 @@
+---
+version: 2
+project_name: nri-postgresql
 builds:
   - id: nri-nix
     main: ./src
@@ -17,6 +20,26 @@ builds:
     ignore:
       - goos: darwin
         goarch: 386
+  
+  - id: nri-nix-fips
+    main: ./src
+    binary: nri-postgresql
+    ldflags:
+      - -s -w -X main.integrationVersion={{.Version}} -X main.gitCommit={{.Commit}} -X main.buildDate={{.Date}}
+    env:
+      - CGO_ENABLED=1
+      - GOEXPERIMENT=boringcrypto
+      - >-
+        {{- if eq .Arch "arm64" -}}
+        CC=aarch64-linux-gnu-gcc
+        {{- end }}
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    tags:
+      - fips
 
   - id: nri-win
     main: ./src
@@ -35,7 +58,8 @@ builds:
 
 nfpms:
   - id: linux
-    file_name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
+    package_name: nri-postgresql
+    file_name_template: "{{ .PackageName }}_{{ .Version }}-1_{{ .Arch }}"
     vendor: "New Relic, Inc."
     homepage: "https://www.newrelic.com/infrastructure"
     maintainer: "New Relic Infrastructure Team <infrastructure-eng@newrelic.com>"
@@ -68,9 +92,61 @@ nfpms:
 
     overrides:
       rpm:
-        file_name_template: "{{ .ProjectName }}-{{ .Version }}-1.{{ .Arch }}"
-        replacements:
-          amd64: x86_64
+        file_name_template: >-
+          {{- .ProjectName }}-
+          {{- .Version }}-1.
+          {{- if eq .Arch "amd64" -}}x86_64
+          {{- else -}}
+          {{ .Arch }}
+          {{- end }}
+
+    # Formats to be generated.
+    formats:
+      - deb
+      - rpm
+  
+  - id: linux-fips
+    package_name: nri-postgresql-fips
+    file_name_template: "{{ .PackageName }}_{{ .Version }}-1_{{ .Arch }}"
+    vendor: "New Relic, Inc."
+    homepage: "https://www.newrelic.com/infrastructure"
+    maintainer: "New Relic Infrastructure Team <infrastructure-eng@newrelic.com>"
+    description: "New Relic Infrastructure postgresql Integration extend the core New Relic\nInfrastructure agent's capabilities to allow you to collect metric and\nlive state data from postgresql components."
+    license: "https://newrelic.com/terms (also see LICENSE installed with this package)"
+
+    builds:
+      - nri-nix
+
+    dependencies:
+      - newrelic-infra (>= 1.20.0)
+
+    bindir: "/var/db/newrelic-infra/newrelic-integrations/bin"
+    contents:
+      - src: "postgresql-config.yml.sample"
+        dst: "/etc/newrelic-infra/integrations.d/postgresql-config.yml.sample"
+      - src: "postgresql-custom-query.yml.sample"
+        dst: "/etc/newrelic-infra/integrations.d/postgresql-custom-query.yml.sample"
+      - src: "postgresql-log.yml.example"
+        dst: "/etc/newrelic-infra/logging.d/postgresql-log.yml.example"
+      - src: "CHANGELOG.md"
+        dst: "/usr/share/doc/nri-postgresql/CHANGELOG.md"
+      - src: "README.md"
+        dst: "/usr/share/doc/nri-postgresql/README.md"
+      - src: "LICENSE"
+        dst: "/usr/share/doc/nri-postgresql/LICENSE"
+      - src: "legacy/postgresql-definition.yml"
+        dst: "/var/db/newrelic-infra/newrelic-integrations/postgresql-definition.yml"
+        type: config
+
+    overrides:
+      rpm:
+        file_name_template: >-
+          {{- .ProjectName }}-fips-
+          {{- .Version }}-1.
+          {{- if eq .Arch "amd64" -}}x86_64
+          {{- else -}}
+          {{ .Arch }}
+          {{- end }}
 
     # Formats to be generated.
     formats:
@@ -82,6 +158,17 @@ archives:
     builds:
       - nri-nix
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Version }}_{{ .Arch }}_dirty"
+    files:
+      - postgresql-config.yml.sample
+      - src: 'legacy/postgresql-definition.yml'
+        dst: .
+        strip_parent: true
+    format: tar.gz
+  
+  - id: nri-nix-fips
+    builds:
+      - nri-nix-fips
+    name_template: "{{ .ProjectName }}-fips_{{ .Os }}_{{ .Version }}_{{ .Arch }}_dirty"
     files:
       - postgresql-config.yml.sample
       - src: 'legacy/postgresql-definition.yml'
