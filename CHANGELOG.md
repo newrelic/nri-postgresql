@@ -9,7 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### enhancements
+## v2.17.0 - 2025-02-03
+
+### 🚀 Enhancements
 - Add FIPS compliant packages
 
 ## v2.16.1 - 2025-01-20
