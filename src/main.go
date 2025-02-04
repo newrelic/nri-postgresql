@@ -92,7 +92,7 @@ func main() {
 		log.Error(err.Error())
 	}
 
-	if args.EnableQueryMonitoring && args.HasMetrics() {
+	if args.EnableQueryMonitoring {
 		queryperformancemonitoring.QueryPerformanceMain(args, pgIntegration, collectionList)
 	}
 
