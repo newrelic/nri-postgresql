@@ -29,7 +29,6 @@ func TestCheckBlockingSessionMetricsFetchEligibilitySupportedVersionSuccess(t *t
 	isExtensionEnabledTest, _ := validations.CheckBlockingSessionMetricsFetchEligibility(enabledExtensions, version)
 	assert.Equal(t, isExtensionEnabledTest, true)
 	assert.NoError(t, mock.ExpectationsWereMet())
-
 }
 
 func TestCheckBlockingSessionMetricsFetchEligibilitySupportedVersionFail(t *testing.T) {
