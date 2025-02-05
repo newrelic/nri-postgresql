@@ -31,12 +31,12 @@ func AnonymizeQueryText(query string) string {
 }
 
 // This function is used to generate a unique plan ID for a query
-func GeneratePlanID(queryID string) *string {
+func GeneratePlanID() (string, error) {
 	randomInt, err := rand.Int(rand.Reader, big.NewInt(RandomIntRange))
 	if err != nil {
-		return nil
+		return "", ErrUnExpectedError
 	}
 	currentTime := time.Now().Format(TimeFormat)
-	result := fmt.Sprintf("%s-%d-%s", queryID, randomInt.Int64(), currentTime)
-	return &result
+	result := fmt.Sprintf("%d-%s", randomInt.Int64(), currentTime)
+	return result, nil
 }

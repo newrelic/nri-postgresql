@@ -3,7 +3,7 @@ package commonutils_test
 import (
 	"testing"
 
-	global_variables "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/global-variables"
+	common_parameters "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-parameters"
 
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/nri-postgresql/src/args"
@@ -29,13 +29,17 @@ func TestIngestMetric(t *testing.T) {
 		Hostname: "localhost",
 		Port:     "5432",
 	}
-	gv := global_variables.SetGlobalVariables(args, uint64(14), "testdb")
+	cp := common_parameters.SetCommonParameters(args, uint64(14), "testdb")
 	metricList := []interface{}{
 		struct {
 			TestField int `metric_name:"testField" source_type:"gauge"`
 		}{TestField: 123},
 	}
-	commonutils.IngestMetric(metricList, "testEvent", pgIntegration, gv)
+	err := commonutils.IngestMetric(metricList, "testEvent", pgIntegration, cp)
+	if err != nil {
+		t.Error(err)
+		return
+	}
 	assert.NotEmpty(t, pgIntegration.Entities)
 }
 
@@ -45,9 +49,9 @@ func TestCreateEntity(t *testing.T) {
 		Hostname: "localhost",
 		Port:     "5432",
 	}
-	gv := global_variables.SetGlobalVariables(args, uint64(14), "testdb")
+	cp := common_parameters.SetCommonParameters(args, uint64(14), "testdb")
 
-	entity, err := commonutils.CreateEntity(pgIntegration, gv)
+	entity, err := commonutils.CreateEntity(pgIntegration, cp)
 	assert.NoError(t, err)
 	assert.NotNil(t, entity)
 	assert.Equal(t, "localhost:5432", entity.Metadata.Name)
@@ -74,10 +78,10 @@ func TestPublishMetrics(t *testing.T) {
 		Hostname: "localhost",
 		Port:     "5432",
 	}
-	gv := global_variables.SetGlobalVariables(args, uint64(14), "testdb")
-	entity, _ := commonutils.CreateEntity(pgIntegration, gv)
+	cp := common_parameters.SetCommonParameters(args, uint64(14), "testdb")
+	entity, _ := commonutils.CreateEntity(pgIntegration, cp)
 
-	err := commonutils.PublishMetrics(pgIntegration, &entity, gv)
+	err := commonutils.PublishMetrics(pgIntegration, &entity, cp)
 	assert.NoError(t, err)
 	assert.NotNil(t, entity)
 }
