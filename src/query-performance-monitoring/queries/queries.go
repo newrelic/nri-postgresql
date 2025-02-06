@@ -25,7 +25,7 @@ const (
 		pg_database pd ON pss.dbid = pd.oid
 	WHERE 
 		pd.datname in (%s) -- List of database names
-		AND pss.query NOT ILIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
+		AND pss.query NOT ILIKE 'EXPLAIN (FORMAT JSON)%%' -- Exclude EXPLAIN queries
 		AND pss.query NOT ILIKE 'SELECT $1 as newrelic%%' -- Exclude specific New Relic queries
 		AND pss.query NOT ILIKE 'WITH wait_history AS%%' -- Exclude specific WITH queries
 		AND pss.query NOT ILIKE 'select -- BLOATQUERY%%' -- Exclude BLOATQUERY

@@ -48,26 +48,19 @@ type IndividualQueryMetrics struct {
 
 type QueryExecutionPlanMetrics struct {
 	NodeType            string  `mapstructure:"Node Type"           json:"Node Type"           metric_name:"node_type"             source_type:"attribute"`
-	StartupCost         float64 `mapstructure:"Startup Cost"        json:"Startup Cost"        metric_name:"startup_cost"          source_type:"gauge"`
-	TotalCost           float64 `mapstructure:"Total Cost"          json:"Total Cost"          metric_name:"total_cost"            source_type:"gauge"`
-	PlanRows            int64   `mapstructure:"Plan Rows"           json:"Plan Rows"           metric_name:"plan_rows"             source_type:"gauge"`
-	ActualStartupTime   float64 `mapstructure:"Actual Startup Time" json:"Actual Startup Time" metric_name:"actual_startup_time"   source_type:"gauge"`
-	ActualTotalTime     float64 `mapstructure:"Actual Total Time"   json:"Actual Total Time"   metric_name:"actual_total_time"     source_type:"gauge"`
-	ActualRows          int64   `mapstructure:"Actual Rows"         json:"Actual Rows"         metric_name:"actual_rows"           source_type:"gauge"`
-	ActualLoops         int64   `mapstructure:"Actual Loops"        json:"Actual Loops"        metric_name:"actual_loops"          source_type:"gauge"`
-	SharedHitBlocks     int64   `mapstructure:"Shared Hit Blocks"   json:"Shared Hit Blocks"   metric_name:"shared_hit_blocks"     source_type:"gauge"`
-	SharedReadBlocks    int64   `mapstructure:"Shared Read Blocks"  json:"Shared Read Blocks"  metric_name:"shared_read_blocks"    source_type:"gauge"`
-	SharedDirtiedBlocks int64   `mapstructure:"Shared Dirtied Blocks" json:"Shared Dirtied Blocks" metric_name:"shared_dirtied_blocks" source_type:"gauge"`
-	SharedWrittenBlocks int64   `mapstructure:"Shared Written Blocks" json:"Shared Written Blocks" metric_name:"shared_written_blocks" source_type:"gauge"`
-	LocalHitBlocks      int64   `mapstructure:"Local Hit Blocks"    json:"Local Hit Blocks"    metric_name:"local_hit_blocks"      source_type:"gauge"`
-	LocalReadBlocks     int64   `mapstructure:"Local Read Blocks"   json:"Local Read Blocks"   metric_name:"local_read_blocks"     source_type:"gauge"`
-	LocalDirtiedBlocks  int64   `mapstructure:"Local Dirtied Blocks" json:"Local Dirtied Blocks" metric_name:"local_dirtied_blocks"  source_type:"gauge"`
-	LocalWrittenBlocks  int64   `mapstructure:"Local Written Blocks" json:"Local Written Blocks" metric_name:"local_written_blocks"  source_type:"gauge"`
-	TempReadBlocks      int64   `mapstructure:"Temp Read Blocks"    json:"Temp Read Blocks"    metric_name:"temp_read_blocks"      source_type:"gauge"`
-	TempWrittenBlocks   int64   `mapstructure:"Temp Written Blocks" json:"Temp Written Blocks" metric_name:"temp_written_blocks"   source_type:"gauge"`
-	DatabaseName        string  `mapstructure:"Database"            json:"Database"            metric_name:"database_name"              source_type:"attribute"`
-	QueryText           string  `mapstructure:"Query"               json:"Query"               metric_name:"query_text"                 source_type:"attribute"`
-	QueryID             string  `mapstructure:"Query Id"            json:"Query Id"            metric_name:"query_id"              source_type:"attribute"`
-	PlanID              string  `mapstructure:"Plan Id"             json:"Plan Id"             metric_name:"plan_id"               source_type:"attribute"`
-	Level               int     `mapstructure:"Level"               json:"Level"             metric_name:"level_id"               source_type:"gauge"`
+	ParallelAware       bool    `mapstructure:"Parallel Aware"      json:"Parallel Aware"      metric_name:"parallel_aware"       source_type:"gauge"`
+	AsyncCapable        bool    `mapstructure:"Async Capable"       json:"Async Capable"       metric_name:"async_capable"        source_type:"gauge"`
+	ScanDirection       string  `mapstructure:"Scan Direction"      json:"Scan Direction"      metric_name:"scan_direction"       source_type:"attribute"`
+	IndexName           string  `mapstructure:"Index Name"          json:"Index Name"          metric_name:"index_name"           source_type:"attribute"`
+	RelationName        string  `mapstructure:"Relation Name"       json:"Relation Name"       metric_name:"relation_name"        source_type:"attribute"`
+	Alias               string  `mapstructure:"Alias"               json:"Alias"               metric_name:"alias"                source_type:"attribute"`
+	StartupCost         float64 `mapstructure:"Startup Cost"        json:"Startup Cost"        metric_name:"startup_cost"         source_type:"gauge"`
+	TotalCost           float64 `mapstructure:"Total Cost"          json:"Total Cost"          metric_name:"total_cost"           source_type:"gauge"`
+	PlanRows            int64   `mapstructure:"Plan Rows"           json:"Plan Rows"           metric_name:"plan_rows"            source_type:"gauge"`
+	PlanWidth           int64   `mapstructure:"Plan Width"          json:"Plan Width"          metric_name:"plan_width"           source_type:"gauge"`
+	RowsRemovedByFilter int64   `mapstructure:"Rows Removed by Filter" json:"Rows Removed by Filter" metric_name:"rows_removed_by_filter" source_type:"gauge"`
+	DatabaseName        string  `mapstructure:"Database"            json:"Database"            metric_name:"database_name"        source_type:"attribute"`
+	QueryID             string  `mapstructure:"Query Id"            json:"Query Id"            metric_name:"query_id"             source_type:"attribute"`
+	PlanID              string  `mapstructure:"Plan Id"             json:"Plan Id"             metric_name:"plan_id"              source_type:"attribute"`
+	Level               int     `mapstructure:"Level"               json:"Level"               metric_name:"level_id"             source_type:"gauge"`
 }
