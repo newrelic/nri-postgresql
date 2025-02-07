@@ -56,7 +56,7 @@ integrations:
     # Threshold in milliseconds for query response time to fetch individual query performance metrics - Defaults to 500
     # QUERY_MONITORING_RESPONSE_TIME_THRESHOLD : "500"
     
-    # The number of records for each query performance metrics
+    # The number of records for each query performance metrics - Defaults to 20
     # QUERY_MONITORING_COUNT_THRESHOLD : "20"
 
     # True if the SSL certificate should be trusted without validating.
