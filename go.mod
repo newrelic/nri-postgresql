@@ -1,6 +1,6 @@
 module github.com/newrelic/nri-postgresql
 
-go 1.23.4
+go 1.23.5
 
 require (
 	github.com/blang/semver/v4 v4.0.0
@@ -11,6 +11,7 @@ require (
 	github.com/xeipuuv/gojsonschema v1.2.0
 	gopkg.in/DATA-DOG/go-sqlmock.v1 v1.3.0
 	gopkg.in/yaml.v3 v3.0.1
+	github.com/go-viper/mapstructure/v2 v2.2.1
 )
 
 require (

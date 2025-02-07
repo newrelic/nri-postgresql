@@ -1,0 +1,70 @@
+services:
+
+  postgres12:
+    build:
+      context: ./perf-testing/oldest_supported/
+      dockerfile: Dockerfile
+    container_name: "postgresql-perf-oldest"
+    restart: always 
+    environment:
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=dbpassword
+      - POSTGRES_DB=demo
+    volumes:
+      - postgres12:/var/lib/postgresql/data
+    ports:
+      - "6432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgresql-latest:
+    build:
+      context: ./perf-testing/oldest_supported/
+      dockerfile: Dockerfile
+    restart: always 
+    container_name: "postgresql-perf-latest"
+    environment:
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=dbpassword
+      - POSTGRES_DB=demo
+    volumes:
+      - pgdata_latest:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  postgres-without-extensions:
+    image: postgres:17.0
+    restart: always
+    container_name: "postgresql-noext"
+    environment:
+      - POSTGRES_USER=dbuser
+      - POSTGRES_PASSWORD=dbpassword
+      - POSTGRES_DB=demo
+    volumes:
+      - pgdata_noext:/var/lib/postgresql/data
+    ports:
+      - "7432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  nri-postgresql:
+    container_name: nri_postgresql
+    build:
+      context: ../
+      dockerfile: tests/perf-testing/integration/Dockerfile
+    
+volumes:
+  pgdata_latest:
+  postgres12:
+  pgdata_noext:
