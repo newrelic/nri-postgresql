@@ -36,7 +36,7 @@ func SetCommonParameters(args args.ArgumentList, version uint64, databases strin
 
 func validateAndGetQueryMonitoringResponseTimeThreshold(args args.ArgumentList) int {
 	if args.QueryMonitoringResponseTimeThreshold < 0 {
-		log.Warn("QueryResponseTimeThreshold should be greater than or equal to 0, setting value to default")
+		log.Warn("QueryResponseTimeThreshold should be greater than or equal to 0 but the input is %d, setting value to default which is %d", args.QueryMonitoringResponseTimeThreshold, DefaultQueryResponseTimeThreshold)
 		return DefaultQueryResponseTimeThreshold
 	}
 	return args.QueryMonitoringResponseTimeThreshold
@@ -44,11 +44,11 @@ func validateAndGetQueryMonitoringResponseTimeThreshold(args args.ArgumentList) 
 
 func validateAndGetQueryMonitoringCountThreshold(args args.ArgumentList) int {
 	if args.QueryMonitoringCountThreshold < 0 {
-		log.Warn("QueryCountThreshold should be greater than or equal to 0, setting value to default")
+		log.Warn("QueryCountThreshold should be greater than 0 but the input is %d, setting value to default which is %d", args.QueryMonitoringCountThreshold, DefaultQueryMonitoringCountThreshold)
 		return DefaultQueryMonitoringCountThreshold
 	}
 	if args.QueryMonitoringCountThreshold > MaxQueryCountThreshold {
-		log.Warn("QueryCountThreshold should be less than or equal to max limit")
+		log.Warn("QueryCountThreshold should be less than or equal to max limit but the input is %d, setting value to max limit which is %d", args.QueryMonitoringCountThreshold, MaxQueryCountThreshold)
 		return MaxQueryCountThreshold
 	}
 	return args.QueryMonitoringCountThreshold

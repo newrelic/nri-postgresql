@@ -179,8 +179,8 @@ const (
 		 queryid, -- Unique identifier for the query
 		 datname, -- Name of the database
 		 planid, -- Plan identifier
-		 ROUND(((cpu_user_time + cpu_sys_time) / NULLIF(calls, 0))::numeric, 3) AS avg_cpu_time_ms, -- Average CPU time in milliseconds
-		 total_exec_time / NULLIF(calls, 0) AS avg_exec_time_ms -- Average execution time in milliseconds
+		 ROUND(((cpu_user_time + cpu_sys_time) / NULLIF(calls, 0))::numeric, 3) AS cpu_time_ms, -- Average CPU time in milliseconds
+		 total_exec_time / NULLIF(calls, 0) AS exec_time_ms -- Average execution time in milliseconds
 		FROM
 		 pg_stat_monitor
 		WHERE
@@ -191,7 +191,7 @@ const (
 		GROUP BY
 		 query, queryid, datname, planid, cpu_user_time, cpu_sys_time, calls, total_exec_time
 		ORDER BY
-		 avg_exec_time_ms DESC -- Order by average execution time in descending order
+		 exec_time_ms DESC -- Order by average execution time in descending order
 		LIMIT %d; -- Limit the number of results`
 
 	// IndividualQuerySearchV12 retrieves individual query statistics for PostgreSQL version 12
@@ -200,8 +200,8 @@ const (
 		 queryid, -- Unique identifier for the query
 		 datname, -- Name of the database
 		 planid, -- Plan identifier
-		 ROUND(((cpu_user_time + cpu_sys_time) / NULLIF(calls, 0))::numeric, 3) AS avg_cpu_time_ms, -- Average CPU time in milliseconds
-		 total_time / NULLIF(calls, 0) AS avg_exec_time_ms -- Average execution time in milliseconds
+		 ROUND(((cpu_user_time + cpu_sys_time) / NULLIF(calls, 0))::numeric, 3) AS cpu_time_ms, -- Average CPU time in milliseconds
+		 total_time / NULLIF(calls, 0) AS exec_time_ms -- Average execution time in milliseconds
 		FROM
 		 pg_stat_monitor
 		WHERE
@@ -212,6 +212,6 @@ const (
 		GROUP BY
 		 query, queryid, datname, planid, cpu_user_time, cpu_sys_time, calls, total_time
 		ORDER BY
-		 avg_exec_time_ms DESC -- Order by average execution time in descending order
+		 exec_time_ms DESC -- Order by average execution time in descending order
 		LIMIT %d; -- Limit the number of results`
 )

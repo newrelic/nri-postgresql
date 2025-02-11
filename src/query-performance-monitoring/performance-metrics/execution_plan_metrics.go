@@ -17,7 +17,7 @@ func PopulateExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, p
 		log.Debug("No individual queries found.")
 		return
 	}
-	executionDetailsList := GetExecutionPlanMetrics(results, connectionInfo)
+	executionDetailsList := getExecutionPlanMetrics(results, connectionInfo)
 	err := commonutils.IngestMetric(executionDetailsList, "PostgresExecutionPlanMetrics", pgIntegration, cp)
 	if err != nil {
 		log.Error("Error ingesting Execution Plan metrics: %v", err)
@@ -25,9 +25,9 @@ func PopulateExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, p
 	}
 }
 
-func GetExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, connectionInfo performancedbconnection.Info) []interface{} {
+func getExecutionPlanMetrics(results []datamodels.IndividualQueryMetrics, connectionInfo performancedbconnection.Info) []interface{} {
 	var executionPlanMetricsList []interface{}
-	var groupIndividualQueriesByDatabase = GroupQueriesByDatabase(results)
+	var groupIndividualQueriesByDatabase = groupQueriesByDatabase(results)
 	for dbName, individualQueriesList := range groupIndividualQueriesByDatabase {
 		dbConn, err := connectionInfo.NewConnection(dbName)
 		if err != nil {
@@ -78,7 +78,7 @@ func validateAndFetchNestedExecPlan(execPlan []map[string]interface{}, individua
 	level := 0
 	if len(execPlan) > 0 {
 		if plan, ok := execPlan[0]["Plan"].(map[string]interface{}); ok {
-			FetchNestedExecutionPlanDetails(individualQuery, &level, plan, executionPlanMetricsList)
+			fetchNestedExecutionPlanDetails(individualQuery, &level, plan, executionPlanMetricsList)
 		} else {
 			log.Debug("execPlan is not in correct datatype")
 		}
@@ -87,7 +87,7 @@ func validateAndFetchNestedExecPlan(execPlan []map[string]interface{}, individua
 	}
 }
 
-func GroupQueriesByDatabase(results []datamodels.IndividualQueryMetrics) map[string][]datamodels.IndividualQueryMetrics {
+func groupQueriesByDatabase(results []datamodels.IndividualQueryMetrics) map[string][]datamodels.IndividualQueryMetrics {
 	databaseMap := make(map[string][]datamodels.IndividualQueryMetrics)
 	for _, individualQueryMetric := range results {
 		if individualQueryMetric.DatabaseName == nil {
@@ -99,7 +99,7 @@ func GroupQueriesByDatabase(results []datamodels.IndividualQueryMetrics) map[str
 	return databaseMap
 }
 
-func FetchNestedExecutionPlanDetails(individualQuery datamodels.IndividualQueryMetrics, level *int, execPlan map[string]interface{}, executionPlanMetricsList *[]interface{}) {
+func fetchNestedExecutionPlanDetails(individualQuery datamodels.IndividualQueryMetrics, level *int, execPlan map[string]interface{}, executionPlanMetricsList *[]interface{}) {
 	var execPlanMetrics datamodels.QueryExecutionPlanMetrics
 	err := mapstructure.Decode(execPlan, &execPlanMetrics)
 	if err != nil {
@@ -115,7 +115,7 @@ func FetchNestedExecutionPlanDetails(individualQuery datamodels.IndividualQueryM
 	if nestedPlans, ok := execPlan["Plans"].([]interface{}); ok {
 		for _, nestedPlan := range nestedPlans {
 			if nestedPlanMap, nestedOk := nestedPlan.(map[string]interface{}); nestedOk {
-				FetchNestedExecutionPlanDetails(individualQuery, level, nestedPlanMap, executionPlanMetricsList)
+				fetchNestedExecutionPlanDetails(individualQuery, level, nestedPlanMap, executionPlanMetricsList)
 			}
 		}
 	}

@@ -24,7 +24,7 @@ func PopulateBlockingMetrics(conn *performancedbconnection.PGSQLConnection, pgIn
 		log.Debug("Extension 'pg_stat_statements' is not enabled or unsupported version.")
 		return
 	}
-	blockingQueriesMetricsList, blockQueryFetchErr := GetBlockingMetrics(conn, cp)
+	blockingQueriesMetricsList, blockQueryFetchErr := getBlockingMetrics(conn, cp)
 	if blockQueryFetchErr != nil {
 		log.Error("Error fetching Blocking queries: %v", blockQueryFetchErr)
 		return
@@ -40,7 +40,7 @@ func PopulateBlockingMetrics(conn *performancedbconnection.PGSQLConnection, pgIn
 	}
 }
 
-func GetBlockingMetrics(conn *performancedbconnection.PGSQLConnection, cp *commonparameters.CommonParameters) ([]interface{}, error) {
+func getBlockingMetrics(conn *performancedbconnection.PGSQLConnection, cp *commonparameters.CommonParameters) ([]interface{}, error) {
 	var blockingQueriesMetricsList []interface{}
 	versionSpecificBlockingQuery, err := commonutils.FetchVersionSpecificBlockingQueries(cp.Version)
 	if err != nil {

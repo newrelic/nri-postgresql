@@ -38,7 +38,7 @@ func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Int
 	}
 	versionInt := version.Major
 	if !validations.CheckPostgresVersionSupportForQueryMonitoring(versionInt) {
-		log.Debug("Postgres version is not supported for query monitoring")
+		log.Debug("Postgres version: %d is not supported for query monitoring", versionInt)
 		return
 	}
 	cp := common_parameters.SetCommonParameters(args, versionInt, commonutils.GetDatabaseListInString(databaseMap))

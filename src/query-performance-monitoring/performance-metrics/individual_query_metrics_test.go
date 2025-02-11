@@ -1,4 +1,4 @@
-package performancemetrics_test
+package performancemetrics
 
 import (
 	"fmt"
@@ -9,7 +9,6 @@ import (
 	"github.com/newrelic/nri-postgresql/src/connection"
 	common_parameters "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-parameters"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
-	performancemetrics "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/performance-metrics"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/queries"
 	"github.com/stretchr/testify/assert"
 	"gopkg.in/DATA-DOG/go-sqlmock.v1"
@@ -27,7 +26,7 @@ func TestGetIndividualQueryMetrics(t *testing.T) {
 	// Mock the individual query
 	query := fmt.Sprintf(queries.IndividualQuerySearchV13AndAbove, mockQueryID, databaseName, args.QueryMonitoringResponseTimeThreshold, args.QueryMonitoringCountThreshold)
 	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(sqlmock.NewRows([]string{
-		"newrelic", "query", "queryid", "datname", "planid", "avg_cpu_time_ms", "avg_exec_time_ms",
+		"newrelic", "query", "queryid", "datname", "planid", "cpu_time_ms", "exec_time_ms",
 	}).AddRow(
 		"newrelic_value", "SELECT 1", "queryid1", "testdb", "planid1", 10.0, 20.0,
 	))
@@ -40,7 +39,7 @@ func TestGetIndividualQueryMetrics(t *testing.T) {
 		},
 	}
 
-	individualQueryMetricsInterface, individualQueryMetrics := performancemetrics.GetIndividualQueryMetrics(conn, slowRunningQueries, cp)
+	individualQueryMetricsInterface, individualQueryMetrics := getIndividualQueryMetrics(conn, slowRunningQueries, cp)
 
 	assert.Len(t, individualQueryMetricsInterface, 1)
 	assert.Len(t, individualQueryMetrics, 1)

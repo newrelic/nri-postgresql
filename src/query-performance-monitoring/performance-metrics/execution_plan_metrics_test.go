@@ -1,4 +1,4 @@
-package performancemetrics_test
+package performancemetrics
 
 import (
 	"testing"
@@ -10,7 +10,6 @@ import (
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/nri-postgresql/src/args"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
-	performancemetrics "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/performance-metrics"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -20,7 +19,7 @@ func TestPopulateExecutionPlanMetrics(t *testing.T) {
 	results := []datamodels.IndividualQueryMetrics{}
 	cp := common_parameters.SetCommonParameters(args, uint64(13), "testdb")
 	connectionInfo := performancedbconnection.DefaultConnectionInfo(&args)
-	performancemetrics.PopulateExecutionPlanMetrics(results, pgIntegration, cp, connectionInfo)
+	PopulateExecutionPlanMetrics(results, pgIntegration, cp, connectionInfo)
 	assert.Empty(t, pgIntegration.Entities)
 }
 
@@ -36,7 +35,7 @@ func TestGroupQueriesByDatabase(t *testing.T) {
 		},
 	}
 
-	groupedQueries := performancemetrics.GroupQueriesByDatabase(results)
+	groupedQueries := groupQueriesByDatabase(results)
 	assert.Len(t, groupedQueries, 1)
 	assert.Contains(t, groupedQueries, databaseName)
 	assert.Len(t, groupedQueries[databaseName], 1)
@@ -85,6 +84,6 @@ func TestFetchNestedExecutionPlanDetails(t *testing.T) {
 	var executionPlanMetricsList []interface{}
 	level := 0
 
-	performancemetrics.FetchNestedExecutionPlanDetails(individualQuery, &level, execPlanLevel3, &executionPlanMetricsList)
+	fetchNestedExecutionPlanDetails(individualQuery, &level, execPlanLevel3, &executionPlanMetricsList)
 	assert.Len(t, executionPlanMetricsList, 3)
 }

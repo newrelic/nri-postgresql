@@ -12,7 +12,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/validations"
 )
 
-func GetSlowRunningMetrics(conn *performancedbconnection.PGSQLConnection, cp *commonparameters.CommonParameters) ([]datamodels.SlowRunningQueryMetrics, []interface{}, error) {
+func getSlowRunningMetrics(conn *performancedbconnection.PGSQLConnection, cp *commonparameters.CommonParameters) ([]datamodels.SlowRunningQueryMetrics, []interface{}, error) {
 	var slowQueryMetricsList []datamodels.SlowRunningQueryMetrics
 	var slowQueryMetricsListInterface []interface{}
 	versionSpecificSlowQuery, err := commonutils.FetchVersionSpecificSlowQueries(cp.Version)
@@ -48,7 +48,7 @@ func PopulateSlowRunningMetrics(conn *performancedbconnection.PGSQLConnection, p
 		return nil
 	}
 
-	slowQueryMetricsList, slowQueryMetricsListInterface, err := GetSlowRunningMetrics(conn, cp)
+	slowQueryMetricsList, slowQueryMetricsListInterface, err := getSlowRunningMetrics(conn, cp)
 	if err != nil {
 		log.Error("Error fetching slow-running queries: %v", err)
 		return nil
