@@ -33,12 +33,14 @@ test:
 integration-test:
 	@echo "=== $(INTEGRATION) === [ test ]: running integration tests..."
 	@docker compose -f tests/docker-compose.yml up -d
+	# Sleep added to allow postgres with test data and extensions to start up
 	@sleep 10
 	@go test -v -tags=integration -count 1 ./tests/postgresql_test.go -timeout 300s || (ret=$$?; docker compose -f tests/docker-compose.yml down -v && exit $$ret)
 	@docker compose -f tests/docker-compose.yml down -v
 	@echo "=== $(INTEGRATION) === [ test ]: running integration tests for query performance monitoring..."
 	@echo "Starting containers for performance tests..."
 	@docker compose -f tests/docker-compose-performance.yml up -d
+	# Sleep added to allow postgres with test data and extensions to start up
 	@sleep 30
 	@go test -v -tags=query_performance ./tests/postgresqlperf_test.go -timeout 600s || (ret=$$?; docker compose -f tests/docker-compose-performance.yml down -v && exit $$ret)
 	@echo "Stopping performance test containers..."

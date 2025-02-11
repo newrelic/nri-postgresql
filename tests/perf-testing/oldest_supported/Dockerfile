@@ -1,11 +1,11 @@
-FROM postgres:12
+FROM postgres:13
 
 # Dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
     git \
     wget \
-    postgresql-server-dev-12 \
+    postgresql-server-dev-13 \
     && rm -rf /var/lib/apt/lists/*
 
 # Postgres Docker Images copy contents of postgresql.conf.sample to postgresql.conf during initialization

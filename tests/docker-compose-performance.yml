@@ -1,6 +1,6 @@
 services:
 
-  postgres12:
+  postgres13:
     build:
       context: ./perf-testing/oldest_supported/
       dockerfile: Dockerfile
@@ -11,7 +11,7 @@ services:
       - POSTGRES_PASSWORD=dbpassword
       - POSTGRES_DB=demo
     volumes:
-      - postgres12:/var/lib/postgresql/data
+      - postgres13:/var/lib/postgresql/data
     ports:
       - "6432:5432"
     healthcheck:
@@ -66,5 +66,5 @@ services:
     
 volumes:
   pgdata_latest:
-  postgres12:
+  postgres13:
   pgdata_noext:
