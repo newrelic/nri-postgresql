@@ -34,8 +34,6 @@ RUN git clone https://github.com/percona/pg_stat_monitor.git \
 # Download the titanic database
 RUN wget https://raw.githubusercontent.com/neondatabase/postgres-sample-dbs/main/titanic.sql -P /docker-entrypoint-initdb.d/
 
-RUN echo ${PWD} && ls -lR
-
 # Enable the extensions and setup the titanic database
 COPY 01-init-extensions.sql /docker-entrypoint-initdb.d/01-init-extensions.sql
 COPY 02-create-database.sql /docker-entrypoint-initdb.d/02-create-database.sql
