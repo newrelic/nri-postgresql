@@ -1,0 +1,98 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": ["name", "protocol_version", "integration_version", "data"],
+    "properties": {
+      "name": {
+        "type": "string",
+        "const": "com.newrelic.postgresql"
+      },
+      "protocol_version": {
+        "type": "string"
+      },
+      "integration_version": {
+        "type": "string"
+      },
+      "data": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["entity", "metrics", "inventory", "events"],
+          "properties": {
+            "entity": {
+              "type": "object",
+              "required": ["name", "type", "id_attributes"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "const": "pg-instance"
+                },
+                "id_attributes": {
+                  "type": "array"
+                }
+              }
+            },
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "blocked_pid",
+                  "blocked_query",
+                  "blocked_query_start",
+                  "blocking_pid",
+                  "blocking_query",
+                  "blocking_query_start",
+                  "database_name",
+                  "event_type"
+                ],
+                "properties": {
+                  "blocked_pid": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "blocked_query": {
+                    "type": "string"
+                  },
+                  "blocked_query_start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "blocking_pid": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "blocking_query": {
+                    "type": "string"
+                  },
+                  "blocking_query_start": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "database_name": {
+                    "type": "string"
+                  },
+                  "event_type": {
+                    "type": "string",
+                    "const": "PostgresBlockingSessions"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "inventory": {
+              "type": "object"
+            },
+            "events": {
+              "type": "array"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "additionalProperties": false
+  }

@@ -1,0 +1,187 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "required": ["name", "protocol_version", "integration_version", "data"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "const": "com.newrelic.postgresql"
+    },
+    "protocol_version": {
+      "type": "string"
+    },
+    "integration_version": {
+      "type": "string"
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["entity", "metrics", "inventory", "events"],
+        "properties": {
+          "entity": {
+            "type": "object",
+            "required": ["name", "type", "id_attributes"],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string",
+                "const": "pg-instance"
+              },
+              "id_attributes": {
+                "type": "array"
+              }
+            }
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "database_name",
+                "event_type",
+                "level_id",
+                "node_type",
+                "plan_id",
+                "plan_rows",
+                "query_id",
+                "startup_cost",
+                "total_cost"
+              ],
+              "properties": {
+                "actual_loops": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "actual_rows": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "actual_startup_time": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "actual_total_time": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "alias": {
+                  "type": "string"
+                },
+                "async_capable": {
+                  "type": ["boolean", "integer"]
+                },
+                "database_name": {
+                  "type": "string"
+                },
+                "event_type": {
+                  "type": "string",
+                  "const": "PostgresExecutionPlanMetrics"
+                },
+                "index_name": {
+                  "type": "string"
+                },
+                "level_id": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "local_dirtied_blocks": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "local_hit_blocks": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "local_read_blocks": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "local_written_blocks": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "node_type": {
+                  "type": "string"
+                },
+                "parallel_aware": {
+                  "type": ["boolean", "integer"]
+                },
+                "plan_id": {
+                  "type": "string"
+                },
+                "plan_rows": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "plan_width": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "query_id": {
+                  "type": "string"
+                },
+                "query_text": {
+                  "type": "string"
+                },
+                "relation_name": {
+                  "type": "string"
+                },
+                "rows_removed_by_filter": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "scan_direction": {
+                  "type": "string"
+                },
+                "shared_dirtied_blocks": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "shared_hit_blocks": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "shared_read_blocks": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "shared_written_blocks": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "startup_cost": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "temp_read_blocks": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "temp_written_blocks": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "total_cost": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "inventory": {
+            "type": "object"
+          },
+          "events": {
+            "type": "array"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

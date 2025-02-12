@@ -1,0 +1,105 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": [
+        "name",
+        "protocol_version",
+        "integration_version",
+        "data"
+    ],
+    "properties": {
+        "name": {
+            "type": "string",
+            "const": "com.newrelic.postgresql"
+        },
+        "protocol_version": {
+            "type": "string"
+        },
+        "integration_version": {
+            "type": "string"
+        },
+        "data": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": [
+                    "entity",
+                    "metrics",
+                    "inventory",
+                    "events"
+                ],
+                "properties": {
+                    "entity": {
+                        "type": "object",
+                        "required": [
+                            "name",
+                            "type",
+                            "id_attributes"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "type": {
+                                "type": "string",
+                                "const": "pg-instance"
+                            },
+                            "id_attributes": {
+                                "type": "array"
+                            }
+                        }
+                    },
+                    "metrics": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "event_type",
+                                "query_id",
+                                "query_text",
+                                "database_name",
+                                "plan_id",
+                                "exec_time_ms"
+                            ],
+                             "properties": {
+                                "cpu_time_ms": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "exec_time_ms": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
+                                "database_name": {
+                                    "type": "string"
+                                },
+                                "event_type": {
+                                    "type": "string",
+                                    "const": "PostgresIndividualQueries"
+                                },
+                                "plan_id": {
+                                    "type": "string"
+                                },
+                                "query_id": {
+                                    "type": "string"
+                                },
+                                "query_text": {
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "inventory": {
+                        "type": "object"
+                    },
+                    "events": {
+                        "type": "array"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}
