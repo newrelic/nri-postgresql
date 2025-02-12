@@ -51,7 +51,7 @@ func getBlockingMetrics(conn *performancedbconnection.PGSQLConnection, cp *commo
 	rows, err := conn.Queryx(query)
 	if err != nil {
 		log.Error("Failed to execute query: %v", err)
-		return nil, err
+		return nil, commonutils.ErrUnExpectedError
 	}
 	defer rows.Close()
 	for rows.Next() {
