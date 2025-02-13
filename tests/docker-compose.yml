@@ -2,6 +2,7 @@ services:
   postgres-9-6:
     image: postgres:9.6
     restart: always
+    container_name: postgres-9-6
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
@@ -10,18 +11,14 @@ services:
   postgres-latest-supported:
     image: postgres:17.0
     restart: always
+    container_name: postgres-latest-supported
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: example
       POSTGRES_DB: demo
 
   nri-postgresql:
-    image: golang:1.23.5-bookworm
-    container_name: nri_postgresql
-    working_dir: /code
-    depends_on:
-      - postgres-9-6
-      - postgres-latest-supported
-    volumes:
-      - ../:/code
-    entrypoint: go run /code/src/main.go
+    container_name: nri-postgresql
+    build:
+      context: ../
+      dockerfile: tests/perf-testing/integration/Dockerfile
