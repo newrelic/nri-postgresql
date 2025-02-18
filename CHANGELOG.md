@@ -15,10 +15,6 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 - Added detailed Query Execution Plan analysis for Slow Running Queries
 - Added Reporting for Wait Events
 - Added Reporting for Blocking Sessions
-
-## v2.17.0 - 2025-02-03
-
-### 🚀 Enhancements
 - Add FIPS compliant packages
 
 ## v2.16.1 - 2025-01-20
