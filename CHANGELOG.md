@@ -9,7 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### enhancements
+## v2.17.0 - 2025-02-19
+
+### 🚀 Enhancements
 - Introduced Query Performance Monitoring
 - Enabled reporting for Slow Running Queries
 - Added detailed Query Execution Plan analysis for Slow Running Queries
