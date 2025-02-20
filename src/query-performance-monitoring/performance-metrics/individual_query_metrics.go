@@ -14,9 +14,6 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/validations"
 )
 
-type queryInfoMap map[string]string
-type databaseQueryInfoMap map[string]queryInfoMap
-
 func PopulateIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, slowRunningQueries []datamodels.SlowRunningQueryMetrics, pgIntegration *integration.Integration, cp *commonparameters.CommonParameters, enabledExtensions map[string]bool) []datamodels.IndividualQueryInfo {
 	isEligible, err := validations.CheckIndividualQueryMetricsFetchEligibility(enabledExtensions)
 	if err != nil {
@@ -49,7 +46,6 @@ func getIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, sl
 	}
 	var individualQueryInfoList []datamodels.IndividualQueryInfo
 	var individualQueryMetricsListInterface []interface{}
-	anonymizedQueriesByDB := processForAnonymizeQueryMap(slowRunningQueries)
 	versionSpecificIndividualQuery, err := commonutils.FetchVersionSpecificIndividualQueries(cp.Version)
 	if err != nil {
 		log.Error("Unsupported postgres version: %v", err)
@@ -69,8 +65,7 @@ func getIndividualQueryMetrics(conn *performancedbconnection.PGSQLConnection, sl
 		individualQuerySamplesList := processRows(rows)
 		for _, individualQuery := range individualQuerySamplesList {
 			individualQueryInfoList = append(individualQueryInfoList, setIndividualQueriesInfo(individualQuery))
-			anonymizedQueryText := anonymizedQueriesByDB[*individualQuery.DatabaseName][*individualQuery.QueryID]
-			individualQuery.QueryText = &anonymizedQueryText
+			individualQuery.QueryText = slowRunningMetric.QueryText
 			individualQueryMetricsListInterface = append(individualQueryMetricsListInterface, individualQuery)
 		}
 	}
@@ -110,22 +105,4 @@ func processRows(rows *sqlx.Rows) []datamodels.IndividualQueryMetrics {
 	}
 	log.Debug("Processed %d rows into individual query metrics", len(individualQueryMetricsList))
 	return individualQueryMetricsList
-}
-
-func processForAnonymizeQueryMap(slowRunningMetricList []datamodels.SlowRunningQueryMetrics) databaseQueryInfoMap {
-	anonymizeQueryMapByDB := make(databaseQueryInfoMap)
-	for _, metric := range slowRunningMetricList {
-		if metric.DatabaseName == nil || metric.QueryID == nil || metric.QueryText == nil {
-			continue
-		}
-		dbName := *metric.DatabaseName
-		queryID := *metric.QueryID
-		anonymizedQuery := *metric.QueryText
-
-		if _, exists := anonymizeQueryMapByDB[dbName]; !exists {
-			anonymizeQueryMapByDB[dbName] = make(map[string]string)
-		}
-		anonymizeQueryMapByDB[dbName][queryID] = anonymizedQuery
-	}
-	return anonymizeQueryMapByDB
 }
