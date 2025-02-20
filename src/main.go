@@ -71,7 +71,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if args.QueryMonitoringOnly && args.EnableQueryMonitoring {
+	if args.QueryMonitoringOnly {
 		queryperformancemonitoring.QueryPerformanceMain(args, pgIntegration, collectionList)
 		return
 	}
