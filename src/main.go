@@ -71,6 +71,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	if args.QueryMonitoringOnly && args.EnableQueryMonitoring {
+		queryperformancemonitoring.QueryPerformanceMain(args, pgIntegration, collectionList)
+		return
+	}
+
 	if args.HasMetrics() {
 		metrics.PopulateMetrics(connectionInfo, collectionList, instance, pgIntegration, args.Pgbouncer, args.CollectDbLockMetrics, args.CollectBloatMetrics, args.CustomMetricsQuery)
 		if args.CustomMetricsConfig != "" {
