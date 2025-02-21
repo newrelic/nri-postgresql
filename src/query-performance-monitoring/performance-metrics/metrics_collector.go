@@ -11,11 +11,11 @@ func fetchMetrics[T any](conn *performancedbconnection.PGSQLConnection, query st
 
 	log.Debug("Executing query to fetch %s metrics", logPrefix)
 	rows, err := conn.Queryx(query)
+	defer rows.Close()
 	if err != nil {
 		log.Error("Error executing query for %s, error: %v", logPrefix, err)
 		return metricsList, metricsListInterface, err
 	}
-	defer rows.Close()
 	for rows.Next() {
 		var metric T
 		if scanErr := rows.StructScan(&metric); scanErr != nil {
