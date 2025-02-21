@@ -18,7 +18,7 @@ func PopulateWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, pgI
 	var eligibleCheckErr error
 	isEligible, eligibleCheckErr = validations.CheckWaitEventMetricsFetchEligibility(enabledExtensions)
 	if eligibleCheckErr != nil {
-		log.Error("Error executing query: %v", eligibleCheckErr)
+		log.Error("Error executing query for eligibility check: %v", eligibleCheckErr)
 		return commonutils.ErrUnExpectedError
 	}
 	if !isEligible {
@@ -39,23 +39,12 @@ func PopulateWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, pgI
 		log.Error("Error ingesting wait event queries: %v", err)
 		return err
 	}
+	log.Debug("Successfully ingested wait event metrics for databases")
 	return nil
 }
 
 func getWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, cp *commonparameters.CommonParameters) ([]interface{}, error) {
-	var waitEventMetricsList []interface{}
-	var query = fmt.Sprintf(queries.WaitEvents, cp.Databases, cp.QueryMonitoringCountThreshold)
-	rows, err := conn.Queryx(query)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var waitEvent datamodels.WaitEventMetrics
-		if waitScanErr := rows.StructScan(&waitEvent); waitScanErr != nil {
-			return nil, err
-		}
-		waitEventMetricsList = append(waitEventMetricsList, waitEvent)
-	}
-	return waitEventMetricsList, nil
+	query := fmt.Sprintf(queries.WaitEvents, cp.Databases, cp.QueryMonitoringCountThreshold)
+	_, waitEventMetricsListInterface, err := fetchMetrics[datamodels.WaitEventMetrics](conn, query, "Wait Event")
+	return waitEventMetricsListInterface, err
 }
