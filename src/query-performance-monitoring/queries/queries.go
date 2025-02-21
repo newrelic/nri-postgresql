@@ -75,6 +75,8 @@ const (
 			pg_stat_statements sa ON wh.queryid = sa.queryid
 		LEFT JOIN
 			pg_database ON pg_database.oid = sa.dbid
+ 			AND sa.query NOT ILIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries as explain queries have same queryID as the original query
+		  	AND sa.query NOT ILIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries as explain queries have same queryID as the original query
 		WHERE pg_database.datname in (%s) -- List of database names
 	)
 	SELECT
