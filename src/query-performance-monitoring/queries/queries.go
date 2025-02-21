@@ -124,8 +124,8 @@ const (
 		JOIN pg_stat_statements AS blocking_statements ON blocking_activity.query_id = blocking_statements.queryid
 		WHERE NOT blocked_locks.granted
 		  AND blocked_activity.datname IN (%s) -- List of database names
-		  AND blocked_statements.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
-		  AND blocking_statements.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
+		  AND blocked_statements.query NOT ILIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
+		  AND blocking_statements.query NOT ILIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
 		ORDER BY blocked_activity.query_start ASC -- Order by the start time of the blocked query in ascending order
 		LIMIT %d; -- Limit the number of results`
 
@@ -153,8 +153,8 @@ const (
 	JOIN pg_stat_activity AS blocking_activity ON blocking_locks.pid = blocking_activity.pid
 	WHERE NOT blocked_locks.granted
 		AND blocked_activity.datname IN (%s) -- List of database names
-		AND blocked_activity.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
-		AND blocking_activity.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
+		AND blocked_activity.query NOT ILIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
+		AND blocking_activity.query NOT ILIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
 		ORDER BY blocked_activity.query_start ASC -- Order by the start time of the blocked query in ascending order
 		LIMIT %d; -- Limit the number of results`
 
