@@ -2,7 +2,7 @@
 package queries
 
 const (
-	SlowQueriesForV13AndAbove = `SELECT 'newrelic' as newrelic, -- Common value to filter with like operator in slow query metrics
+	SlowQueriesForV13AndAbove = `SELECT
 		pss.queryid AS query_id, -- Unique identifier for the query
 		LEFT(pss.query, 4095) AS query_text, -- Query text truncated to 4095 characters
 		pd.datname AS database_name, -- Name of the database
@@ -25,19 +25,12 @@ const (
 		pg_database pd ON pss.dbid = pd.oid
 	WHERE 
 		pd.datname in (%s) -- List of database names
-		AND pss.query NOT ILIKE 'EXPLAIN (FORMAT JSON)%%' -- Exclude EXPLAIN queries
-		AND pss.query NOT ILIKE 'SELECT $1 as newrelic%%' -- Exclude specific New Relic queries
-		AND pss.query NOT ILIKE 'WITH wait_history AS%%' -- Exclude specific WITH queries
-		AND pss.query NOT ILIKE 'select -- BLOATQUERY%%' -- Exclude BLOATQUERY
-		AND pss.query NOT ILIKE 'select -- INDEXQUERY%%' -- Exclude INDEXQUERY
-		AND pss.query NOT ILIKE 'SELECT -- TABLEQUERY%%' -- Exclude TABLEQUERY
-		AND pss.query NOT ILIKE 'SELECT table_schema%%' -- Exclude table_schema queries
 	ORDER BY
 		avg_elapsed_time_ms DESC -- Order by the average elapsed time in descending order
 	LIMIT %d;`
 
 	// SlowQueriesForV12 retrieves slow queries and their statistics for PostgreSQL version 12
-	SlowQueriesForV12 = `SELECT 'newrelic' as newrelic, -- Common value to filter with like operator in slow query metrics
+	SlowQueriesForV12 = `SELECT
 		pss.queryid AS query_id, -- Unique identifier for the query
 		LEFT(pss.query, 4095) AS query_text, -- Query text truncated to 4095 characters
 		pd.datname AS database_name, -- Name of the database
@@ -60,14 +53,6 @@ const (
 		pg_database pd ON pss.dbid = pd.oid
 		WHERE 
 		pd.datname in (%s) -- List of database names
-		AND pss.query NOT ILIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
-		AND pss.query NOT ILIKE 'SELECT $1 as newrelic%%' -- Exclude specific New Relic queries
-		AND pss.query NOT ILIKE 'WITH wait_history AS%%' -- Exclude specific WITH queries
-		AND pss.query NOT ILIKE 'select -- BLOATQUERY%%' -- Exclude BLOATQUERY
-		AND pss.query NOT ILIKE 'select -- INDEXQUERY%%' -- Exclude INDEXQUERY
-		AND pss.query NOT ILIKE 'SELECT -- TABLEQUERY%%' -- Exclude TABLEQUERY
-		AND pss.query NOT ILIKE 'SELECT table_schema%%' -- Exclude table_schema queries
-		AND pss.query NOT ILIKE 'SELECT D.datname%%' -- Exclude specific datname queries
 	ORDER BY
 		avg_elapsed_time_ms DESC -- Order by the average elapsed time in descending order
 	LIMIT
@@ -112,7 +97,7 @@ const (
 	LIMIT %d; -- Limit the number of results`
 
 	// BlockingQueriesForV14AndAbove retrieves information about blocking and blocked queries for PostgreSQL version 14 and above
-	BlockingQueriesForV14AndAbove = `SELECT 'newrelic' as newrelic, -- Common value to filter with like operator in slow query metrics
+	BlockingQueriesForV14AndAbove = `SELECT
 		  blocked_activity.pid AS blocked_pid, -- Process ID of the blocked query
 		  LEFT(blocked_statements.query, 4095) AS blocked_query, -- Blocked query text truncated to 4095 characters
 		  blocked_statements.queryid AS blocked_query_id, -- Unique identifier for the blocked query
@@ -145,7 +130,7 @@ const (
 		LIMIT %d; -- Limit the number of results`
 
 	// BlockingQueriesForV12AndV13 retrieves information about blocking and blocked queries for PostgreSQL versions 12 and 13
-	BlockingQueriesForV12AndV13 = `SELECT 'newrelic' as newrelic, -- Common value to filter with like operator in slow query metrics
+	BlockingQueriesForV12AndV13 = `SELECT
 		blocked_activity.pid AS blocked_pid, -- Process ID of the blocked query
 		LEFT(blocked_activity.query, 4095) AS blocked_query, -- Blocked query text truncated to 4095 characters
 		blocked_activity.query_start AS blocked_query_start, -- Start time of the blocked query
@@ -174,7 +159,7 @@ const (
 		LIMIT %d; -- Limit the number of results`
 
 	// IndividualQuerySearchV13AndAbove retrieves individual query statistics for PostgreSQL version 13 and above
-	IndividualQuerySearchV13AndAbove = `SELECT 'newrelic' as newrelic, -- Common value to filter with like operator in slow query metrics
+	IndividualQuerySearchV13AndAbove = `SELECT 
 		 LEFT(query, 4095) as query, -- Query text truncated to 4095 characters
 		 queryid, -- Unique identifier for the query
 		 datname, -- Name of the database
@@ -195,7 +180,7 @@ const (
 		LIMIT %d; -- Limit the number of results`
 
 	// IndividualQuerySearchV12 retrieves individual query statistics for PostgreSQL version 12
-	IndividualQuerySearchV12 = `SELECT 'newrelic' as newrelic, -- Common value to filter with like operator in slow query metrics
+	IndividualQuerySearchV12 = `SELECT
 		 LEFT(query, 4095) as query, -- Query text truncated to 4095 characters
 		 queryid, -- Unique identifier for the query
 		 datname, -- Name of the database
