@@ -1,4 +1,4 @@
-FROM postgres:13
+FROM postgres:17
 
 # Dependencies
 RUN apt-get update && apt-get install -y \
