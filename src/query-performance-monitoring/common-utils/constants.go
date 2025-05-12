@@ -20,3 +20,6 @@ const PostgresVersion12 = 12
 const PostgresVersion11 = 11
 const PostgresVersion13 = 13
 const PostgresVersion14 = 14
+
+const PgStatStatementExtension = "pg_stat_statements"
+const PgStatMonitorExtension = "pg_stat_monitor"

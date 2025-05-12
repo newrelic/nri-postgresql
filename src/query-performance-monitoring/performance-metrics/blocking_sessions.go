@@ -15,11 +15,7 @@ import (
 )
 
 func PopulateBlockingMetrics(conn *performancedbconnection.PGSQLConnection, pgIntegration *integration.Integration, cp *commonparameters.CommonParameters, enabledExtensions map[string]bool) {
-	isEligible, enableCheckError := validations.CheckBlockingSessionMetricsFetchEligibility(enabledExtensions, cp.Version)
-	if enableCheckError != nil {
-		log.Error("Error executing query: %v in PopulateBlockingMetrics", enableCheckError)
-		return
-	}
+	isEligible := validations.CheckBlockingSessionMetricsFetchEligibility(enabledExtensions, cp.Version)
 	if !isEligible {
 		log.Debug("Extension 'pg_stat_statements' is not enabled or unsupported version.")
 		return
@@ -42,7 +38,7 @@ func PopulateBlockingMetrics(conn *performancedbconnection.PGSQLConnection, pgIn
 
 func getBlockingMetrics(conn *performancedbconnection.PGSQLConnection, cp *commonparameters.CommonParameters) ([]interface{}, error) {
 	var blockingQueriesMetricsList []interface{}
-	versionSpecificBlockingQuery, err := commonutils.FetchVersionSpecificBlockingQueries(cp.Version)
+	versionSpecificBlockingQuery, err := commonutils.FetchVersionSpecificBlockingQuery(cp.Version, cp.IsRds)
 	if err != nil {
 		log.Error("Unsupported postgres version: %v", err)
 		return nil, err

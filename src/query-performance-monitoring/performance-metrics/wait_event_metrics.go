@@ -9,18 +9,11 @@ import (
 	commonparameters "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-parameters"
 	commonutils "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-utils"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/datamodels"
-	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/queries"
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/validations"
 )
 
 func PopulateWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, pgIntegration *integration.Integration, cp *commonparameters.CommonParameters, enabledExtensions map[string]bool) error {
-	var isEligible bool
-	var eligibleCheckErr error
-	isEligible, eligibleCheckErr = validations.CheckWaitEventMetricsFetchEligibility(enabledExtensions)
-	if eligibleCheckErr != nil {
-		log.Error("Error executing query: %v", eligibleCheckErr)
-		return commonutils.ErrUnExpectedError
-	}
+	var isEligible = validations.CheckWaitEventMetricsFetchEligibility(enabledExtensions)
 	if !isEligible {
 		log.Debug("Extension 'pg_wait_sampling' or 'pg_stat_statement' is not enabled or unsupported version.")
 		return commonutils.ErrNotEligible
@@ -44,7 +37,12 @@ func PopulateWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, pgI
 
 func getWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, cp *commonparameters.CommonParameters) ([]interface{}, error) {
 	var waitEventMetricsList []interface{}
-	var query = fmt.Sprintf(queries.WaitEvents, cp.Databases, cp.QueryMonitoringCountThreshold)
+	supportedWaitQuery, err := commonutils.FetchSupportedWaitEventsQuery(cp.IsRds)
+	if err != nil {
+		log.Error("Unsupported postgres version: %v", err)
+		return nil, err
+	}
+	var query = fmt.Sprintf(supportedWaitQuery, cp.Databases, cp.QueryMonitoringCountThreshold)
 	rows, err := conn.Queryx(query)
 	if err != nil {
 		return nil, err
@@ -55,6 +53,7 @@ func getWaitEventMetrics(conn *performancedbconnection.PGSQLConnection, cp *comm
 		if waitScanErr := rows.StructScan(&waitEvent); waitScanErr != nil {
 			return nil, err
 		}
+
 		waitEventMetricsList = append(waitEventMetricsList, waitEvent)
 	}
 	return waitEventMetricsList, nil

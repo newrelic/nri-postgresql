@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 Unreleased section should follow [Release Toolkit](https://github.com/newrelic/release-toolkit#render-markdown-and-update-markdown)
 
 ## Unreleased
+### enhancements
+- Add Query Level Monitoring support for RDS Postgres
+- Add QueryMonitoringOnly flag to collect only query level monitoring metrics
 
 ## v2.17.1 - 2025-02-19
 

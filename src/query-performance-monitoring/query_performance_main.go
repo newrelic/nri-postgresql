@@ -53,11 +53,6 @@ func populateQueryPerformanceMetrics(newConnection *performancedbconnection.PGSQ
 		return
 	}
 	start := time.Now()
-	log.Debug("Starting PopulateSlowRunningMetrics at ", start)
-	slowRunningQueries := performancemetrics.PopulateSlowRunningMetrics(newConnection, pgIntegration, cp, enabledExtensions)
-	log.Debug("PopulateSlowRunningMetrics completed in ", time.Since(start))
-
-	start = time.Now()
 	log.Debug("Starting PopulateWaitEventMetrics at ", start)
 	_ = performancemetrics.PopulateWaitEventMetrics(newConnection, pgIntegration, cp, enabledExtensions)
 	log.Debug("PopulateWaitEventMetrics completed in ", time.Since(start))
@@ -67,13 +62,36 @@ func populateQueryPerformanceMetrics(newConnection *performancedbconnection.PGSQ
 	performancemetrics.PopulateBlockingMetrics(newConnection, pgIntegration, cp, enabledExtensions)
 	log.Debug("PopulateBlockingMetrics completed in ", time.Since(start))
 
-	start = time.Now()
-	log.Debug("Starting PopulateIndividualQueryMetrics at ", start)
-	individualQueries := performancemetrics.PopulateIndividualQueryMetrics(newConnection, slowRunningQueries, pgIntegration, cp, enabledExtensions)
-	log.Debug("PopulateIndividualQueryMetrics completed in ", time.Since(start))
+	// This check ensures metrics are collected even if the pg_stat_monitor extension is not enabled, as it alters the method of retrieving metrics and execution plans from different extensions.
+	if !cp.IsRds {
+		start = time.Now()
+		log.Debug("Starting PopulateSlowRunningMetrics at ", start)
+		slowRunningQueries := performancemetrics.PopulateSlowRunningMetrics(newConnection, pgIntegration, cp, enabledExtensions)
+		log.Debug("PopulateSlowRunningMetrics completed in ", time.Since(start))
 
-	start = time.Now()
-	log.Debug("Starting PopulateExecutionPlanMetrics at ", start)
-	performancemetrics.PopulateExecutionPlanMetrics(individualQueries, pgIntegration, cp, connectionInfo)
-	log.Debug("PopulateExecutionPlanMetrics completed in ", time.Since(start))
+		start = time.Now()
+		log.Debug("Starting PopulateIndividualQueryMetrics at ", start)
+		individualQueries := performancemetrics.PopulateIndividualQueryMetrics(newConnection, slowRunningQueries, pgIntegration, cp, enabledExtensions)
+		log.Debug("PopulateIndividualQueryMetrics completed in ", time.Since(start))
+
+		start = time.Now()
+		log.Debug("Starting PopulateExecutionPlanMetrics at ", start)
+		performancemetrics.PopulateExecutionPlanMetrics(individualQueries, pgIntegration, cp, connectionInfo)
+		log.Debug("PopulateExecutionPlanMetrics completed in ", time.Since(start))
+	} else {
+		start = time.Now()
+		log.Debug("Starting PopulateSlowQueriesPgStat at ", start)
+		slowQueries := performancemetrics.PopulateSlowRunningMetricsPgStat(newConnection, pgIntegration, cp, enabledExtensions)
+		log.Debug("PopulateSlowQueriesPgStat completed in ", time.Since(start))
+
+		start = time.Now()
+		log.Debug("Starting PopulateIndividualQueryMetricsPgStat at ", start)
+		individualQueries := performancemetrics.PopulateIndividualQueryMetricsPgStat(slowQueries, pgIntegration, cp)
+		log.Debug("PopulateIndividualQueryMetricsPgStat completed in ", time.Since(start))
+
+		start = time.Now()
+		log.Debug("Starting PopulateExecutionPlanMetrics at ", start)
+		performancemetrics.PopulateExecutionPlanMetrics(individualQueries, pgIntegration, cp, connectionInfo)
+		log.Debug("PopulateExecutionPlanMetrics completed in ", time.Since(start))
+	}
 }

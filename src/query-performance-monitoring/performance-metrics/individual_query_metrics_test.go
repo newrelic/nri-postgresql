@@ -5,6 +5,8 @@ import (
 	"regexp"
 	"testing"
 
+	"github.com/newrelic/infra-integrations-sdk/v3/integration"
+
 	"github.com/newrelic/nri-postgresql/src/args"
 	"github.com/newrelic/nri-postgresql/src/connection"
 	common_parameters "github.com/newrelic/nri-postgresql/src/query-performance-monitoring/common-parameters"
@@ -44,4 +46,48 @@ func TestGetIndividualQueryMetrics(t *testing.T) {
 	assert.Len(t, individualQueryMetricsInterface, 1)
 	assert.Len(t, individualQueryMetrics, 1)
 	assert.NoError(t, mock.ExpectationsWereMet())
+}
+
+func TestPopulateIndividualQueryMetricsPgStat(t *testing.T) {
+	slowQueries := []datamodels.SlowRunningQueryMetrics{
+		{
+			QueryID:         stringPtr("query1"),
+			DatabaseName:    stringPtr("testdb"),
+			QueryText:       stringPtr("SELECT * FROM test where id = $1"),
+			IndividualQuery: stringPtr("SELECT * FROM test where id = 1"),
+		},
+		{
+			QueryID:         stringPtr("query2"),
+			DatabaseName:    stringPtr("testdb"),
+			QueryText:       stringPtr("SELECT * FROM users where id = $1"),
+			IndividualQuery: stringPtr("SELECT * FROM users where id = 1"),
+		},
+	}
+	pgIntegration, _ := integration.New("test", "1.0.0")
+	args := args.ArgumentList{QueryMonitoringCountThreshold: 10}
+	version := uint64(13)
+	databaseName := "testdb"
+	cp := common_parameters.SetCommonParameters(args, version, databaseName)
+	result := PopulateIndividualQueryMetricsPgStat(slowQueries, pgIntegration, cp)
+	assert.NotEmpty(t, pgIntegration.Entities)
+	assert.Len(t, result, 2)
+	assert.Equal(t, "query1", *result[0].QueryID)
+	assert.Equal(t, "testdb", *result[0].DatabaseName)
+	assert.Equal(t, "SELECT * FROM test where id = $1", *result[0].QueryText)
+	assert.Equal(t, "SELECT * FROM test where id = 1", *result[0].RealQueryText)
+}
+
+func TestPopulateIndividualQueryMetricsPgStatEmpty(t *testing.T) {
+	pgIntegration, _ := integration.New("test", "1.0.0")
+	args := args.ArgumentList{QueryMonitoringCountThreshold: 10}
+	version := uint64(13)
+	databaseName := "testdb"
+	cp := common_parameters.SetCommonParameters(args, version, databaseName)
+	result := PopulateIndividualQueryMetricsPgStat(nil, pgIntegration, cp)
+	assert.NotEmpty(t, pgIntegration.Entities)
+	assert.Len(t, result, 0)
+}
+
+func stringPtr(s string) *string {
+	return &s
 }

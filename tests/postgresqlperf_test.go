@@ -13,6 +13,7 @@ import (
 
 	"github.com/newrelic/nri-postgresql/tests/simulation"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 var (
@@ -37,6 +38,15 @@ var (
 	psw        = flag.String("psw", defaultPass, "Postgresql user password")
 	port       = flag.Int("port", defaultPort, "Postgresql port")
 	database   = flag.String("database", defaultDB, "Postgresql database")
+
+	allSampleTypes = []string {
+		"PostgresqlInstanceSample",
+		"PostgresSlowQueries",
+		"PostgresWaitEvents",
+		"PostgresBlockingSessions",
+		"PostgresIndividualQueries",
+		"PostgresExecutionPlanMetrics",
+	}
 )
 
 func TestMain(m *testing.M) {
@@ -47,27 +57,20 @@ func TestMain(m *testing.M) {
 
 func TestIntegrationWithDatabaseLoadPerfEnabled(t *testing.T) {
 	tests := []struct {
-		name          string
-		expectedOrder []string
-		containers    []string
-		args          []string
+		name                string
+		expectedSampleTypes []string
+		containers          []string
+		args                []string
 	}{
 		{
-			name: "Performance metrics collection test",
-			expectedOrder: []string{
-				"PostgresqlInstanceSample",
-				"PostgresSlowQueries",
-				"PostgresWaitEvents",
-				"PostgresBlockingSessions",
-				"PostgresIndividualQueries",
-				"PostgresExecutionPlanMetrics",
-			},
-			containers: perfContainers,
-			args:       []string{`-collection_list=all`, `-enable_query_monitoring=true`},
+			name:                "Performance metrics collection test",
+			expectedSampleTypes: allSampleTypes,
+			containers:          perfContainers,
+			args:                []string{`-collection_list=all`, `-enable_query_monitoring=true`},
 		},
 		{
 			name: "Performance metrics collection test without collection list",
-			expectedOrder: []string{
+			expectedSampleTypes: []string{
 				"PostgresqlInstanceSample",
 			},
 			containers: perfContainers,
@@ -75,7 +78,7 @@ func TestIntegrationWithDatabaseLoadPerfEnabled(t *testing.T) {
 		},
 		{
 			name: "Performance metrics collection test without query monitoring enabled",
-			expectedOrder: []string{
+			expectedSampleTypes: []string{
 				"PostgresqlInstanceSample",
 			},
 			containers: perfContainers,
@@ -101,35 +104,23 @@ func TestIntegrationWithDatabaseLoadPerfEnabled(t *testing.T) {
 					assert.NoError(t, err, "Running Integration Failed")
 
 					samples := strings.Split(stdout, "\n")
-					count := 0
+					foundSampleTypes := make(map[string]bool)
 
-					for idx, sample := range samples {
+					for _, sample := range samples {
 						sample = strings.TrimSpace(sample)
 						if sample == "" {
 							continue
 						}
 
-						// Validate JSON
-						var j map[string]interface{}
-						err = json.Unmarshal([]byte(sample), &j)
-						assert.NoError(t, err, "Sample %d - Integration Output Is An Invalid JSONs", idx)
+						sampleType := getSampleType(sample, allSampleTypes)
+						require.NotEmpty(t, sampleType, "No sample type found in JSON output: %s", sample)
+						require.Contains(t, tt.expectedSampleTypes, sampleType, "Found unexpected sample type %q", sampleType)
+						foundSampleTypes[sampleType] = true
 
-						// Validate sample type
-						t.Run(fmt.Sprintf("Validating JSON Schema For %s", tt.expectedOrder[count]), func(t *testing.T) {
-							sampleType := tt.expectedOrder[count]
-							if !strings.Contains(sample, sampleType) {
-								t.Errorf("Integration output does not contain: %s", tt.expectedOrder[count])
-							}
-
-							// Validate against schema
-							schemaFileName := simulation.GetSchemaFileName(sampleType)
-							err = simulation.ValidateJSONSchema(schemaFileName, sample)
-							assert.NoError(t, err, "Sample %d (%s) failed schema validation", idx, sampleType)
-						})
-
-						count++
+						validateSample(t, sample, sampleType)
 					}
-
+					samplesFound := getFoundSampleTypes(foundSampleTypes)
+					require.ElementsMatch(t, tt.expectedSampleTypes, samplesFound, "Not all expected sample types where found expected %v, found %v", tt.expectedSampleTypes, samplesFound)
 					// Wait for all simulations to complete
 					<-done
 				})
@@ -182,4 +173,38 @@ func TestIntegrationUnsupportedDatabase(t *testing.T) {
 			}
 		})
 	}
+}
+
+func getSampleType(sample string, sampleTypes []string) string {
+	for _, sType := range sampleTypes {
+		if strings.Contains(sample, sType) {
+			return sType
+		}
+	}
+	return ""
+}
+
+func validateSample(t *testing.T, sample string, sampleType string) {
+	t.Helper()
+	// Validate JSON format
+	var j map[string]interface{}
+	err := json.Unmarshal([]byte(sample), &j)
+	require.NoError(t, err, "Got an invalid JSON as output: %s", sample)
+
+	// Validate schema
+	t.Run(fmt.Sprintf("Validating JSON schema for sample: %s", sampleType), func(t *testing.T) {
+		schemaFile := simulation.GetSchemaFileName(sampleType)
+		require.NotEmpty(t, schemaFile, "Schema file not found for sample type: %s", sampleType)
+
+		err = simulation.ValidateJSONSchema(schemaFile, sample)
+		assert.NoError(t, err, "Sample failed schema validation for type: %s", sampleType)
+	})
+}
+
+func getFoundSampleTypes(foundSampleTypes map[string]bool) []string {
+	foundSampleTypesKeys := make([]string, 0)
+	for key, _ := range foundSampleTypes {
+		foundSampleTypesKeys = append(foundSampleTypesKeys, key)
+	}
+	return foundSampleTypesKeys
 }
