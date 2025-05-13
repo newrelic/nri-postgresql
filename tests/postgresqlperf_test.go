@@ -39,7 +39,7 @@ var (
 	port       = flag.Int("port", defaultPort, "Postgresql port")
 	database   = flag.String("database", defaultDB, "Postgresql database")
 
-	allSampleTypes = []string {
+	allSampleTypes = []string{
 		"PostgresqlInstanceSample",
 		"PostgresSlowQueries",
 		"PostgresWaitEvents",

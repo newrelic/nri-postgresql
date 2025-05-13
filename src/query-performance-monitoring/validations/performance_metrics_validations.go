@@ -30,7 +30,7 @@ func CheckSlowQueryMetricsFetchEligibility(enabledExtensions map[string]bool) bo
 }
 
 func CheckWaitEventMetricsFetchEligibility(enabledExtensions map[string]bool) bool {
-	return enabledExtensions[commonutils.PgStatStatementExtension]
+	return enabledExtensions[commonutils.PgStatStatementExtension] && enabledExtensions[commonutils.PgWaitSamplingExtension]
 }
 
 func CheckBlockingSessionMetricsFetchEligibility(enabledExtensions map[string]bool, version uint64) bool {

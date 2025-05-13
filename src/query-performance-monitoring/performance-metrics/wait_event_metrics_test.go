@@ -1,7 +1,6 @@
 package performancemetrics
 
 import (
-	"database/sql/driver"
 	"fmt"
 	"regexp"
 	"testing"
@@ -19,40 +18,37 @@ func TestGetWaitEventMetrics(t *testing.T) {
 	conn, mock := connection.CreateMockSQL(t)
 	args := args.ArgumentList{QueryMonitoringCountThreshold: 10}
 	databaseName := "testdb"
-	version := uint64(14)
-	cp := common_parameters.SetCommonParameters(args, version, databaseName)
-	expectedQuery := queries.WaitEvents
-	query := fmt.Sprintf(expectedQuery, databaseName, args.QueryMonitoringCountThreshold)
-	rowData := []driver.Value{
-		"Locks:Lock", "Locks", 500.0, "2023-01-01T00:00:00Z", "queryid2", "SELECT 2", "testdb",
-	}
-	expectedRows := [][]driver.Value{
-		rowData, rowData,
-	}
-	mockRows := sqlmock.NewRows([]string{
+	cp := common_parameters.SetCommonParameters(args, uint64(14), databaseName)
+
+	var query = fmt.Sprintf(queries.WaitEvents, databaseName, args.QueryMonitoringCountThreshold)
+	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(sqlmock.NewRows([]string{
 		"wait_event_name", "wait_category", "total_wait_time_ms", "collection_timestamp", "query_id", "query_text", "database_name",
-	}).AddRow(rowData...).AddRow(rowData...)
-	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(mockRows)
-	waitEventMetricsList, err := getWaitEventMetrics(conn, cp)
-	compareMockRowsWithWaitMetrics(t, expectedRows, waitEventMetricsList)
+	}).AddRow(
+		"Locks:Lock", "Locks", 1000.0, "2023-01-01T00:00:00Z", "queryid1", "SELECT 1", "testdb",
+	))
+	waitEventsList, err := getWaitEventMetrics(conn, cp)
+
 	assert.NoError(t, err)
-	assert.Len(t, waitEventMetricsList, 2)
+	assert.Len(t, waitEventsList, 1)
 	assert.NoError(t, mock.ExpectationsWereMet())
 }
 
-func compareMockRowsWithWaitMetrics(t *testing.T, expectedRows [][]driver.Value, waitEventMetricsList []any) {
-	assert.Equal(t, 2, len(waitEventMetricsList))
-	for index := range waitEventMetricsList {
-		waitEvents := waitEventMetricsList[index].(datamodels.WaitEventMetrics)
-		assert.Equal(t, expectedRows[index][0], *waitEvents.WaitEventName)
-		assert.Equal(t, expectedRows[index][1], *waitEvents.WaitCategory)
-		assert.Equal(t, expectedRows[index][2], *waitEvents.TotalWaitTimeMs)
-		assert.Equal(t, expectedRows[index][3], *waitEvents.CollectionTimestamp)
-		assert.Equal(t, expectedRows[index][4], *waitEvents.QueryID)
-		assert.Equal(t, expectedRows[index][5], *waitEvents.QueryText)
-		assert.Equal(t, expectedRows[index][6], *waitEvents.DatabaseName)
-	}
+func TestGetWaitEventEmptyMetrics(t *testing.T) {
+	conn, mock := connection.CreateMockSQL(t)
+	args := args.ArgumentList{QueryMonitoringCountThreshold: 10}
+	databaseName := "testdb"
+	cp := common_parameters.SetCommonParameters(args, uint64(14), databaseName)
+
+	var query = fmt.Sprintf(queries.WaitEvents, databaseName, args.QueryMonitoringCountThreshold)
+	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(sqlmock.NewRows([]string{
+		"wait_event_name", "wait_category", "total_wait_time_ms", "collection_timestamp", "query_id", "query_text", "database_name",
+	}))
+	waitEventsList, err := getWaitEventMetrics(conn, cp)
+	assert.NoError(t, err)
+	assert.Len(t, waitEventsList, 0)
+	assert.NoError(t, mock.ExpectationsWereMet())
 }
+
 func TestGetWaitEventMetricsFromPgStatActivity(t *testing.T) {
 	conn, mock := connection.CreateMockSQL(t)
 	args := args.ArgumentList{QueryMonitoringCountThreshold: 10, Hostname: "testhost.rds.amazonaws.com"}
@@ -65,26 +61,71 @@ func TestGetWaitEventMetricsFromPgStatActivity(t *testing.T) {
 	}).AddRow(
 		"Locks:Lock", "Locks", 500.0, "2023-01-01T00:00:00Z", "queryid2", "SELECT 2", "testdb",
 	))
-	waitEventsList, err := getWaitEventMetrics(conn, cp)
+	waitEventsList, err := getWaitEventMetricsPgStat(conn, cp)
 	assert.NoError(t, err)
 	assert.Len(t, waitEventsList, 1)
 
 	// Ensure all expectations were met
 	assert.NoError(t, mock.ExpectationsWereMet())
 }
-func TestGetWaitEventEmptyMetrics(t *testing.T) {
+
+func TestGetWaitEventMetricsPgStat_Success(t *testing.T) {
 	conn, mock := connection.CreateMockSQL(t)
-	args := args.ArgumentList{QueryMonitoringCountThreshold: 10, Hostname: "testhost"}
-	databaseName := "testdb"
-	version := uint64(14)
-	cp := common_parameters.SetCommonParameters(args, version, databaseName)
-	expectedQuery := queries.WaitEvents
-	query := fmt.Sprintf(expectedQuery, databaseName, args.QueryMonitoringCountThreshold)
-	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(sqlmock.NewRows([]string{
+	cp := &common_parameters.CommonParameters{
+		Databases:                     "testdb",
+		QueryMonitoringCountThreshold: 10,
+	}
+	query := fmt.Sprintf(queries.WaitEventsFromPgStatActivity, cp.Databases, cp.QueryMonitoringCountThreshold)
+	mockRows := sqlmock.NewRows([]string{
 		"wait_event_name", "wait_category", "total_wait_time_ms", "collection_timestamp", "query_id", "query_text", "database_name",
-	}))
-	waitEventsList, err := getWaitEventMetrics(conn, cp)
+	}).AddRow(
+		"Locks:Lock", "Locks", 500.0, "2023-01-01T00:00:00Z", "queryid1", "SELECT 1", "testdb",
+	)
+	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(mockRows)
+
+	waitEventMetrics, err := getWaitEventMetricsPgStat(conn, cp)
+
 	assert.NoError(t, err)
-	assert.Len(t, waitEventsList, 0)
+	assert.Len(t, waitEventMetrics, 1)
+	assert.Equal(t, "Locks:Lock", *waitEventMetrics[0].WaitEventName)
 	assert.NoError(t, mock.ExpectationsWereMet())
+}
+
+func TestGetFilteredWaitEvents(t *testing.T) {
+	waitEventMetrics := []datamodels.WaitEventMetrics{
+		{
+			QueryText: stringPointer("SELECT 1"),
+		},
+	}
+	slowQueryMetrics := []datamodels.SlowRunningQueryMetrics{
+		{
+			QueryText: stringPointer("SELECT ?"),
+			QueryID:   stringPointer("queryid1"),
+		},
+	}
+
+	filteredMetrics := getFilteredWaitEvents(waitEventMetrics, slowQueryMetrics)
+
+	assert.Len(t, filteredMetrics, 1)
+	filteredMetric := filteredMetrics[0].(datamodels.WaitEventMetrics)
+	assert.Equal(t, "SELECT ?", *filteredMetric.QueryText)
+	assert.Equal(t, "queryid1", *filteredMetric.QueryID)
+}
+
+func TestGetFilteredWaitEvents_NoMatch(t *testing.T) {
+	waitEventMetrics := []datamodels.WaitEventMetrics{
+		{
+			QueryText: stringPointer("SELECT 2"),
+		},
+	}
+	slowQueryMetrics := []datamodels.SlowRunningQueryMetrics{
+		{
+			QueryText: stringPointer("SELECT 1 where a='b'"),
+			QueryID:   stringPointer("queryid1"),
+		},
+	}
+
+	filteredMetrics := getFilteredWaitEvents(waitEventMetrics, slowQueryMetrics)
+
+	assert.Len(t, filteredMetrics, 0)
 }

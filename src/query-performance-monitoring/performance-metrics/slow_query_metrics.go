@@ -98,9 +98,9 @@ func getFilteredIndividualAndSlowMetrics(individualQueries []string, slowQueryMe
 		normalizedSlowQueryText := commonutils.AnonymizeAndNormalize(*slowQueryMetric.QueryText)
 		if _, exists := individualQueryMap[normalizedSlowQueryText]; exists {
 			individualQuerySample := individualQueryMap[normalizedSlowQueryText]
-			slowQueryMetric.QueryText = &individualQuerySample
-			slowQueryMetrics = append(slowQueryMetrics, slowQueryMetric)
+			slowQueryMetric.IndividualQuery = &individualQuerySample
 			filteredSlowQueryMetricsInterface = append(filteredSlowQueryMetricsInterface, slowQueryMetric)
+			filteredSlowQueryMetrics = append(filteredSlowQueryMetrics, slowQueryMetric)
 		}
 	}
 	return filteredSlowQueryMetrics, filteredSlowQueryMetricsInterface

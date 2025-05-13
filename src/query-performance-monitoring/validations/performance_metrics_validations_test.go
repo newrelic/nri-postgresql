@@ -61,50 +61,24 @@ func TestIndividualQueryMetricsFetchEligibilitySupportedVersionFail(t *testing.T
 }
 
 func TestCheckWaitEventMetricsFetchEligibility(t *testing.T) {
+	validationQuery := "SELECT extname FROM pg_extension"
 	testCases := []struct {
-		name              string
-		enabledExtensions map[string]bool
-		expected          bool
+		waitExt  string
+		statExt  string
+		expected bool
 	}{
-		{
-			name: "Both pg_wait_sampling and pg_stat_statements enabled",
-			enabledExtensions: map[string]bool{
-				"pg_wait_sampling":   true,
-				"pg_stat_statements": true,
-			},
-			expected: true,
-		},
-		{
-			name: "Only pg_stat_statements enabled",
-			enabledExtensions: map[string]bool{
-				"pg_wait_sampling":   false,
-				"pg_stat_statements": true,
-			},
-			expected: true,
-		},
-		{
-			name: "Neither pg_wait_sampling nor pg_stat_statements enabled",
-			enabledExtensions: map[string]bool{
-				"pg_wait_sampling":   false,
-				"pg_stat_statements": false,
-			},
-			expected: false,
-		},
-		{
-			name: "Only pg_wait_sampling enabled",
-			enabledExtensions: map[string]bool{
-				"pg_wait_sampling":   true,
-				"pg_stat_statements": false,
-			},
-			expected: false,
-		},
+		{"pg_wait_sampling", "pg_stat_statements", true}, // Success
+		{"pg_wait_sampling", "", false},                  // Fail V1
+		{"", "pg_stat_statements", false},                // Fail V2
 	}
 
+	conn, mock := connection.CreateMockSQL(t)
 	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			result := CheckWaitEventMetricsFetchEligibility(tc.enabledExtensions)
-			assert.Equal(t, tc.expected, result)
-		})
+		mock.ExpectQuery(regexp.QuoteMeta(validationQuery)).WillReturnRows(sqlmock.NewRows([]string{"extname"}).AddRow(tc.waitExt).AddRow(tc.statExt))
+		enabledExtensions, _ := FetchAllExtensions(conn)
+		isExtensionEnabledTest := CheckWaitEventMetricsFetchEligibility(enabledExtensions)
+		assert.Equal(t, isExtensionEnabledTest, tc.expected)
+		assert.NoError(t, mock.ExpectationsWereMet())
 	}
 }
 

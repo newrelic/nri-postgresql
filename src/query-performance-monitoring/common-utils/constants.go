@@ -23,3 +23,4 @@ const PostgresVersion14 = 14
 
 const PgStatStatementExtension = "pg_stat_statements"
 const PgStatMonitorExtension = "pg_stat_monitor"
+const PgWaitSamplingExtension = "pg_wait_sampling"

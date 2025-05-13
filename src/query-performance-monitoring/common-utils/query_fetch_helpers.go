@@ -15,13 +15,11 @@ func FetchVersionSpecificSlowQuery(version uint64) (string, error) {
 	}
 }
 
-func FetchVersionSpecificBlockingQuery(version uint64, isRds bool) (string, error) {
+func FetchVersionSpecificBlockingQuery(version uint64) (string, error) {
 	switch {
 	case version == PostgresVersion12, version == PostgresVersion13:
 		return queries.BlockingQueriesForV12AndV13, nil
-	case version >= PostgresVersion14 && isRds:
-		return queries.RDSPostgresBlockingQueryForV14AndAbove, nil
-	case version >= PostgresVersion14 && !isRds:
+	case version >= PostgresVersion14:
 		return queries.BlockingQueriesForV14AndAbove, nil
 	default:
 		return "", ErrUnsupportedVersion
@@ -36,13 +34,5 @@ func FetchVersionSpecificIndividualQueries(version uint64) (string, error) {
 		return queries.IndividualQuerySearchV13AndAbove, nil
 	default:
 		return "", ErrUnsupportedVersion
-	}
-}
-
-func FetchSupportedWaitEventsQuery(isRDS bool) (string, error) {
-	if isRDS {
-		return queries.WaitEventsFromPgStatActivity, nil
-	} else {
-		return queries.WaitEvents, nil
 	}
 }

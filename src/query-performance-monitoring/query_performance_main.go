@@ -52,18 +52,18 @@ func populateQueryPerformanceMetrics(newConnection *performancedbconnection.PGSQ
 		log.Error("Error fetching extensions: ", err)
 		return
 	}
-	start := time.Now()
-	log.Debug("Starting PopulateWaitEventMetrics at ", start)
-	_ = performancemetrics.PopulateWaitEventMetrics(newConnection, pgIntegration, cp, enabledExtensions)
-	log.Debug("PopulateWaitEventMetrics completed in ", time.Since(start))
 
-	start = time.Now()
-	log.Debug("Starting PopulateBlockingMetrics at ", start)
-	performancemetrics.PopulateBlockingMetrics(newConnection, pgIntegration, cp, enabledExtensions)
-	log.Debug("PopulateBlockingMetrics completed in ", time.Since(start))
-
-	// This check ensures metrics are collected even if the pg_stat_monitor extension is not enabled, as it alters the method of retrieving metrics and execution plans from different extensions.
 	if !cp.IsRds {
+		start := time.Now()
+		log.Debug("Starting PopulateWaitEventMetrics at ", start)
+		_ = performancemetrics.PopulateWaitEventMetrics(newConnection, pgIntegration, cp, enabledExtensions)
+		log.Debug("PopulateWaitEventMetrics completed in ", time.Since(start))
+
+		start = time.Now()
+		log.Debug("Starting PopulateBlockingMetrics at ", start)
+		performancemetrics.PopulateBlockingMetrics(newConnection, pgIntegration, cp, enabledExtensions)
+		log.Debug("PopulateBlockingMetrics completed in ", time.Since(start))
+
 		start = time.Now()
 		log.Debug("Starting PopulateSlowRunningMetrics at ", start)
 		slowRunningQueries := performancemetrics.PopulateSlowRunningMetrics(newConnection, pgIntegration, cp, enabledExtensions)
@@ -79,7 +79,7 @@ func populateQueryPerformanceMetrics(newConnection *performancedbconnection.PGSQ
 		performancemetrics.PopulateExecutionPlanMetrics(individualQueries, pgIntegration, cp, connectionInfo)
 		log.Debug("PopulateExecutionPlanMetrics completed in ", time.Since(start))
 	} else {
-		start = time.Now()
+		start := time.Now()
 		log.Debug("Starting PopulateSlowQueriesPgStat at ", start)
 		slowQueries := performancemetrics.PopulateSlowRunningMetricsPgStat(newConnection, pgIntegration, cp, enabledExtensions)
 		log.Debug("PopulateSlowQueriesPgStat completed in ", time.Since(start))
@@ -93,5 +93,15 @@ func populateQueryPerformanceMetrics(newConnection *performancedbconnection.PGSQ
 		log.Debug("Starting PopulateExecutionPlanMetrics at ", start)
 		performancemetrics.PopulateExecutionPlanMetrics(individualQueries, pgIntegration, cp, connectionInfo)
 		log.Debug("PopulateExecutionPlanMetrics completed in ", time.Since(start))
+
+		start = time.Now()
+		log.Debug("Starting PopulateWaitEventMetrics at ", start)
+		_ = performancemetrics.PopulateWaitEventMetricsPgStat(newConnection, pgIntegration, cp, enabledExtensions, slowQueries)
+		log.Debug("PopulateWaitEventMetrics completed in ", time.Since(start))
+
+		start = time.Now()
+		log.Debug("Starting PopulateBlockingMetrics at ", start)
+		performancemetrics.PopulateBlockingMetricsPgStat(newConnection, pgIntegration, cp, enabledExtensions, slowQueries)
+		log.Debug("PopulateBlockingMetrics completed in ", time.Since(start))
 	}
 }
