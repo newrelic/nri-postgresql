@@ -47,6 +47,13 @@ var (
 		"PostgresIndividualQueries",
 		"PostgresExecutionPlanMetrics",
 	}
+	newSampleTypes = []string{
+		"PostgresSlowQueries",
+		"PostgresWaitEvents",
+		"PostgresBlockingSessions",
+		"PostgresIndividualQueries",
+		"PostgresExecutionPlanMetrics",
+	}
 )
 
 func TestMain(m *testing.M) {
@@ -83,6 +90,12 @@ func TestIntegrationWithDatabaseLoadPerfEnabled(t *testing.T) {
 			},
 			containers: perfContainers,
 			args:       []string{`-collection_list=all`},
+		},
+		{
+			name: "Performance metrics collection test with query moniotoring only flag enabled",
+			expectedSampleTypes: newSampleTypes,
+			containers: perfContainers,
+			args:       []string{`-collection_list=all`, `-query_monitoring_only=true`},
 		},
 	}
 
