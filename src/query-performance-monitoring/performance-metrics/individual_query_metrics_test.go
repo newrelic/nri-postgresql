@@ -48,6 +48,7 @@ func TestGetIndividualQueryMetrics(t *testing.T) {
 	assert.NoError(t, mock.ExpectationsWereMet())
 }
 
+// TestPopulateIndividualQueryMetricsPgStat tests the PopulateIndividualQueryMetricsPgStat function which retrievs the queries from the slow query metrics as the extension pg_stat_monitor is not available for RDS/Aurora
 func TestPopulateIndividualQueryMetricsPgStat(t *testing.T) {
 	slowQueries := []datamodels.SlowRunningQueryMetrics{
 		{

@@ -61,6 +61,7 @@ func PopulateSlowRunningMetrics(conn *performancedbconnection.PGSQLConnection, p
 	return slowQueryMetricsList
 }
 
+// PopulateSlowRunningMetricsPgStat collects and ingests slow running query metrics. // Returns nil if an error occurs or if the required extension is not enabled.
 func PopulateSlowRunningMetricsPgStat(conn *performancedbconnection.PGSQLConnection, pgIntegration *integration.Integration, cp *commonparameters.CommonParameters, enabledExtensions map[string]bool) []datamodels.SlowRunningQueryMetrics {
 	isEligible := validations.CheckSlowQueryMetricsFetchEligibility(enabledExtensions)
 	if !isEligible {

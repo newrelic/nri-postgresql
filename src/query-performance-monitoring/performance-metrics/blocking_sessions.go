@@ -68,7 +68,6 @@ func getBlockingMetrics(conn *performancedbconnection.PGSQLConnection, cp *commo
 }
 
 func PopulateBlockingMetricsPgStat(conn *performancedbconnection.PGSQLConnection, pgIntegration *integration.Integration, cp *commonparameters.CommonParameters, enabledExtensions map[string]bool, slowQueryMetrics []datamodels.SlowRunningQueryMetrics) {
-	log.Info("PopulateBlockingMetricsPgStat:{}", len(slowQueryMetrics))
 	isEligible := validations.CheckBlockingSessionMetricsFetchEligibility(enabledExtensions, cp.Version)
 	if !isEligible {
 		log.Debug("Extension 'pg_stat_statements' is not enabled or unsupported version.")

@@ -38,6 +38,7 @@ func SetCommonParameters(args args.ArgumentList, version uint64, databases strin
 	}
 }
 
+// A reliable way to identify hostnames associated with Amazon Relational Database Service (RDS) instances. Amazon uses this domain suffix for RDS endpoints across various database engines.
 func isRdsHost(hostname string) bool {
 	return strings.Contains(hostname, ".rds.amazonaws.com")
 }

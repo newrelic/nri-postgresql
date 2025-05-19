@@ -79,6 +79,14 @@ func populateQueryPerformanceMetrics(newConnection *performancedbconnection.PGSQ
 		performancemetrics.PopulateExecutionPlanMetrics(individualQueries, pgIntegration, cp, connectionInfo)
 		log.Debug("PopulateExecutionPlanMetrics completed in ", time.Since(start))
 	} else {
+		/*
+			Currently, there isn't an extension like pg_stat_monitor for RDS/Aurora that retrieves individual queries along with their CPU
+			and execution times. To address this, we utilize pg_stat_activity to capture active or last executed queries in a database connection.
+			We then correlate these queries with metrics related to slow performance, waiting sessions, and blocking sessions, as well as execution plans,
+			in order to establish connections between these metrics. Although we cannot join pg_stat_statements with all other metrics using a query ID
+			for each metric collection query, we can join pg_stat_statements through the query text. This process involves anonymizing and normalizing
+			both individual and slow queries for accurate correlation.
+		*/
 		start := time.Now()
 		log.Debug("Starting PopulateSlowQueriesPgStat at ", start)
 		slowQueries := performancemetrics.PopulateSlowRunningMetricsPgStat(newConnection, pgIntegration, cp, enabledExtensions)

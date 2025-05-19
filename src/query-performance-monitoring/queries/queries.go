@@ -111,7 +111,7 @@ const (
 	ORDER BY total_wait_time_ms DESC -- Order by the total wait time in descending order
 	LIMIT %d; -- Limit the number of results`
 
-	// WaitEvents retrieves wait events and their statistics from pg_stat_activity
+	// WaitEvents retrieves wait events and their statistics from pg_stat_activity and doesnt involve joining pg_stat_staments as query id is missing in pg_stat_activity
 	WaitEventsFromPgStatActivity = `WITH wait_history AS (
         SELECT
             sa.pid, -- Process ID
@@ -176,6 +176,7 @@ const (
 		ORDER BY blocked_activity.query_start ASC -- Order by the start time of the blocked query in ascending order
 		LIMIT %d; -- Limit the number of results`
 
+	// RDSPostgresBlockingQuery retrieves blocking session events and their statistics from pg_stat_activity and doesnt involve joining pg_stat_staments as query id is missing in pg_stat_activity
 	RDSPostgresBlockingQuery = `SELECT 'newrelic' as newrelic, -- Common value to filter with like operator in slow query metrics
 		  blocked_activity.pid AS blocked_pid, -- Process ID of the blocked query
 		  blocked_activity.query AS blocked_query, -- Blocked query text truncated to 4095 characters
@@ -254,6 +255,7 @@ const (
 		 exec_time_ms DESC -- Order by average execution time in descending order
 		LIMIT %d; -- Limit the number of results`
 
+	// IndividualQueryFromPgStat retrieves currently running or last executed query of  DB connections
 	IndividualQueryFromPgStat = "select query  from pg_stat_activity where query is not null and query !='';"
 
 	// IndividualQuerySearchV12 retrieves individual query statistics for PostgreSQL version 12
