@@ -69,7 +69,7 @@ func PopulateSlowRunningMetricsPgStat(conn *performancedbconnection.PGSQLConnect
 	}
 	individualQueries := getIndividualQueriesFromPgStat(conn)
 	slowQueryMetricsList, _, err := getSlowRunningMetrics(conn, cp)
-	filteredSlowQueryMetrics, filteredSlowQueryMetricsInterface := getFilteredIndividualAndSlowMetrics(individualQueries, slowQueryMetricsList)
+	filteredSlowQueryMetrics, filteredSlowQueryMetricsInterface := getFilteredSlowMetrics(individualQueries, slowQueryMetricsList)
 	if err != nil {
 		log.Error("Error fetching slow-running queries: %v", err)
 		return nil
@@ -87,7 +87,7 @@ func PopulateSlowRunningMetricsPgStat(conn *performancedbconnection.PGSQLConnect
 	return filteredSlowQueryMetrics
 }
 
-func getFilteredIndividualAndSlowMetrics(individualQueries []string, slowQueryMetrics []datamodels.SlowRunningQueryMetrics) ([]datamodels.SlowRunningQueryMetrics, []interface{}) {
+func getFilteredSlowMetrics(individualQueries []string, slowQueryMetrics []datamodels.SlowRunningQueryMetrics) ([]datamodels.SlowRunningQueryMetrics, []interface{}) {
 	filteredSlowQueryMetrics := make([]datamodels.SlowRunningQueryMetrics, 0)
 	filteredSlowQueryMetricsInterface := make([]interface{}, 0)
 	individualQueryMap := make(map[string]string)

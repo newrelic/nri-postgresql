@@ -82,7 +82,7 @@ func TestGetFilteredIndividualAndSlowMetrics_MatchingQueries(t *testing.T) {
 		{QueryText: stringPointer("SELECT * FROM products")},
 	}
 
-	filteredMetrics, _ := getFilteredIndividualAndSlowMetrics(individualQueries, slowQueryMetrics)
+	filteredMetrics, _ := getFilteredSlowMetrics(individualQueries, slowQueryMetrics)
 
 	assert.Len(t, filteredMetrics, 1)
 	assert.Equal(t, "SELECT * FROM users", *filteredMetrics[0].QueryText)
@@ -95,7 +95,7 @@ func TestGetFilteredIndividualAndSlowMetrics_NoMatchingQueries(t *testing.T) {
 		{QueryText: stringPointer("SELECT * FROM products")},
 	}
 
-	filteredMetrics, filteredMetricsInterface := getFilteredIndividualAndSlowMetrics(individualQueries, slowQueryMetrics)
+	filteredMetrics, filteredMetricsInterface := getFilteredSlowMetrics(individualQueries, slowQueryMetrics)
 
 	assert.Len(t, filteredMetrics, 0)
 	assert.Len(t, filteredMetricsInterface, 0)
@@ -105,7 +105,7 @@ func TestGetFilteredIndividualAndSlowMetrics_EmptyInputs(t *testing.T) {
 	individualQueries := []string{}
 	slowQueryMetrics := []datamodels.SlowRunningQueryMetrics{}
 
-	filteredMetrics, filteredMetricsInterface := getFilteredIndividualAndSlowMetrics(individualQueries, slowQueryMetrics)
+	filteredMetrics, filteredMetricsInterface := getFilteredSlowMetrics(individualQueries, slowQueryMetrics)
 
 	assert.Len(t, filteredMetrics, 0)
 	assert.Len(t, filteredMetricsInterface, 0)
@@ -117,7 +117,7 @@ func TestGetFilteredIndividualAndSlowMetrics_DuplicateQueries(t *testing.T) {
 		{QueryText: stringPointer("SELECT * FROM users")},
 	}
 
-	filteredMetrics, filteredMetricsInterface := getFilteredIndividualAndSlowMetrics(individualQueries, slowQueryMetrics)
+	filteredMetrics, filteredMetricsInterface := getFilteredSlowMetrics(individualQueries, slowQueryMetrics)
 
 	assert.Len(t, filteredMetrics, 1)
 	assert.Len(t, filteredMetricsInterface, 1)
