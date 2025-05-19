@@ -9,6 +9,14 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+### bugfix
+- Rolling back the bad release v2.17.2
+
+## v2.17.2 - 2025-05-19
+
+### 🚀 Enhancements
+- Bad release
+
 ## v2.17.1 - 2025-02-19
 
 ### 🚀 Enhancements
