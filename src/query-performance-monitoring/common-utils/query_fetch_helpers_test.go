@@ -36,7 +36,7 @@ func TestFetchVersionSpecificSlowQueries(t *testing.T) {
 		{commonutils.PostgresVersion11, "", true},
 	}
 
-	runTestCases(t, tests, commonutils.FetchVersionSpecificSlowQueries)
+	runTestCases(t, tests, commonutils.FetchVersionSpecificSlowQuery)
 }
 
 func TestFetchVersionSpecificBlockingQueries(t *testing.T) {
@@ -51,7 +51,7 @@ func TestFetchVersionSpecificBlockingQueries(t *testing.T) {
 		{commonutils.PostgresVersion11, "", true},
 	}
 
-	runTestCases(t, tests, commonutils.FetchVersionSpecificBlockingQueries)
+	runTestCases(t, tests, commonutils.FetchVersionSpecificBlockingQuery)
 }
 
 func TestFetchVersionSpecificIndividualQueries(t *testing.T) {

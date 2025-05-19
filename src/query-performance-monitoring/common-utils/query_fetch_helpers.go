@@ -4,7 +4,7 @@ import (
 	"github.com/newrelic/nri-postgresql/src/query-performance-monitoring/queries"
 )
 
-func FetchVersionSpecificSlowQueries(version uint64) (string, error) {
+func FetchVersionSpecificSlowQuery(version uint64) (string, error) {
 	switch {
 	case version == PostgresVersion12:
 		return queries.SlowQueriesForV12, nil
@@ -15,7 +15,7 @@ func FetchVersionSpecificSlowQueries(version uint64) (string, error) {
 	}
 }
 
-func FetchVersionSpecificBlockingQueries(version uint64) (string, error) {
+func FetchVersionSpecificBlockingQuery(version uint64) (string, error) {
 	switch {
 	case version == PostgresVersion12, version == PostgresVersion13:
 		return queries.BlockingQueriesForV12AndV13, nil

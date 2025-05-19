@@ -40,3 +40,26 @@ func GeneratePlanID() (string, error) {
 	result := fmt.Sprintf("%d-%s", randomInt.Int64(), currentTime)
 	return result, nil
 }
+
+func AnonymizeAndNormalize(query string) string {
+	reNumbers := regexp.MustCompile(`\d+`)
+	cleanedQuery := reNumbers.ReplaceAllString(query, "?")
+
+	reSingleQuotes := regexp.MustCompile(`'[^']*'`)
+	cleanedQuery = reSingleQuotes.ReplaceAllString(cleanedQuery, "?")
+
+	reDoubleQuotes := regexp.MustCompile(`"[^"]*"`)
+	cleanedQuery = reDoubleQuotes.ReplaceAllString(cleanedQuery, "?")
+
+	cleanedQuery = strings.ReplaceAll(cleanedQuery, "$", "")
+
+	cleanedQuery = strings.ToLower(cleanedQuery)
+
+	cleanedQuery = strings.ReplaceAll(cleanedQuery, ";", "")
+
+	cleanedQuery = strings.TrimSpace(cleanedQuery)
+
+	cleanedQuery = strings.Join(strings.Fields(cleanedQuery), " ")
+
+	return cleanedQuery
+}

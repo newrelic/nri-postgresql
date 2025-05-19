@@ -1,6 +1,8 @@
 package commonparameters
 
 import (
+	"strings"
+
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	"github.com/newrelic/nri-postgresql/src/args"
 )
@@ -21,6 +23,7 @@ type CommonParameters struct {
 	QueryMonitoringResponseTimeThreshold int
 	Host                                 string
 	Port                                 string
+	IsRds                                bool
 }
 
 func SetCommonParameters(args args.ArgumentList, version uint64, databases string) *CommonParameters {
@@ -31,7 +34,13 @@ func SetCommonParameters(args args.ArgumentList, version uint64, databases strin
 		QueryMonitoringResponseTimeThreshold: validateAndGetQueryMonitoringResponseTimeThreshold(args),
 		Host:                                 args.Hostname,
 		Port:                                 args.Port,
+		IsRds:                                isRdsHost(args.Hostname),
 	}
+}
+
+// A reliable way to identify hostnames associated with Amazon Relational Database Service (RDS) instances. Amazon uses this domain suffix for RDS endpoints across various database engines.
+func isRdsHost(hostname string) bool {
+	return strings.Contains(hostname, ".rds.amazonaws.com")
 }
 
 func validateAndGetQueryMonitoringResponseTimeThreshold(args args.ArgumentList) int {
