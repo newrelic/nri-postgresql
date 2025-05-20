@@ -42,7 +42,7 @@ External dependencies are managed through the [govendor tool](https://github.com
 
 ## Testing
 
-To run the tests execute:
+To run the unit tests execute:
 
 ```bash
 $ make test
