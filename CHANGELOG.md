@@ -9,7 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### enhancements
+## v2.18.0 - 2025-05-20
+
+### 🚀 Enhancements
 - Update readme
 
 ## v2.17.1 - 2025-02-19
