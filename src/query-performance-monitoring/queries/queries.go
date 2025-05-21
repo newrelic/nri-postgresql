@@ -73,7 +73,7 @@ const (
 	LIMIT
 		 %d; -- Limit the number of results`
 
-	// WaitEvents retrieves wait events and their statistics
+	// WaitEvents retrieves wait events and their statistics from pg_wait_sampling_history
 	WaitEvents = `WITH wait_history AS (
 		SELECT
 			wh.pid, -- Process ID
@@ -111,6 +111,38 @@ const (
 	ORDER BY total_wait_time_ms DESC -- Order by the total wait time in descending order
 	LIMIT %d; -- Limit the number of results`
 
+	// WaitEvents retrieves wait events and their statistics from pg_stat_activity and doesnt involve joining pg_stat_staments as query id is missing in pg_stat_activity
+	WaitEventsFromPgStatActivity = `WITH wait_history AS (
+        SELECT
+            sa.pid, -- Process ID
+            sa.wait_event_type AS event_type, -- Type of the wait event
+            sa.wait_event AS event, -- Wait event           
+            sa.backend_start AS duration, -- Timestamp of the wait event
+            pg_database.datname AS database_name, -- Name of the database
+			sa.query as query_text
+        FROM
+            pg_stat_activity sa
+        LEFT JOIN
+            pg_database ON pg_database.oid = sa.datid
+        WHERE pg_database.datname in (%s) -- List of database names 
+      )
+    SELECT
+        event_type || ':' || event AS wait_event_name, -- Concatenated wait event name
+        CASE
+            WHEN event_type IN ('LWLock', 'Lock') THEN 'Locks' -- Wait category is Locks
+            WHEN event_type = 'IO' THEN 'Disk IO' -- Wait category is Disk IO
+            WHEN event_type = 'CPU' THEN 'CPU' -- Wait category is CPU
+            ELSE 'Other' -- Wait category is Other
+        END AS wait_category, -- Category of the wait event
+		query_text,
+        to_char(NOW() AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS collection_timestamp, -- Timestamp of data collection
+        database_name -- Name of the database
+    FROM wait_history
+    WHERE query_text NOT LIKE 'EXPLAIN (FORMAT JSON) %%' AND event_type IS NOT NULL
+    GROUP BY event_type, event, database_name,duration,query_text
+    ORDER BY duration DESC -- Order by the total wait time in descending order
+    LIMIT %d;  -- Limit the number of results`
+
 	// BlockingQueriesForV14AndAbove retrieves information about blocking and blocked queries for PostgreSQL version 14 and above
 	BlockingQueriesForV14AndAbove = `SELECT 'newrelic' as newrelic, -- Common value to filter with like operator in slow query metrics
 		  blocked_activity.pid AS blocked_pid, -- Process ID of the blocked query
@@ -141,6 +173,35 @@ const (
 		  AND blocked_activity.datname IN (%s) -- List of database names
 		  AND blocked_statements.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
 		  AND blocking_statements.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
+		ORDER BY blocked_activity.query_start ASC -- Order by the start time of the blocked query in ascending order
+		LIMIT %d; -- Limit the number of results`
+
+	// RDSPostgresBlockingQuery retrieves blocking session events and their statistics from pg_stat_activity and doesnt involve joining pg_stat_staments as query id is missing in pg_stat_activity
+	RDSPostgresBlockingQuery = `SELECT 'newrelic' as newrelic, -- Common value to filter with like operator in slow query metrics
+		  blocked_activity.pid AS blocked_pid, -- Process ID of the blocked query
+		  blocked_activity.query AS blocked_query, -- Blocked query text truncated to 4095 characters
+		  blocked_activity.query_start AS blocked_query_start, -- Start time of the blocked query
+		  blocked_activity.datname AS database_name, -- Name of the database
+		  blocking_activity.pid AS blocking_pid, -- Process ID of the blocking query
+		  blocking_activity.query AS blocking_query, -- Blocking query text truncated to 4095 characters
+		  blocking_activity.query_start AS blocking_query_start -- Start time of the blocking query
+		FROM pg_stat_activity AS blocked_activity
+		JOIN pg_locks blocked_locks ON blocked_activity.pid = blocked_locks.pid
+		JOIN pg_locks blocking_locks ON blocked_locks.locktype = blocking_locks.locktype
+		  AND blocked_locks.database IS NOT DISTINCT FROM blocking_locks.database
+		  AND blocked_locks.relation IS NOT DISTINCT FROM blocking_locks.relation
+		  AND blocked_locks.page IS NOT DISTINCT FROM blocking_locks.page
+		  AND blocked_locks.tuple IS NOT DISTINCT FROM blocking_locks.tuple
+		  AND blocked_locks.transactionid IS NOT DISTINCT FROM blocking_locks.transactionid
+		  AND blocked_locks.classid IS NOT DISTINCT FROM blocking_locks.classid
+		  AND blocked_locks.objid IS NOT DISTINCT FROM blocking_locks.objid
+		  AND blocked_locks.objsubid IS NOT DISTINCT FROM blocking_locks.objsubid
+		  AND blocked_locks.pid <> blocking_locks.pid
+		JOIN pg_stat_activity AS blocking_activity ON blocking_locks.pid = blocking_activity.pid
+		WHERE NOT blocked_locks.granted
+          AND blocked_activity.datname IN (%s) -- List of database names
+		  AND blocked_activity.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
+		  AND blocking_activity.query NOT LIKE 'EXPLAIN (FORMAT JSON) %%' -- Exclude EXPLAIN queries
 		ORDER BY blocked_activity.query_start ASC -- Order by the start time of the blocked query in ascending order
 		LIMIT %d; -- Limit the number of results`
 
@@ -193,6 +254,9 @@ const (
 		ORDER BY
 		 exec_time_ms DESC -- Order by average execution time in descending order
 		LIMIT %d; -- Limit the number of results`
+
+	// IndividualQueryFromPgStat retrieves currently running or last executed query of  DB connections
+	IndividualQueryFromPgStat = "select query  from pg_stat_activity where query is not null and query !='';"
 
 	// IndividualQuerySearchV12 retrieves individual query statistics for PostgreSQL version 12
 	IndividualQuerySearchV12 = `SELECT 'newrelic' as newrelic, -- Common value to filter with like operator in slow query metrics

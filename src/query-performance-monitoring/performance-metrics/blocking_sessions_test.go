@@ -72,3 +72,85 @@ func TestGetBlockingMetricsErr(t *testing.T) {
 	assert.EqualError(t, err, commonutils.ErrUnExpectedError.Error())
 	assert.NoError(t, mock.ExpectationsWereMet())
 }
+
+func TestGetBlockingMetricsPgStat_Success(t *testing.T) {
+	conn, mock := connection.CreateMockSQL(t)
+	cp := &common_parameters.CommonParameters{
+		Databases:                     "testdb",
+		QueryMonitoringCountThreshold: 10,
+		Version:                       14,
+	}
+	query := fmt.Sprintf(queries.RDSPostgresBlockingQuery, cp.Databases, cp.QueryMonitoringCountThreshold)
+	mockRows := sqlmock.NewRows([]string{
+		"newrelic", "blocked_pid", "blocked_query", "blocked_query_start", "database_name",
+		"blocking_pid", "blocking_query", "blocking_query_start",
+	}).AddRow(
+		"newrelic_value", 123, "SELECT 1", "2023-01-01 00:00:00", "testdb",
+		456, "SELECT 2", "2023-01-01 00:00:00",
+	).AddRow(
+		"newrelic_value", 789, "SELECT 3", "2023-01-02 00:00:00", "testdb",
+		101, "SELECT 4", "2023-01-02 00:00:00",
+	)
+	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnRows(mockRows)
+
+	blockingMetrics, err := getBlockingMetricsPgStat(conn, cp)
+
+	assert.NoError(t, err)
+	assert.Len(t, blockingMetrics, 2)
+	assert.Equal(t, "SELECT 1", *blockingMetrics[0].BlockedQuery)
+	assert.Equal(t, "SELECT 2", *blockingMetrics[0].BlockingQuery)
+	assert.NoError(t, mock.ExpectationsWereMet())
+}
+
+func TestGetBlockingMetricsPgStat_Error(t *testing.T) {
+	conn, mock := connection.CreateMockSQL(t)
+	cp := &common_parameters.CommonParameters{
+		Databases:                     "testdb",
+		QueryMonitoringCountThreshold: 10,
+		Version:                       14,
+	}
+	query := fmt.Sprintf(queries.RDSPostgresBlockingQuery, cp.Databases, cp.QueryMonitoringCountThreshold)
+	mock.ExpectQuery(regexp.QuoteMeta(query)).WillReturnError(commonutils.ErrUnExpectedError)
+
+	blockingMetrics, err := getBlockingMetricsPgStat(conn, cp)
+
+	assert.Error(t, err)
+	assert.Nil(t, blockingMetrics)
+	assert.NoError(t, mock.ExpectationsWereMet())
+}
+
+func TestGetFilteredBlockingSessions(t *testing.T) {
+	blockingSessionMetrics := []datamodels.BlockingSessionMetrics{
+		{
+			BlockingQuery: stringPointer("SELECT 1"),
+			BlockedQuery:  stringPointer("SELECT 2"),
+		},
+	}
+	slowQueryMetrics := []datamodels.SlowRunningQueryMetrics{
+		{
+			QueryText: stringPointer("SELECT 1"),
+			QueryID:   stringPointer("123"),
+		},
+	}
+
+	filteredMetrics := getFilteredBlockingSessions(blockingSessionMetrics, slowQueryMetrics)
+
+	assert.Len(t, filteredMetrics, 1)
+}
+
+func TestGetFilteredBlockingSessions_NoMatch(t *testing.T) {
+	blockingSessionMetrics := []datamodels.BlockingSessionMetrics{
+		{
+			BlockingQuery: stringPointer("SELECT 3"),
+			BlockedQuery:  stringPointer("SELECT 4"),
+		},
+	}
+	slowQueryMetrics := []datamodels.SlowRunningQueryMetrics{
+		{
+			QueryText: stringPointer("SELECT 1 where a='b'"),
+			QueryID:   stringPointer("123"),
+		},
+	}
+	filteredMetrics := getFilteredBlockingSessions(blockingSessionMetrics, slowQueryMetrics)
+	assert.Len(t, filteredMetrics, 0)
+}
