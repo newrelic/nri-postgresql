@@ -103,12 +103,12 @@ func populateQueryPerformanceMetrics(newConnection *performancedbconnection.PGSQ
 		log.Debug("PopulateExecutionPlanMetrics completed in ", time.Since(start))
 
 		start = time.Now()
-		log.Debug("Starting PopulateWaitEventMetrics at ", start)
+		log.Debug("Starting PopulateWaitEventMetricsPgStat at ", start)
 		_ = performancemetrics.PopulateWaitEventMetricsPgStat(newConnection, pgIntegration, cp, enabledExtensions, slowQueries)
 		log.Debug("PopulateWaitEventMetrics completed in ", time.Since(start))
 
 		start = time.Now()
-		log.Debug("Starting PopulateBlockingMetrics at ", start)
+		log.Debug("Starting PopulateBlockingMetricsPgStat at ", start)
 		performancemetrics.PopulateBlockingMetricsPgStat(newConnection, pgIntegration, cp, enabledExtensions, slowQueries)
 		log.Debug("PopulateBlockingMetrics completed in ", time.Since(start))
 	}

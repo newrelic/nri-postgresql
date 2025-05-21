@@ -34,6 +34,7 @@ type ArgumentList struct {
 	QueryMonitoringOnly                  bool   `default:"false" help:"Enable collection of only detailed query performance metrics, excluding other metrics."`
 	QueryMonitoringResponseTimeThreshold int    `default:"500" help:"Threshold in milliseconds for query response time. If response time for the individual query exceeds this threshold, the individual query is reported in metrics"`
 	QueryMonitoringCountThreshold        int    `default:"20" help:"The number of records for each query performance metrics"`
+	IsRds                                bool   `default:"false" help:"If true, the integration will support on AWS RDS. This will enable RDS-specific metrics and configurations."`
 }
 
 // Validate validates PostgreSQl arguments
