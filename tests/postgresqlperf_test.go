@@ -91,12 +91,6 @@ func TestIntegrationWithDatabaseLoadPerfEnabled(t *testing.T) {
 			containers: perfContainers,
 			args:       []string{`-collection_list=all`},
 		},
-		{
-			name:                "Performance metrics collection test with query monitoring only flag enabled",
-			expectedSampleTypes: newSampleTypes,
-			containers:          perfContainers,
-			args:                []string{`-collection_list=all`, `-query_monitoring_only=true`},
-		},
 	}
 
 	for _, tt := range tests {

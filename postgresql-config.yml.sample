@@ -50,9 +50,6 @@ integrations:
     # True if SSL is to be used. Defaults to false.
     ENABLE_SSL: "false"
     
-    # Enable collection of only detailed query performance metrics, excluding other metrics. - Defaults to false
-    QUERY_MONITORING_ONLY : "false"
-
     # Enable query performance monitoring for Aurora/RDS - Defaults to false
     IS_RDS: "false"
     

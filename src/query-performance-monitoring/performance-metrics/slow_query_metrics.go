@@ -2,6 +2,8 @@ package performancemetrics
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 	performancedbconnection "github.com/newrelic/nri-postgresql/src/connection"
@@ -29,6 +31,10 @@ func getSlowRunningMetrics(conn *performancedbconnection.PGSQLConnection, cp *co
 		var slowQuery datamodels.SlowRunningQueryMetrics
 		if scanErr := rows.StructScan(&slowQuery); scanErr != nil {
 			return nil, nil, err
+		}
+		if slowQuery.QueryText != nil && strings.Contains(strings.ToLower(*slowQuery.QueryText), "alter") {
+			anonymizedQuery := commonutils.AnonymizeQueryText(*slowQuery.QueryText)
+			slowQuery.QueryText = &anonymizedQuery
 		}
 		slowQueryMetricsList = append(slowQueryMetricsList, slowQuery)
 		slowQueryMetricsListInterface = append(slowQueryMetricsListInterface, slowQuery)
