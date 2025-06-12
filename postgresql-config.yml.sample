@@ -52,6 +52,9 @@ integrations:
     
     # Enable collection of only detailed query performance metrics, excluding other metrics. - Defaults to false
     QUERY_MONITORING_ONLY : "false"
+
+    # Enable query performance monitoring for Aurora/RDS - Defaults to false
+    IS_RDS: "false"
     
     # Enable query performance monitoring - Defaults to false
     # ENABLE_QUERY_MONITORING : "false"
