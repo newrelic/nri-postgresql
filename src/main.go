@@ -70,7 +70,6 @@ func main() {
 		log.Error("Error creating instance entity: %s", err.Error())
 		os.Exit(1)
 	}
-
 	if args.HasMetrics() {
 		metrics.PopulateMetrics(connectionInfo, collectionList, instance, pgIntegration, args.Pgbouncer, args.CollectDbLockMetrics, args.CollectBloatMetrics, args.CustomMetricsQuery)
 		if args.CustomMetricsConfig != "" {

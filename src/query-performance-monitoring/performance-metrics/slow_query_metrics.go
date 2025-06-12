@@ -2,6 +2,7 @@ package performancemetrics
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/newrelic/infra-integrations-sdk/v3/integration"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
@@ -15,7 +16,7 @@ import (
 func getSlowRunningMetrics(conn *performancedbconnection.PGSQLConnection, cp *commonparameters.CommonParameters) ([]datamodels.SlowRunningQueryMetrics, []interface{}, error) {
 	var slowQueryMetricsList []datamodels.SlowRunningQueryMetrics
 	var slowQueryMetricsListInterface []interface{}
-	versionSpecificSlowQuery, err := commonutils.FetchVersionSpecificSlowQueries(cp.Version)
+	versionSpecificSlowQuery, err := commonutils.FetchVersionSpecificSlowQuery(cp.Version)
 	if err != nil {
 		log.Error("Unsupported postgres version: %v", err)
 		return nil, nil, err
@@ -31,6 +32,10 @@ func getSlowRunningMetrics(conn *performancedbconnection.PGSQLConnection, cp *co
 		if scanErr := rows.StructScan(&slowQuery); scanErr != nil {
 			return nil, nil, err
 		}
+		if slowQuery.QueryText != nil && strings.Contains(strings.ToLower(*slowQuery.QueryText), "alter") {
+			anonymizedQuery := commonutils.AnonymizeQueryText(*slowQuery.QueryText)
+			slowQuery.QueryText = &anonymizedQuery
+		}
 		slowQueryMetricsList = append(slowQueryMetricsList, slowQuery)
 		slowQueryMetricsListInterface = append(slowQueryMetricsListInterface, slowQuery)
 	}
@@ -38,11 +43,7 @@ func getSlowRunningMetrics(conn *performancedbconnection.PGSQLConnection, cp *co
 }
 
 func PopulateSlowRunningMetrics(conn *performancedbconnection.PGSQLConnection, pgIntegration *integration.Integration, cp *commonparameters.CommonParameters, enabledExtensions map[string]bool) []datamodels.SlowRunningQueryMetrics {
-	isEligible, err := validations.CheckSlowQueryMetricsFetchEligibility(enabledExtensions)
-	if err != nil {
-		log.Error("Error executing query: %v", err)
-		return nil
-	}
+	isEligible := validations.CheckSlowQueryMetricsFetchEligibility(enabledExtensions)
 	if !isEligible {
 		log.Debug("Extension 'pg_stat_statements' is not enabled or unsupported version.")
 		return nil
@@ -64,4 +65,50 @@ func PopulateSlowRunningMetrics(conn *performancedbconnection.PGSQLConnection, p
 		return nil
 	}
 	return slowQueryMetricsList
+}
+
+// PopulateSlowRunningMetricsPgStat collects and ingests slow running query metrics. // Returns nil if an error occurs or if the required extension is not enabled.
+func PopulateSlowRunningMetricsPgStat(conn *performancedbconnection.PGSQLConnection, pgIntegration *integration.Integration, cp *commonparameters.CommonParameters, enabledExtensions map[string]bool) []datamodels.SlowRunningQueryMetrics {
+	isEligible := validations.CheckSlowQueryMetricsFetchEligibility(enabledExtensions)
+	if !isEligible {
+		log.Debug("Extension 'pg_stat_statements' is not enabled or unsupported version.")
+		return nil
+	}
+	individualQueries := getIndividualQueriesFromPgStat(conn)
+	slowQueryMetricsList, _, err := getSlowRunningMetrics(conn, cp)
+	filteredSlowQueryMetrics, filteredSlowQueryMetricsInterface := getFilteredSlowMetrics(individualQueries, slowQueryMetricsList)
+	if err != nil {
+		log.Error("Error fetching slow-running queries: %v", err)
+		return nil
+	}
+
+	if len(slowQueryMetricsList) == 0 {
+		log.Debug("No slow-running queries found.")
+		return nil
+	}
+	err = commonutils.IngestMetric(filteredSlowQueryMetricsInterface, "PostgresSlowQueries", pgIntegration, cp)
+	if err != nil {
+		log.Error("Error ingesting slow-running queries: %v", err)
+		return nil
+	}
+	return filteredSlowQueryMetrics
+}
+
+func getFilteredSlowMetrics(individualQueries []string, slowQueryMetrics []datamodels.SlowRunningQueryMetrics) ([]datamodels.SlowRunningQueryMetrics, []interface{}) {
+	filteredSlowQueryMetrics := make([]datamodels.SlowRunningQueryMetrics, 0)
+	filteredSlowQueryMetricsInterface := make([]interface{}, 0)
+	individualQueryMap := make(map[string]string)
+	for _, individualQuery := range individualQueries {
+		individualQueryMap[commonutils.AnonymizeAndNormalize(individualQuery)] = individualQuery
+	}
+	for _, slowQueryMetric := range slowQueryMetrics {
+		normalizedSlowQueryText := commonutils.AnonymizeAndNormalize(*slowQueryMetric.QueryText)
+		if _, exists := individualQueryMap[normalizedSlowQueryText]; exists {
+			individualQuerySample := individualQueryMap[normalizedSlowQueryText]
+			slowQueryMetric.IndividualQuery = &individualQuerySample
+			filteredSlowQueryMetricsInterface = append(filteredSlowQueryMetricsInterface, slowQueryMetric)
+			filteredSlowQueryMetrics = append(filteredSlowQueryMetrics, slowQueryMetric)
+		}
+	}
+	return filteredSlowQueryMetrics, filteredSlowQueryMetricsInterface
 }
