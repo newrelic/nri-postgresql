@@ -70,6 +70,10 @@
                                     "type": "number",
                                     "minimum": 0
                                 },
+                                "avg_exec_time_ms": {
+                                    "type": "number",
+                                    "minimum": 0
+                                },
                                 "database_name": {
                                     "type": "string"
                                 },
