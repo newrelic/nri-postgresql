@@ -41,10 +41,11 @@ type IndividualQueryMetrics struct {
 	QueryText       *string  `json:"query" db:"query" metric_name:"query_text" source_type:"attribute"`
 	QueryID         *string  `json:"queryid" db:"queryid" metric_name:"query_id" source_type:"attribute"`
 	DatabaseName    *string  `json:"datname" db:"datname" metric_name:"database_name" source_type:"attribute"`
-	AvgCPUTimeInMS  *float64 `json:"cpu_time_ms" db:"cpu_time_ms" metric_name:"cpu_time_ms" source_type:"gauge"`
+	CPUTimeInMS     *float64 `json:"cpu_time_ms" db:"cpu_time_ms" metric_name:"cpu_time_ms" source_type:"gauge"`
 	PlanID          *string  `json:"planid" db:"planid" metric_name:"plan_id" source_type:"attribute"`
 	RealQueryText   *string  `ingest_data:"false"`
-	AvgExecTimeInMs *float64 `json:"exec_time_ms" db:"exec_time_ms" metric_name:"exec_time_ms" source_type:"gauge"`
+	ExecTimeInMs    *float64 `json:"exec_time_ms" db:"exec_time_ms" metric_name:"exec_time_ms" source_type:"gauge"`
+	AvgExecTimeInMs *float64 `json:"avg_exec_time_ms" metric_name:"avg_exec_time_ms" source_type:"gauge"`
 	Newrelic        *string  `db:"newrelic"              metric_name:"newrelic"            source_type:"attribute"  ingest_data:"false"`
 }
 

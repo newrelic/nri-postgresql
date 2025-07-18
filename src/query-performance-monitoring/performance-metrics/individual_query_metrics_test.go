@@ -52,16 +52,18 @@ func TestGetIndividualQueryMetrics(t *testing.T) {
 func TestPopulateIndividualQueryMetricsPgStat(t *testing.T) {
 	slowQueries := []datamodels.SlowRunningQueryMetrics{
 		{
-			QueryID:         stringPtr("query1"),
-			DatabaseName:    stringPtr("testdb"),
-			QueryText:       stringPtr("SELECT * FROM test where id = $1"),
-			IndividualQuery: stringPtr("SELECT * FROM test where id = 1"),
+			QueryID:          stringPtr("query1"),
+			DatabaseName:     stringPtr("testdb"),
+			QueryText:        stringPtr("SELECT * FROM test where id = $1"),
+			IndividualQuery:  stringPtr("SELECT * FROM test where id = 1"),
+			AvgElapsedTimeMs: floatPtr(100),
 		},
 		{
-			QueryID:         stringPtr("query2"),
-			DatabaseName:    stringPtr("testdb"),
-			QueryText:       stringPtr("SELECT * FROM users where id = $1"),
-			IndividualQuery: stringPtr("SELECT * FROM users where id = 1"),
+			QueryID:          stringPtr("query2"),
+			DatabaseName:     stringPtr("testdb"),
+			QueryText:        stringPtr("SELECT * FROM users where id = $1"),
+			IndividualQuery:  stringPtr("SELECT * FROM users where id = 1"),
+			AvgElapsedTimeMs: floatPtr(100),
 		},
 	}
 	pgIntegration, _ := integration.New("test", "1.0.0")
@@ -76,6 +78,7 @@ func TestPopulateIndividualQueryMetricsPgStat(t *testing.T) {
 	assert.Equal(t, "testdb", *result[0].DatabaseName)
 	assert.Equal(t, "SELECT * FROM test where id = $1", *result[0].QueryText)
 	assert.Equal(t, "SELECT * FROM test where id = 1", *result[0].RealQueryText)
+	assert.Equal(t, float64(100), *result[0].AvgExecTimeInMs)
 }
 
 func TestPopulateIndividualQueryMetricsPgStatEmpty(t *testing.T) {
@@ -91,4 +94,8 @@ func TestPopulateIndividualQueryMetricsPgStatEmpty(t *testing.T) {
 
 func stringPtr(s string) *string {
 	return &s
+}
+
+func floatPtr(i float64) *float64 {
+	return &i
 }

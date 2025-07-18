@@ -117,14 +117,15 @@ const (
             sa.pid, -- Process ID
             sa.wait_event_type AS event_type, -- Type of the wait event
             sa.wait_event AS event, -- Wait event           
-            sa.backend_start AS duration, -- Timestamp of the wait event
             pg_database.datname AS database_name, -- Name of the database
-			sa.query as query_text
+			sa.query as query_text,
+			EXTRACT(EPOCH FROM (NOW() - sa.state_change)) * 1000 AS total_wait_time_ms 
         FROM
             pg_stat_activity sa
         LEFT JOIN
             pg_database ON pg_database.oid = sa.datid
         WHERE pg_database.datname in (%s) -- List of database names 
+			AND sa.state = 'active' -- Only consider active sessions
       )
     SELECT
         event_type || ':' || event AS wait_event_name, -- Concatenated wait event name
@@ -135,12 +136,13 @@ const (
             ELSE 'Other' -- Wait category is Other
         END AS wait_category, -- Category of the wait event
 		query_text,
+		total_wait_time_ms,
         to_char(NOW() AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS collection_timestamp, -- Timestamp of data collection
         database_name -- Name of the database
     FROM wait_history
-    WHERE query_text NOT LIKE 'EXPLAIN (FORMAT JSON) %%' AND event_type IS NOT NULL
-    GROUP BY event_type, event, database_name,duration,query_text
-    ORDER BY duration DESC -- Order by the total wait time in descending order
+    WHERE query_text NOT LIKE 'EXPLAIN (FORMAT JSON) %%' AND event_type IS NOT NULL 
+    GROUP BY event_type, event, database_name,total_wait_time_ms,query_text
+    ORDER BY total_wait_time_ms DESC -- Order by the total wait time in descending order
     LIMIT %d;  -- Limit the number of results`
 
 	// BlockingQueriesForV14AndAbove retrieves information about blocking and blocked queries for PostgreSQL version 14 and above
