@@ -9,6 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+### enhancement
+- Add total_wait_time for wait events of RDS/Aurora DB monitoring 
+
 ## v2.19.2 - 2025-06-30
 
 ### ⛓️ Dependencies
