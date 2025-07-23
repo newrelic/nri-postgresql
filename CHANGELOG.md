@@ -9,8 +9,14 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### enhancement
-- Add total_wait_time for wait events of RDS/Aurora DB monitoring 
+## v2.20.0 - 2025-07-23
+
+### 🚀 Enhancements
+- Add total_wait_time for wait events of RDS/Aurora DB monitoring
+
+### ⛓️ Dependencies
+- Updated github.com/go-viper/mapstructure/v2 to v2.4.0 - [Changelog 🔗](https://github.com/go-viper/mapstructure/releases/tag/v2.4.0)
+- Updated golang patch version to v1.24.5
 
 ## v2.19.2 - 2025-06-30
 
