@@ -12,7 +12,7 @@ const MaxQueryCountThreshold = 30
 const DefaultQueryMonitoringCountThreshold = 20
 
 // DefaultQueryResponseTimeThreshold is the default threshold for the response time of a query.
-const DefaultQueryResponseTimeThreshold = 500
+const DefaultQueryResponseTimeThreshold = 1
 
 type CommonParameters struct {
 	Version                              uint64
