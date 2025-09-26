@@ -1,4 +1,4 @@
-FROM postgres:17.6
+FROM postgres:18.0
 
 # Dependencies
 RUN apt-get update && apt-get install -y \
