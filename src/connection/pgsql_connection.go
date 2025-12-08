@@ -97,6 +97,12 @@ func (p PGSQLConnection) Query(v interface{}, query string) error {
 	return p.connection.Select(v, query)
 }
 
+// QueryUnsafe runs a query and loads results into v, ignoring extra columns in the result set
+// This is useful for queries where the schema may vary (e.g., PgBouncer versions)
+func (p PGSQLConnection) QueryUnsafe(v interface{}, query string) error {
+	return p.connection.Unsafe().Select(v, query)
+}
+
 // Queryx runs a query and returns a set of rows
 func (p PGSQLConnection) Queryx(query string) (*sqlx.Rows, error) {
 	return p.connection.Queryx(query)

@@ -9,6 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+### enhancements
+- Removed strict column validation for PgBouncer metrics to support multiple PgBouncer versions without breaking when columns change between versions 
+
 ## v2.22.1 - 2025-11-17
 
 ### ⛓️ Dependencies
