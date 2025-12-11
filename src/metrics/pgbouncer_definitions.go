@@ -22,6 +22,9 @@ var pgbouncerStatsDefinition = &QueryDefinition{
 		TotalQueryTime             *int64 `db:"total_query_time"  metric_name:"pgbouncer.stats.totalQueryDurationInMillisecondsPerSecond"       source_type:"rate"`
 		TotalRequests              *int64 `db:"total_requests"    metric_name:"pgbouncer.stats.requestsPerSecond"                               source_type:"rate"`
 		TotalWaitTime              *int64 `db:"total_wait_time"`
+		TotalClientParseCount      *int64 `db:"total_client_parse_count" metric_name:"pgbouncer.stats.totalClientParseCount"                    source_type:"rate"` // added in v1.24
+		TotalServerParseCount      *int64 `db:"total_server_parse_count" metric_name:"pgbouncer.stats.totalServerParseCount"                    source_type:"rate"` // added in v1.24
+		TotalBindCount             *int64 `db:"total_bind_count"   metric_name:"pgbouncer.stats.totalBindCount"                                 source_type:"rate"` // added in v1.24
 		AvgXactCount               *int64 `db:"avg_xact_count"    metric_name:"pgbouncer.stats.avgTransactionCount"                             source_type:"gauge"`
 		AvgXactTime                *int64 `db:"avg_xact_time"     metric_name:"pgbouncer.stats.avgTransactionDurationInMilliseconds"            source_type:"gauge"`
 		AvgQueryCount              *int64 `db:"avg_query_count"   metric_name:"pgbouncer.stats.avgQueryCount"                                   source_type:"gauge"`
@@ -32,6 +35,9 @@ var pgbouncerStatsDefinition = &QueryDefinition{
 		AvgQueryTime               *int64 `db:"avg_query_time"    metric_name:"pgbouncer.stats.avgQueryDurationInMilliseconds"                  source_type:"gauge"`
 		AvgQuery                   *int64 `db:"avg_query"         metric_name:"pgbouncer.stats.avgQueryDurationInMilliseconds"                  source_type:"gauge"`
 		AvgWaitTime                *int64 `db:"avg_wait_time"`
+		AvgClientParseCount        *int64 `db:"avg_client_parse_count" metric_name:"pgbouncer.stats.avgClientParseCount"                        source_type:"gauge"` // added in v1.24
+		AvgServerParseCount        *int64 `db:"avg_server_parse_count" metric_name:"pgbouncer.stats.avgServerParseCount"                        source_type:"gauge"` // added in v1.24
+		AvgBindCount               *int64 `db:"avg_bind_count"    metric_name:"pgbouncer.stats.avgBindCount"                                    source_type:"gauge"` // added in v1.24
 	}{},
 }
 

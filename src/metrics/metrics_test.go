@@ -675,6 +675,97 @@ func TestPopulatePgBouncerMetrics(t *testing.T) {
 				"host":        "testhost",
 			},
 		},
+		{
+			name: "pgbouncer version >= 24",
+			pgbouncerPoolsRows: sqlmock.NewRows([]string{
+				"database",
+				"user",
+				"cl_active",
+				"cl_waiting",
+				"sv_active",
+				"sv_idle",
+				"sv_used",
+				"sv_tested",
+				"sv_login",
+				"maxwait",
+				"maxwait_us",
+				"pool_mode",
+				"cl_waiting_cancel_req",
+				"cl_active_cancel_req",
+				"sv_active_cancel",
+				"sv_being_canceled",
+			}).AddRow("testDB", "testUser", 1, 2, 3, 4, 5, 6, 7, 8, 9, "testMode", 10, 11, 12, 13),
+			pgbouncerStatsRows: sqlmock.NewRows([]string{
+				"database",
+				"total_xact_count",
+				"total_query_count",
+				"total_received",
+				"total_sent",
+				"total_xact_time",
+				"total_query_time",
+				"total_wait_time",
+				"avg_xact_count",
+				"avg_xact_time",
+				"avg_query_count",
+				"avg_recv",
+				"avg_sent",
+				"avg_query_time",
+				"avg_wait_time",
+				"total_server_assignment_count", // New in v23
+				"avg_server_assignment_count",   // New in v23
+				"total_client_parse_count",      // New in v24
+				"total_server_parse_count",      // New in v24
+				"total_bind_count",              // New in v24
+				"avg_client_parse_count",        // New in v24
+				"avg_server_parse_count",        // New in v24
+				"avg_bind_count",                // New in v24
+			}).AddRow("testDB", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22),
+			expectedPool: map[string]interface{}{
+				"pgbouncer.pools.clientConnectionsActive":           float64(1),
+				"pgbouncer.pools.clientConnectionsWaiting":          float64(2),
+				"pgbouncer.pools.serverConnectionsActive":           float64(3),
+				"pgbouncer.pools.serverConnectionsIdle":             float64(4),
+				"pgbouncer.pools.serverConnectionsUsed":             float64(5),
+				"pgbouncer.pools.serverConnectionsTested":           float64(6),
+				"pgbouncer.pools.serverConnectionsLogin":            float64(7),
+				"pgbouncer.pools.maxwaitInMilliseconds":             float64(8),
+				"displayName":                                       "testDB",
+				"entityName":                                        "pgbouncer:testDB",
+				"event_type":                                        "PgBouncerSample",
+				"host":                                              "testhost",
+				"pgbouncer.pools.clientConnectionsWaitingCancelReq": float64(10),
+				"pgbouncer.pools.clientConnectionsActiveCancelReq":  float64(11),
+				"pgbouncer.pools.serverConnectionsActiveCancel":     float64(12),
+				"pgbouncer.pools.serverConnectionsBeingCancel":      float64(13),
+				"pgbouncer.pools.user":                              "testUser",
+			},
+			expectedStats: map[string]interface{}{
+				"pgbouncer.stats.transactionsPerSecond":                           float64(0),
+				"pgbouncer.stats.queriesPerSecond":                                float64(0),
+				"pgbouncer.stats.bytesInPerSecond":                                float64(0),
+				"pgbouncer.stats.bytesOutPerSecond":                               float64(0),
+				"pgbouncer.stats.totalTransactionDurationInMillisecondsPerSecond": float64(0),
+				"pgbouncer.stats.totalQueryDurationInMillisecondsPerSecond":       float64(0),
+				"pgbouncer.stats.avgTransactionCount":                             float64(8),
+				"pgbouncer.stats.avgTransactionDurationInMilliseconds":            float64(9),
+				"pgbouncer.stats.avgQueryCount":                                   float64(10),
+				"pgbouncer.stats.avgBytesIn":                                      float64(11),
+				"pgbouncer.stats.avgBytesOut":                                     float64(12),
+				"pgbouncer.stats.avgQueryDurationInMilliseconds":                  float64(13),
+				"pgbouncer.stats.totalServerAssignmentCount":                      float64(15),
+				"pgbouncer.stats.avgServerAssignmentCount":                        float64(16),
+				"pgbouncer.stats.totalClientParseCount":                           float64(0), // rate metric, 0 on first read
+				"pgbouncer.stats.totalServerParseCount":                           float64(0), // rate metric, 0 on first read
+				"pgbouncer.stats.totalBindCount":                                  float64(0), // rate metric, 0 on first read
+				"pgbouncer.stats.avgClientParseCount":                             float64(20),
+				"pgbouncer.stats.avgServerParseCount":                             float64(21),
+				"pgbouncer.stats.avgBindCount":                                    float64(22),
+				"displayName":                                                     "testDB",
+				"entityName":                                                      "pgbouncer:testDB",
+				"event_type":                                                      "PgBouncerSample",
+				"host":                                                            "testhost",
+			},
+		},
 	}
 
 	for _, testCase := range testsCases {
