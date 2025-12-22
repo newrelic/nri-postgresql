@@ -3,6 +3,7 @@ package args
 
 import (
 	"errors"
+	"os"
 	sdkArgs "github.com/newrelic/infra-integrations-sdk/v3/args"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
 )
@@ -34,12 +35,40 @@ type ArgumentList struct {
 	QueryMonitoringResponseTimeThreshold int    `default:"500" help:"Threshold in milliseconds for query response time. If response time for the individual query exceeds this threshold, the individual query is reported in metrics"`
 	QueryMonitoringCountThreshold        int    `default:"20" help:"The number of records for each query performance metrics"`
 	IsRds                                bool   `default:"false" help:"If true, the integration will support on AWS RDS. This will enable RDS-specific metrics and configurations."`
+	AWSIamAuth                           bool   `default:"false" help:"If true, use AWS IAM authentication instead of username/password. Requires AWS credentials and RDS IAM database authentication enabled."`
+	AwsRegion                            string `default:"" help:"AWS region for IAM authentication. Overrides AWS_REGION environment variable and AWS config file."`
 }
 
-// Validate validates PostgreSQl arguments
+// GetEffectiveAwsRegion returns the AWS region to use, prioritizing ArgumentList input over environment/config
+func (al ArgumentList) GetEffectiveAwsRegion() string {
+	if al.AwsRegion != "" {
+		return al.AwsRegion
+	}
+	
+	if envRegion := os.Getenv("AWS_REGION"); envRegion != "" {
+		return envRegion
+	}
+	
+	if defaultRegion := os.Getenv("AWS_DEFAULT_REGION"); defaultRegion != "" {
+		return defaultRegion
+	}
+	
+	return ""
+}
+
+// Validate validates PostgreSQL arguments
 func (al ArgumentList) Validate() error {
-	if al.Username == "" || al.Password == "" {
-		return errors.New("invalid configuration: must specify a username and password")
+	if al.AWSIamAuth {
+		if al.Username == "" {
+			return errors.New("AWS IAM authentication requires a username. Please provide --username argument")
+		}
+		if al.GetEffectiveAwsRegion() == "" {
+			return errors.New("AWS IAM authentication requires a region. Please set --aws-region argument or AWS_REGION environment variable")
+		}
+	} else {
+		if al.Username == "" || al.Password == "" {
+			return errors.New("invalid configuration: must specify a username and password")
+		}
 	}
 	if err := al.validateSSL(); err != nil {
 		return err
