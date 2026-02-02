@@ -9,6 +9,12 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+## v2.23.1 - 2026-02-02
+
+### ⛓️ Dependencies
+- Updated github.com/lib/pq to v1.11.1 - [Changelog 🔗](https://github.com/lib/pq/releases/tag/v1.11.1)
+- Updated golang patch version to v1.25.6
+
 ## v2.23.0 - 2025-12-13
 
 ### 🚀 Enhancements
