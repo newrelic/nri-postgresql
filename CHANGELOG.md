@@ -9,8 +9,13 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### security
+## v2.24.0 - 2026-02-09
+
+### 🛡️ Security notices
 - Updated golang patch version to v1.25.7
+
+### ⛓️ Dependencies
+- Updated github.com/go-viper/mapstructure/v2 to v2.5.0 - [Changelog 🔗](https://github.com/go-viper/mapstructure/releases/tag/v2.5.0)
 
 ## v2.23.1 - 2026-02-02
 
