@@ -9,6 +9,11 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+## v2.24.1 - 2026-02-16
+
+### ⛓️ Dependencies
+- Updated github.com/lib/pq to v1.11.2 - [Changelog 🔗](https://github.com/lib/pq/releases/tag/v1.11.2)
+
 ## v2.24.0 - 2026-02-09
 
 ### 🛡️ Security notices
