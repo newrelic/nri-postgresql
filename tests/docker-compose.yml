@@ -1,6 +1,6 @@
 services:
   postgres-9-6:
-    image: postgres:9.6
+    image: postgres:18.2
     restart: always
     container_name: postgres-9-6
     environment:
@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: demo
 
   postgres-latest-supported:
-    image: postgres:17.8
+    image: postgres:18.2
     restart: always
     container_name: postgres-latest-supported
     environment:
