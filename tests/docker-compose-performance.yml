@@ -22,7 +22,7 @@ services:
 
   postgresql-latest:
     build:
-      context: ./perf-testing/oldest_supported/
+      context: ./perf-testing/latest_supported/
       dockerfile: Dockerfile
     restart: always 
     container_name: "postgresql-perf-latest"
