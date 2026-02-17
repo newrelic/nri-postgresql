@@ -498,7 +498,8 @@ func PopulatePgBouncerMetrics(pgIntegration *integration.Integration, con *conne
 
 	for _, definition := range pgbouncerDefs {
 		dataModels := definition.GetDataModels()
-		if err := con.Query(dataModels, definition.GetQuery()); err != nil {
+		// Use QueryUnsafe to support different PgBouncer versions with varying column sets
+		if err := con.QueryUnsafe(dataModels, definition.GetQuery()); err != nil {
 			log.Error("Could not execute index query: %s", err.Error())
 			return
 		}

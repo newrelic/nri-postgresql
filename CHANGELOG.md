@@ -9,6 +9,48 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+## v2.24.1 - 2026-02-16
+
+### ⛓️ Dependencies
+- Updated github.com/lib/pq to v1.11.2 - [Changelog 🔗](https://github.com/lib/pq/releases/tag/v1.11.2)
+
+## v2.24.0 - 2026-02-09
+
+### 🛡️ Security notices
+- Updated golang patch version to v1.25.7
+
+### ⛓️ Dependencies
+- Updated github.com/go-viper/mapstructure/v2 to v2.5.0 - [Changelog 🔗](https://github.com/go-viper/mapstructure/releases/tag/v2.5.0)
+
+## v2.23.1 - 2026-02-02
+
+### ⛓️ Dependencies
+- Updated github.com/lib/pq to v1.11.1 - [Changelog 🔗](https://github.com/lib/pq/releases/tag/v1.11.1)
+- Updated golang patch version to v1.25.6
+
+## v2.23.0 - 2025-12-13
+
+### 🚀 Enhancements
+- Removed strict column validation for PgBouncer metrics to support multiple PgBouncer versions without breaking when columns change between versions
+
+### ⛓️ Dependencies
+- Updated golang patch version to v1.25.5
+
+## v2.22.1 - 2025-11-17
+
+### ⛓️ Dependencies
+- Updated golang patch version to v1.25.4
+
+## v2.22.0 - 2025-11-10
+
+### 🛡️ Security notices
+- Updated golang version to v1.25.3
+
+## v2.21.0 - 2025-09-15
+
+### 🚀 Enhancements
+- Reduced QueryMonitoringResponseTimeThreshold from 500ms to 1ms to improve visibility of Individual query performance data immediately
+
 ## v2.20.1 - 2025-08-29
 
 ### ⛓️ Dependencies
