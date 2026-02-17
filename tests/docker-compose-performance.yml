@@ -41,7 +41,7 @@ services:
       retries: 5
   
   postgres-without-extensions:
-    image: postgres:17.8
+    image: postgres:18.2
     restart: always
     container_name: "postgresql-noext"
     environment:
