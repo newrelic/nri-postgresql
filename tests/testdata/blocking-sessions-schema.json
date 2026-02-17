@@ -58,7 +58,7 @@
                     "type": "string"
                   },
                   "blocked_query_id": {
-                    "type": "integer"
+                    "type": "string"
                   },
                   "blocked_query_start": {
                     "type": "string",
@@ -72,7 +72,7 @@
                     "type": "string"
                   },
                   "blocking_query_id": {
-                    "type": "integer"
+                    "type": "string"
                   },
                   "blocking_query_start": {
                     "type": "string",
