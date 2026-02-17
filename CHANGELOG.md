@@ -9,6 +9,11 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+### bugfix
+- Fixed PostgreSQL 13 integration tests by upgrading pg_stat_monitor to version 2.3.1 for compatibility with individual query and execution plan metrics
+- Fixed docker-compose configuration to use correct Dockerfile for postgresql-latest service (PostgreSQL 17)
+- Updated blocking sessions JSON schema to include blocking_query_id fields 
+
 ## v2.24.1 - 2026-02-16
 
 ### ⛓️ Dependencies

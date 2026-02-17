@@ -57,6 +57,9 @@
                   "blocked_query": {
                     "type": "string"
                   },
+                  "blocked_query_id": {
+                    "type": "string"
+                  },
                   "blocked_query_start": {
                     "type": "string",
                     "format": "date-time"
@@ -66,6 +69,9 @@
                     "minimum": 0
                   },
                   "blocking_query": {
+                    "type": "string"
+                  },
+                  "blocking_query_id": {
                     "type": "string"
                   },
                   "blocking_query_start": {
