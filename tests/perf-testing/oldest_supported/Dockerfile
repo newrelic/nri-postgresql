@@ -23,10 +23,10 @@ RUN git clone https://github.com/postgrespro/pg_wait_sampling.git \
     && cd .. \
     && rm -rf pg_wait_sampling
 
-# Install pg_stat_monitor (version 1.1.1 for PostgreSQL 13 compatibility)
+# Install pg_stat_monitor (version 2.3.1 for PostgreSQL 13 compatibility)
 RUN git clone https://github.com/percona/pg_stat_monitor.git \
     && cd pg_stat_monitor \
-    && git checkout 1.1.1 \
+    && git checkout 2.3.1 \
     && make USE_PGXS=1 \
     && make USE_PGXS=1 install \
     && cd .. \
