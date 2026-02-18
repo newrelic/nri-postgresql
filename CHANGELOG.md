@@ -9,6 +9,12 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+### security
+- Updated golang patch version to v1.25.7
+
+### enhancement
+- Updated github.com/go-viper/mapstructure/v2 to v2.5.0 - [Changelog 🔗](https://github.com/go-viper/mapstructure/releases/tag/v2.5.0)
+- Updated github.com/lib/pq to v1.11.1 - [Changelog 🔗](https://github.com/lib/pq/releases/tag/v1.11.1)
 ### bugfix
 - Fixed PostgreSQL 13 integration tests by upgrading pg_stat_monitor to version 2.3.1 for compatibility with individual query and execution plan metrics
 - Fixed docker-compose configuration to use correct Dockerfile for postgresql-latest service (PostgreSQL 17)
