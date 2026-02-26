@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: demo
 
   postgres-latest-supported:
-    image: postgres:17.8
+    image: postgres:17.9
     restart: always
     container_name: postgres-latest-supported
     environment:
