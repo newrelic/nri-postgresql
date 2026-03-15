@@ -47,6 +47,11 @@ integrations:
     # Enable collecting bloat metrics which can be performance intensive
     COLLECT_BLOAT_METRICS: "true"
     
+    # True if DBLoad (Average Active Sessions) metrics should be collected.
+    # DBLoad represents database load as CPU + Wait time, similar to AWS RDS Performance Insights.
+    # Defaults to false.
+    # COLLECT_DB_LOAD_METRICS: "false"
+
     # True if SSL is to be used. Defaults to false.
     ENABLE_SSL: "false"
     
