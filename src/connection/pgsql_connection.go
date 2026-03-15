@@ -2,8 +2,10 @@
 package connection
 
 import (
+	"context"
 	"fmt"
 	"net/url"
+	"strconv"
 
 	"github.com/jmoiron/sqlx"
 	// pq is required for postgreSQL driver but isn't used in code
@@ -45,6 +47,8 @@ type connectionInfo struct {
 	SSLRootCertLocation    string
 	SSLKeyLocation         string
 	TrustServerCertificate bool
+	AWSIamAuth             bool
+	AwsRegion              string
 }
 
 // DefaultConnectionInfo takes an argument list and constructs a default connection out of it
@@ -61,12 +65,20 @@ func DefaultConnectionInfo(al *args.ArgumentList) Info {
 		SSLRootCertLocation:    al.SSLRootCertLocation,
 		SSLKeyLocation:         al.SSLKeyLocation,
 		TrustServerCertificate: al.TrustServerCertificate,
+		AWSIamAuth:             al.AWSIamAuth,
+		AwsRegion:              al.GetEffectiveAwsRegion(),
 	}
 }
 
 // NewConnection creates a new PGSQLConnection from args
 func (ci *connectionInfo) NewConnection(database string) (*PGSQLConnection, error) {
-	db, err := sqlx.Open("postgres", createConnectionURL(ci, database))
+	log.Debug("Creating connection to database: %s", database)
+	password, err := ci.resolvePassword()
+	if err != nil {
+		return nil, fmt.Errorf("failed to resolve password: %w", err)
+	}
+
+	db, err := sqlx.Open("postgres", createConnectionURL(ci, database, password))
 	if err != nil {
 		return nil, err
 	}
@@ -74,6 +86,28 @@ func (ci *connectionInfo) NewConnection(database string) (*PGSQLConnection, erro
 	return &PGSQLConnection{
 		connection: db,
 	}, nil
+}
+
+// resolvePassword returns either an AWS IAM auth token (cached) or the static password
+func (ci *connectionInfo) resolvePassword() (string, error) {
+	if !ci.AWSIamAuth {
+		return ci.Password, nil
+	}
+
+	port, err := strconv.Atoi(ci.Port)
+	if err != nil {
+		return "", fmt.Errorf("invalid port: %w", err)
+	}
+	endpoint := fmt.Sprintf("%s:%d", ci.Host, port)
+
+	// Use cached token manager
+	cache := getTokenCache()
+	token, err := cache.getCachedToken(context.TODO(), endpoint, ci.AwsRegion, ci.Username)
+	if err != nil {
+		return "", fmt.Errorf("failed to get IAM auth token: %w", err)
+	}
+
+	return token, nil
 }
 
 func (ci *connectionInfo) HostPort() (string, string) {
@@ -157,10 +191,10 @@ func (p PGSQLConnection) HaveExtensionInSchema(extensionName, schemaName string)
 
 // createConnectionURL creates the connection string. A list of parameters
 // can be found here https://godoc.org/github.com/lib/pq#hdr-Connection_String_Parameters
-func createConnectionURL(ci *connectionInfo, database string) string {
+func createConnectionURL(ci *connectionInfo, database string, password string) string {
 	connectionURL := &url.URL{
 		Scheme: "postgres",
-		User:   url.UserPassword(ci.Username, ci.Password),
+		User:   url.UserPassword(ci.Username, password),
 		Host:   fmt.Sprintf("%s:%s", ci.Host, ci.Port),
 		Path:   database,
 	}
@@ -168,8 +202,8 @@ func createConnectionURL(ci *connectionInfo, database string) string {
 	query := url.Values{}
 	query.Add("connect_timeout", ci.Timeout)
 
-	// SSL settings
-	if ci.EnableSSL {
+	// SSL settings - Force SSL for IAM auth
+	if ci.EnableSSL || ci.AWSIamAuth {
 		addSSLQueries(query, ci)
 	} else {
 		query.Add("sslmode", "disable")
