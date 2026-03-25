@@ -11,6 +11,7 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ### security
 - update go to v1.25.8
+- update github.com/lib/pq to v1.12.0
 
 ## v2.25.0 - 2026-02-18
 
