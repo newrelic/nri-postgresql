@@ -729,7 +729,7 @@ func TestPopulateMetrics(t *testing.T) {
 
 	instance, _ := testIntegration.Entity("testInstance", "instance")
 
-	PopulateMetrics(ci, dbList, instance, testIntegration, true, true, true, "")
+	PopulateMetrics(ci, dbList, instance, testIntegration, true, true, false, true, "")
 }
 
 func TestPopulateCustomMetricsFromFile(t *testing.T) {
