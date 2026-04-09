@@ -63,57 +63,97 @@ func PopulateMetrics(
 		return
 	}
 
-	// Handle based on detected database type
-	switch connInfo.Type {
-	case DatabaseTypePgBouncerAdmin:
-		// Connected to PgBouncer admin console - only collect PgBouncer metrics
-		log.Info("Detected PgBouncer admin console connection")
-		log.Info("PgBouncer version: %s", connInfo.PgBouncerVersion)
-
-		// Add version to instance entity
-		addPgBouncerVersionToInstance(instance, connInfo.PgBouncerVersion)
-
-		// Collect PgBouncer metrics
-		PopulatePgBouncerMetrics(i, con, ci)
-
-	case DatabaseTypePostgreSQL:
-		// Connected to PostgreSQL (either direct or through PgBouncer proxy)
-		// Collect all standard PostgreSQL metrics
-		log.Info("Detected PostgreSQL connection, version: %s", connInfo.PostgreSQLVersion)
-
-		PopulateInstanceMetrics(instance, connInfo.PostgreSQLVersion, con)
-		PopulateDatabaseMetrics(databaseList, connInfo.PostgreSQLVersion, i, con, ci)
-		if collectDbLocks {
-			PopulateDatabaseLockMetrics(databaseList, connInfo.PostgreSQLVersion, i, con, ci)
-		}
-		PopulateTableMetrics(databaseList, connInfo.PostgreSQLVersion, i, ci, collectBloat)
-		PopulateIndexMetrics(databaseList, i, ci)
-		if customMetricsQuery != "" {
-			PopulateCustomMetrics(customMetricsQuery, i, con, ci, instance)
-		}
-
-		// If PgBouncer flag is set, also collect PgBouncer pool metrics
-		// by connecting to the "pgbouncer" virtual database
-		if collectPgBouncer {
-			pbCon, pbErr := ci.NewConnection("pgbouncer")
-			if pbErr != nil {
-				log.Error("Error creating connection to pgbouncer database: %s", pbErr)
-			} else {
-				defer pbCon.Close()
-
-				// Try to get PgBouncer version and add to metrics
-				pbVersion, pbVerErr := tryPgBouncerVersion(pbCon)
-				if pbVerErr != nil {
-					log.Warn("Unable to collect PgBouncer version: %s", pbVerErr.Error())
-				} else {
-					log.Info("PgBouncer version: %s", pbVersion)
-					addPgBouncerVersionToInstance(instance, pbVersion)
-				}
-
-				PopulatePgBouncerMetrics(i, pbCon, ci)
-			}
-		}
+	// Handle PgBouncer admin console
+	if connInfo.Type == DatabaseTypePgBouncerAdmin {
+		collectPgBouncerAdminMetrics(connInfo, instance, i, con, ci)
+		return
 	}
+
+	// Handle PostgreSQL (direct or through proxy)
+	if connInfo.Type == DatabaseTypePostgreSQL {
+		collectPostgreSQLMetrics(connInfo, databaseList, instance, i, con, ci, collectPgBouncer, collectDbLocks, collectBloat, customMetricsQuery)
+		return
+	}
+
+	log.Error("Unknown database type detected")
+}
+
+// collectPgBouncerAdminMetrics handles metrics collection for PgBouncer admin console
+func collectPgBouncerAdminMetrics(
+	connInfo *ConnectionInfo,
+	instance *integration.Entity,
+	i *integration.Integration,
+	con *connection.PGSQLConnection,
+	ci connection.Info) {
+
+	log.Info("Detected PgBouncer admin console connection")
+	log.Info("PgBouncer version: %s", connInfo.PgBouncerVersion)
+
+	// Add version to instance entity
+	addPgBouncerVersionToInstance(instance, connInfo.PgBouncerVersion)
+
+	// Collect PgBouncer metrics
+	PopulatePgBouncerMetrics(i, con, ci)
+}
+
+// collectPostgreSQLMetrics handles metrics collection for PostgreSQL connections
+func collectPostgreSQLMetrics(
+	connInfo *ConnectionInfo,
+	databaseList collection.DatabaseList,
+	instance *integration.Entity,
+	i *integration.Integration,
+	con *connection.PGSQLConnection,
+	ci connection.Info,
+	collectPgBouncer, collectDbLocks, collectBloat bool,
+	customMetricsQuery string) {
+
+	log.Info("Detected PostgreSQL connection, version: %s", connInfo.PostgreSQLVersion)
+
+	// Collect standard PostgreSQL metrics
+	PopulateInstanceMetrics(instance, connInfo.PostgreSQLVersion, con)
+	PopulateDatabaseMetrics(databaseList, connInfo.PostgreSQLVersion, i, con, ci)
+
+	if collectDbLocks {
+		PopulateDatabaseLockMetrics(databaseList, connInfo.PostgreSQLVersion, i, con, ci)
+	}
+
+	PopulateTableMetrics(databaseList, connInfo.PostgreSQLVersion, i, ci, collectBloat)
+	PopulateIndexMetrics(databaseList, i, ci)
+
+	if customMetricsQuery != "" {
+		PopulateCustomMetrics(customMetricsQuery, i, con, ci, instance)
+	}
+
+	// If PgBouncer flag is set, also collect PgBouncer pool metrics
+	// by connecting to the "pgbouncer" virtual database
+	if collectPgBouncer {
+		collectPgBouncerPoolMetrics(instance, i, ci)
+	}
+}
+
+// collectPgBouncerPoolMetrics collects PgBouncer pool metrics when connected through proxy
+func collectPgBouncerPoolMetrics(
+	instance *integration.Entity,
+	i *integration.Integration,
+	ci connection.Info) {
+
+	pbCon, err := ci.NewConnection("pgbouncer")
+	if err != nil {
+		log.Error("Error creating connection to pgbouncer database: %s", err)
+		return
+	}
+	defer pbCon.Close()
+
+	// Try to get PgBouncer version and add to metrics
+	pbVersion, err := tryPgBouncerVersion(pbCon)
+	if err != nil {
+		log.Warn("Unable to collect PgBouncer version: %s", err.Error())
+	} else {
+		log.Info("PgBouncer version: %s", pbVersion)
+		addPgBouncerVersionToInstance(instance, pbVersion)
+	}
+
+	PopulatePgBouncerMetrics(i, pbCon, ci)
 }
 
 // PopulateCustomMetricsFromFile collects metrics defined by a custom config file
