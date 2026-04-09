@@ -18,7 +18,8 @@ import (
 )
 
 const (
-	versionQuery = `SHOW server_version`
+	versionQuery          = `SHOW server_version`
+	pgbouncerVersionQuery = `SHOW VERSION`
 )
 
 // PopulateMetrics collects metrics for each type
@@ -30,6 +31,37 @@ func PopulateMetrics(
 	collectPgBouncer, collectDbLocks, collectBloat bool,
 	customMetricsQuery string) {
 
+	// When collectPgBouncer is true and DATABASE is "pgbouncer", we're connected
+	// to the PgBouncer admin console, which doesn't support standard PostgreSQL queries.
+	// In this mode, skip standard metrics and only collect PgBouncer metrics.
+	if collectPgBouncer && ci.DatabaseName() == "pgbouncer" {
+		con, err := ci.NewConnection("pgbouncer")
+		if err != nil {
+			log.Error("Error creating connection to pgbouncer admin console: %s", err)
+			return
+		}
+		defer con.Close()
+
+		// Collect PgBouncer version
+		pgbouncerVersion, err := CollectPgBouncerVersion(con)
+		if err != nil {
+			log.Warn("Unable to collect PgBouncer version: %s", err.Error())
+		} else {
+			log.Info("PgBouncer version: %s", pgbouncerVersion)
+			// Add version to instance entity
+			metricSet := instance.NewMetricSet("PostgresqlInstanceSample",
+				attribute.Attribute{Key: "displayName", Value: instance.Metadata.Name},
+				attribute.Attribute{Key: "entityName", Value: instance.Metadata.Namespace + ":" + instance.Metadata.Name},
+				attribute.Attribute{Key: "pgbouncerVersion", Value: pgbouncerVersion},
+			)
+			_ = metricSet.SetMetric("pgbouncer.version", pgbouncerVersion, metric.ATTRIBUTE)
+		}
+
+		PopulatePgBouncerMetrics(i, con, ci)
+		return
+	}
+
+	// Standard PostgreSQL metrics collection
 	con, err := ci.NewConnection(ci.DatabaseName())
 	if err != nil {
 		log.Error("Metrics collection failed: error creating connection to PostgreSQL: %s", err.Error())
@@ -54,12 +86,30 @@ func PopulateMetrics(
 		PopulateCustomMetrics(customMetricsQuery, i, con, ci, instance)
 	}
 
+	// If PgBouncer metrics are also requested in standard PostgreSQL mode,
+	// create a separate connection to the "pgbouncer" database
 	if collectPgBouncer {
 		con, err = ci.NewConnection("pgbouncer")
 		if err != nil {
 			log.Error("Error creating connection to pgbouncer database: %s", err)
 		} else {
 			defer con.Close()
+
+			// Collect PgBouncer version
+			pgbouncerVersion, err := CollectPgBouncerVersion(con)
+			if err != nil {
+				log.Warn("Unable to collect PgBouncer version: %s", err.Error())
+			} else {
+				log.Info("PgBouncer version: %s", pgbouncerVersion)
+				// Add version to instance entity
+				metricSet := instance.NewMetricSet("PostgresqlInstanceSample",
+					attribute.Attribute{Key: "displayName", Value: instance.Metadata.Name},
+					attribute.Attribute{Key: "entityName", Value: instance.Metadata.Namespace + ":" + instance.Metadata.Name},
+					attribute.Attribute{Key: "pgbouncerVersion", Value: pgbouncerVersion},
+				)
+				_ = metricSet.SetMetric("pgbouncer.version", pgbouncerVersion, metric.ATTRIBUTE)
+			}
+
 			PopulatePgBouncerMetrics(i, con, ci)
 		}
 	}
@@ -223,6 +273,10 @@ type serverVersionRow struct {
 	Version string `db:"server_version"`
 }
 
+type pgbouncerVersionRow struct {
+	Version string `db:"version"`
+}
+
 func CollectVersion(connection *connection.PGSQLConnection) (*semver.Version, error) {
 	var versionRows []*serverVersionRow
 	if err := connection.Query(&versionRows, versionQuery); err != nil {
@@ -245,6 +299,20 @@ func CollectVersion(connection *connection.PGSQLConnection) (*semver.Version, er
 	}
 
 	return &v, nil
+}
+
+// CollectPgBouncerVersion collects the PgBouncer version using SHOW VERSION
+func CollectPgBouncerVersion(connection *connection.PGSQLConnection) (string, error) {
+	var versionRows []*pgbouncerVersionRow
+	if err := connection.Query(&versionRows, pgbouncerVersionQuery); err != nil {
+		return "", err
+	}
+
+	if len(versionRows) == 0 {
+		return "", fmt.Errorf("no version information returned from PgBouncer")
+	}
+
+	return versionRows[0].Version, nil
 }
 
 // func parseSpecialVersion(version string, specialIndex int) (*semver.Version, error) {

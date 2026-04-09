@@ -60,10 +60,21 @@ func main() {
 	}
 
 	connectionInfo := connection.DefaultConnectionInfo(&args)
-	collectionList, err := collection.BuildCollectionList(args, connectionInfo)
-	if err != nil {
-		log.Error("Error creating list of entities to collect: %s", err)
-		os.Exit(1)
+
+	// When connecting directly to PgBouncer admin console (DATABASE=pgbouncer),
+	// skip building collection list as it requires PostgreSQL-specific queries
+	var collectionList collection.DatabaseList
+	if args.Pgbouncer && args.Database == "pgbouncer" {
+		// PgBouncer admin console mode - initialize empty collection list
+		collectionList = collection.DatabaseList{}
+	} else {
+		// Standard PostgreSQL mode - build collection list normally
+		var err error
+		collectionList, err = collection.BuildCollectionList(args, connectionInfo)
+		if err != nil {
+			log.Error("Error creating list of entities to collect: %s", err)
+			os.Exit(1)
+		}
 	}
 	instance, err := pgIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 	if err != nil {
@@ -78,12 +89,18 @@ func main() {
 	}
 
 	if args.HasInventory() {
-		con, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
-		if err != nil {
-			log.Error("Inventory collection failed: error creating connection to PostgreSQL: %s", err.Error())
+		// Skip inventory collection when connected to PgBouncer admin console
+		// as it requires PostgreSQL-specific system queries
+		if args.Pgbouncer && args.Database == "pgbouncer" {
+			log.Debug("Skipping inventory collection in PgBouncer admin console mode")
 		} else {
-			defer con.Close()
-			inventory.PopulateInventory(instance, con)
+			con, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
+			if err != nil {
+				log.Error("Inventory collection failed: error creating connection to PostgreSQL: %s", err.Error())
+			} else {
+				defer con.Close()
+				inventory.PopulateInventory(instance, con)
+			}
 		}
 	}
 
@@ -92,7 +109,13 @@ func main() {
 	}
 
 	if args.EnableQueryMonitoring {
-		queryperformancemonitoring.QueryPerformanceMain(args, pgIntegration, collectionList)
+		// Skip query monitoring when connected to PgBouncer admin console
+		// as it requires PostgreSQL-specific system views (pg_stat_statements, pg_stat_activity, etc.)
+		if args.Pgbouncer && args.Database == "pgbouncer" {
+			log.Debug("Skipping query performance monitoring in PgBouncer admin console mode")
+		} else {
+			queryperformancemonitoring.QueryPerformanceMain(args, pgIntegration, collectionList)
+		}
 	}
 
 }
