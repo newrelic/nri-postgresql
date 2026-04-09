@@ -21,21 +21,31 @@ import (
 func QueryPerformanceMain(args args.ArgumentList, pgIntegration *integration.Integration, databaseMap collection.DatabaseList) {
 	connectionInfo := performancedbconnection.DefaultConnectionInfo(&args)
 	if len(databaseMap) == 0 {
-		log.Debug("No databases found")
+		log.Debug("No databases found for query monitoring")
 		return
 	}
 	newConnection, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
 	if err != nil {
-		log.Error("Error creating connection: ", err)
+		log.Error("Error creating connection for query monitoring: ", err)
 		return
 	}
 	defer newConnection.Close()
 
-	version, versionErr := metrics.CollectVersion(newConnection)
-	if versionErr != nil {
-		log.Error("Error fetching version: ", versionErr)
+	// Detect database type - QPM only works for PostgreSQL
+	connInfo, detectErr := metrics.DetectDatabaseType(newConnection)
+	if detectErr != nil {
+		log.Error("Error determining database type for query monitoring: ", detectErr)
 		return
 	}
+
+	// Skip QPM if connected to PgBouncer admin console
+	if connInfo.Type == metrics.DatabaseTypePgBouncerAdmin {
+		log.Debug("Skipping query performance monitoring - connected to PgBouncer admin console (only PostgreSQL databases support QPM)")
+		return
+	}
+
+	// We have PostgreSQL connection - proceed with QPM
+	version := connInfo.PostgreSQLVersion
 	versionInt := version.Major
 	if !validations.CheckPostgresVersionSupportForQueryMonitoring(versionInt) {
 		log.Debug("Postgres version: %d is not supported for query monitoring", versionInt)

@@ -22,7 +22,24 @@ const (
 	pgbouncerVersionQuery = `SHOW VERSION`
 )
 
+// DatabaseType represents the type of database we're connected to
+type DatabaseType int
+
+const (
+	DatabaseTypePostgreSQL DatabaseType = iota
+	DatabaseTypePgBouncerAdmin
+	DatabaseTypeUnknown
+)
+
+// ConnectionInfo contains information about the connected database
+type ConnectionInfo struct {
+	Type              DatabaseType
+	PostgreSQLVersion *semver.Version
+	PgBouncerVersion  string
+}
+
 // PopulateMetrics collects metrics for each type
+// It automatically detects whether we're connected to PostgreSQL or PgBouncer admin console
 func PopulateMetrics(
 	ci connection.Info,
 	databaseList collection.DatabaseList,
@@ -31,86 +48,70 @@ func PopulateMetrics(
 	collectPgBouncer, collectDbLocks, collectBloat bool,
 	customMetricsQuery string) {
 
-	// When collectPgBouncer is true and DATABASE is "pgbouncer", we're connected
-	// to the PgBouncer admin console, which doesn't support standard PostgreSQL queries.
-	// In this mode, skip standard metrics and only collect PgBouncer metrics.
-	if collectPgBouncer && ci.DatabaseName() == "pgbouncer" {
-		con, err := ci.NewConnection("pgbouncer")
-		if err != nil {
-			log.Error("Error creating connection to pgbouncer admin console: %s", err)
-			return
-		}
-		defer con.Close()
-
-		// Collect PgBouncer version
-		pgbouncerVersion, err := CollectPgBouncerVersion(con)
-		if err != nil {
-			log.Warn("Unable to collect PgBouncer version: %s", err.Error())
-		} else {
-			log.Info("PgBouncer version: %s", pgbouncerVersion)
-			// Add version to instance entity
-			metricSet := instance.NewMetricSet("PostgresqlInstanceSample",
-				attribute.Attribute{Key: "displayName", Value: instance.Metadata.Name},
-				attribute.Attribute{Key: "entityName", Value: instance.Metadata.Namespace + ":" + instance.Metadata.Name},
-				attribute.Attribute{Key: "pgbouncerVersion", Value: pgbouncerVersion},
-			)
-			_ = metricSet.SetMetric("pgbouncer.version", pgbouncerVersion, metric.ATTRIBUTE)
-		}
-
-		PopulatePgBouncerMetrics(i, con, ci)
-		return
-	}
-
-	// Standard PostgreSQL metrics collection
+	// Create connection to the configured database
 	con, err := ci.NewConnection(ci.DatabaseName())
 	if err != nil {
-		log.Error("Metrics collection failed: error creating connection to PostgreSQL: %s", err.Error())
+		log.Error("Metrics collection failed: error creating connection: %s", err.Error())
 		return
 	}
 	defer con.Close()
 
-	version, err := CollectVersion(con)
+	// Detect what type of database we're connected to by trying queries
+	connInfo, err := DetectDatabaseType(con)
 	if err != nil {
-		log.Error("Metrics collection failed: error collecting version number: %s", err.Error())
+		log.Error("Metrics collection failed: unable to determine database type: %s", err.Error())
 		return
 	}
 
-	PopulateInstanceMetrics(instance, version, con)
-	PopulateDatabaseMetrics(databaseList, version, i, con, ci)
-	if collectDbLocks {
-		PopulateDatabaseLockMetrics(databaseList, version, i, con, ci)
-	}
-	PopulateTableMetrics(databaseList, version, i, ci, collectBloat)
-	PopulateIndexMetrics(databaseList, i, ci)
-	if customMetricsQuery != "" {
-		PopulateCustomMetrics(customMetricsQuery, i, con, ci, instance)
-	}
+	// Handle based on detected database type
+	switch connInfo.Type {
+	case DatabaseTypePgBouncerAdmin:
+		// Connected to PgBouncer admin console - only collect PgBouncer metrics
+		log.Info("Detected PgBouncer admin console connection")
+		log.Info("PgBouncer version: %s", connInfo.PgBouncerVersion)
 
-	// If PgBouncer metrics are also requested in standard PostgreSQL mode,
-	// create a separate connection to the "pgbouncer" database
-	if collectPgBouncer {
-		con, err = ci.NewConnection("pgbouncer")
-		if err != nil {
-			log.Error("Error creating connection to pgbouncer database: %s", err)
-		} else {
-			defer con.Close()
+		// Add version to instance entity
+		addPgBouncerVersionToInstance(instance, connInfo.PgBouncerVersion)
 
-			// Collect PgBouncer version
-			pgbouncerVersion, err := CollectPgBouncerVersion(con)
-			if err != nil {
-				log.Warn("Unable to collect PgBouncer version: %s", err.Error())
+		// Collect PgBouncer metrics
+		PopulatePgBouncerMetrics(i, con, ci)
+
+	case DatabaseTypePostgreSQL:
+		// Connected to PostgreSQL (either direct or through PgBouncer proxy)
+		// Collect all standard PostgreSQL metrics
+		log.Info("Detected PostgreSQL connection, version: %s", connInfo.PostgreSQLVersion)
+
+		PopulateInstanceMetrics(instance, connInfo.PostgreSQLVersion, con)
+		PopulateDatabaseMetrics(databaseList, connInfo.PostgreSQLVersion, i, con, ci)
+		if collectDbLocks {
+			PopulateDatabaseLockMetrics(databaseList, connInfo.PostgreSQLVersion, i, con, ci)
+		}
+		PopulateTableMetrics(databaseList, connInfo.PostgreSQLVersion, i, ci, collectBloat)
+		PopulateIndexMetrics(databaseList, i, ci)
+		if customMetricsQuery != "" {
+			PopulateCustomMetrics(customMetricsQuery, i, con, ci, instance)
+		}
+
+		// If PgBouncer flag is set, also collect PgBouncer pool metrics
+		// by connecting to the "pgbouncer" virtual database
+		if collectPgBouncer {
+			pbCon, pbErr := ci.NewConnection("pgbouncer")
+			if pbErr != nil {
+				log.Error("Error creating connection to pgbouncer database: %s", pbErr)
 			} else {
-				log.Info("PgBouncer version: %s", pgbouncerVersion)
-				// Add version to instance entity
-				metricSet := instance.NewMetricSet("PostgresqlInstanceSample",
-					attribute.Attribute{Key: "displayName", Value: instance.Metadata.Name},
-					attribute.Attribute{Key: "entityName", Value: instance.Metadata.Namespace + ":" + instance.Metadata.Name},
-					attribute.Attribute{Key: "pgbouncerVersion", Value: pgbouncerVersion},
-				)
-				_ = metricSet.SetMetric("pgbouncer.version", pgbouncerVersion, metric.ATTRIBUTE)
-			}
+				defer pbCon.Close()
 
-			PopulatePgBouncerMetrics(i, con, ci)
+				// Try to get PgBouncer version and add to metrics
+				pbVersion, pbVerErr := tryPgBouncerVersion(pbCon)
+				if pbVerErr != nil {
+					log.Warn("Unable to collect PgBouncer version: %s", pbVerErr.Error())
+				} else {
+					log.Info("PgBouncer version: %s", pbVersion)
+					addPgBouncerVersionToInstance(instance, pbVersion)
+				}
+
+				PopulatePgBouncerMetrics(i, pbCon, ci)
+			}
 		}
 	}
 }
@@ -277,21 +278,56 @@ type pgbouncerVersionRow struct {
 	Version string `db:"version"`
 }
 
-func CollectVersion(connection *connection.PGSQLConnection) (*semver.Version, error) {
+// addPgBouncerVersionToInstance adds PgBouncer version metrics to the instance entity
+func addPgBouncerVersionToInstance(instance *integration.Entity, version string) {
+	metricSet := instance.NewMetricSet("PostgresqlInstanceSample",
+		attribute.Attribute{Key: "displayName", Value: instance.Metadata.Name},
+		attribute.Attribute{Key: "entityName", Value: instance.Metadata.Namespace + ":" + instance.Metadata.Name},
+		attribute.Attribute{Key: "pgbouncerVersion", Value: version},
+	)
+	_ = metricSet.SetMetric("pgbouncer.version", version, metric.ATTRIBUTE)
+}
+
+// DetectDatabaseType determines what type of database we're connected to
+// by attempting queries and checking which ones succeed
+func DetectDatabaseType(connection *connection.PGSQLConnection) (*ConnectionInfo, error) {
+	connInfo := &ConnectionInfo{Type: DatabaseTypeUnknown}
+
+	// First, try PostgreSQL version query
+	pgVersion, pgErr := tryPostgreSQLVersion(connection)
+	if pgErr == nil {
+		// Successfully connected to PostgreSQL (either direct or through PgBouncer proxy)
+		connInfo.Type = DatabaseTypePostgreSQL
+		connInfo.PostgreSQLVersion = pgVersion
+		return connInfo, nil
+	}
+
+	// PostgreSQL query failed, try PgBouncer admin console query
+	pbVersion, pbErr := tryPgBouncerVersion(connection)
+	if pbErr == nil {
+		// Successfully connected to PgBouncer admin console
+		connInfo.Type = DatabaseTypePgBouncerAdmin
+		connInfo.PgBouncerVersion = pbVersion
+		return connInfo, nil
+	}
+
+	// Neither worked - return both errors
+	return nil, fmt.Errorf("unable to determine database type - PostgreSQL error: %v, PgBouncer error: %v", pgErr, pbErr)
+}
+
+// tryPostgreSQLVersion attempts to get PostgreSQL version
+func tryPostgreSQLVersion(connection *connection.PGSQLConnection) (*semver.Version, error) {
 	var versionRows []*serverVersionRow
 	if err := connection.Query(&versionRows, versionQuery); err != nil {
 		return nil, err
 	}
 
+	if len(versionRows) == 0 {
+		return nil, fmt.Errorf("no version information returned")
+	}
+
 	re := regexp.MustCompile(`[0-9]+\.[0-9]+(\.[0-9])?`)
 	version := re.FindString(versionRows[0].Version)
-	// special cases for ubuntu/debian parsing
-	//version := versionRows[0].Version
-	//if strings.Contains(version, "Ubuntu") {
-	//return parseSpecialVersion(version, strings.Index(version, " (Ubuntu"))
-	//} else if strings.Contains(version, "Debian") {
-	//return parseSpecialVersion(version, strings.Index(version, " (Debian"))
-	//}
 
 	v, err := semver.ParseTolerant(version)
 	if err != nil {
@@ -301,8 +337,8 @@ func CollectVersion(connection *connection.PGSQLConnection) (*semver.Version, er
 	return &v, nil
 }
 
-// CollectPgBouncerVersion collects the PgBouncer version using SHOW VERSION
-func CollectPgBouncerVersion(connection *connection.PGSQLConnection) (string, error) {
+// tryPgBouncerVersion attempts to get PgBouncer version
+func tryPgBouncerVersion(connection *connection.PGSQLConnection) (string, error) {
 	var versionRows []*pgbouncerVersionRow
 	if err := connection.Query(&versionRows, pgbouncerVersionQuery); err != nil {
 		return "", err
@@ -314,6 +350,13 @@ func CollectPgBouncerVersion(connection *connection.PGSQLConnection) (string, er
 
 	return versionRows[0].Version, nil
 }
+
+// CollectVersion is kept for backward compatibility
+// It only works for PostgreSQL connections
+func CollectVersion(connection *connection.PGSQLConnection) (*semver.Version, error) {
+	return tryPostgreSQLVersion(connection)
+}
+
 
 // func parseSpecialVersion(version string, specialIndex int) (*semver.Version, error) {
 // partialVersion := version[:specialIndex]

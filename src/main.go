@@ -61,20 +61,14 @@ func main() {
 
 	connectionInfo := connection.DefaultConnectionInfo(&args)
 
-	// When connecting directly to PgBouncer admin console (DATABASE=pgbouncer),
-	// skip building collection list as it requires PostgreSQL-specific queries
-	var collectionList collection.DatabaseList
-	if args.Pgbouncer && args.Database == "pgbouncer" {
-		// PgBouncer admin console mode - initialize empty collection list
+	// Try to build collection list - if it fails, we might be connected to PgBouncer admin console
+	// The detection will happen later in PopulateMetrics
+	collectionList, err := collection.BuildCollectionList(args, connectionInfo)
+	if err != nil {
+		// Log as debug since this might be expected for PgBouncer admin console
+		log.Debug("Unable to build collection list (this is normal for PgBouncer admin console): %s", err)
+		// Initialize empty collection list - PopulateMetrics will handle detection
 		collectionList = collection.DatabaseList{}
-	} else {
-		// Standard PostgreSQL mode - build collection list normally
-		var err error
-		collectionList, err = collection.BuildCollectionList(args, connectionInfo)
-		if err != nil {
-			log.Error("Error creating list of entities to collect: %s", err)
-			os.Exit(1)
-		}
 	}
 	instance, err := pgIntegration.Entity(fmt.Sprintf("%s:%s", args.Hostname, args.Port), "pg-instance")
 	if err != nil {
@@ -89,16 +83,19 @@ func main() {
 	}
 
 	if args.HasInventory() {
-		// Skip inventory collection when connected to PgBouncer admin console
-		// as it requires PostgreSQL-specific system queries
-		if args.Pgbouncer && args.Database == "pgbouncer" {
-			log.Debug("Skipping inventory collection in PgBouncer admin console mode")
+		con, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
+		if err != nil {
+			log.Error("Inventory collection failed: error creating connection: %s", err.Error())
 		} else {
-			con, err := connectionInfo.NewConnection(connectionInfo.DatabaseName())
-			if err != nil {
-				log.Error("Inventory collection failed: error creating connection to PostgreSQL: %s", err.Error())
+			defer con.Close()
+
+			// Try to detect database type - inventory only works for PostgreSQL
+			connInfo, detectErr := metrics.DetectDatabaseType(con)
+			if detectErr != nil {
+				log.Warn("Unable to determine database type for inventory collection: %s", detectErr.Error())
+			} else if connInfo.Type == metrics.DatabaseTypePgBouncerAdmin {
+				log.Debug("Skipping inventory collection - connected to PgBouncer admin console")
 			} else {
-				defer con.Close()
 				inventory.PopulateInventory(instance, con)
 			}
 		}
@@ -109,13 +106,7 @@ func main() {
 	}
 
 	if args.EnableQueryMonitoring {
-		// Skip query monitoring when connected to PgBouncer admin console
-		// as it requires PostgreSQL-specific system views (pg_stat_statements, pg_stat_activity, etc.)
-		if args.Pgbouncer && args.Database == "pgbouncer" {
-			log.Debug("Skipping query performance monitoring in PgBouncer admin console mode")
-		} else {
-			queryperformancemonitoring.QueryPerformanceMain(args, pgIntegration, collectionList)
-		}
+		queryperformancemonitoring.QueryPerformanceMain(args, pgIntegration, collectionList)
 	}
 
 }
