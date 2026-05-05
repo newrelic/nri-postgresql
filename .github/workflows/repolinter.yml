@@ -6,6 +6,10 @@ on:
   push:
   workflow_dispatch:
 
+
+permissions:
+  contents: read
+
 jobs:
   repolinter:
     uses: newrelic/coreint-automation/.github/workflows/reusable_repolinter.yaml@v3
