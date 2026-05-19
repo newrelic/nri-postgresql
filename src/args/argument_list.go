@@ -28,6 +28,7 @@ type ArgumentList struct {
 	TrustServerCertificate               bool   `default:"false" help:"If true server certificate is not verified for SSL. If false certificate will be verified against supplied certificate"`
 	Pgbouncer                            bool   `default:"false" help:"Collects metrics from PgBouncer instance. Assumes connection is through PgBouncer."`
 	CollectDbLockMetrics                 bool   `default:"false" help:"If true, enables collection of lock metrics for the specified database. (Note: requires that the 'tablefunc' extension is installed)"` //nolint: stylecheck
+	CollectDbLoadMetrics                 bool   `default:"false" help:"If true, enables collection of DBLoad (Average Active Sessions) metrics for each database"` //nolint: stylecheck
 	CollectBloatMetrics                  bool   `default:"true" help:"Enable collecting bloat metrics which can be performance intensive"`
 	ShowVersion                          bool   `default:"false" help:"Print build information and exit"`
 	EnableQueryMonitoring                bool   `default:"false" help:"Enable collection of detailed query performance metrics."`
