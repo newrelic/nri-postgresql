@@ -1,4 +1,4 @@
-FROM postgres:17.9
+FROM postgres:17.10
 
 # Dependencies
 RUN apt-get update && apt-get install -y \
