@@ -24,6 +24,8 @@ BuildVersion='0'
 Year=$(date +"%Y")
 INTEGRATION_EXE="nri-${INTEGRATION}.exe"
 
+mkdir -p ./winres
+
 sed \
   -e "s/{MajorVersion}/$MajorVersion/g" \
   -e "s/{MinorVersion}/$MinorVersion/g" \
@@ -32,6 +34,6 @@ sed \
   -e "s/{Year}/$Year/g" \
   -e "s/{Integration}/nri-$INTEGRATION/g" \
   -e "s/{IntegrationExe}/$INTEGRATION_EXE/g" \
-   ./build/windows/versioninfo.json.template > ./src/versioninfo.json
+   ./build/windows/winres.json.template > ./winres/winres.json
 
-go generate github.com/newrelic/nri-${INTEGRATION}/src/
+go-winres make --arch 386,amd64 --out ./src/rsrc
