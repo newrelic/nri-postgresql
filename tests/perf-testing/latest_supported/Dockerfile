@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     git \
     wget \
     postgresql-server-dev-17 \
+    libkrb5-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Postgres Docker Images copy contents of postgresql.conf.sample to postgresql.conf during initialization
