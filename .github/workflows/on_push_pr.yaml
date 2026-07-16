@@ -9,6 +9,10 @@ on:
   pull_request:
   workflow_dispatch:
 
+
+permissions:
+  contents: read
+
 jobs:
   push-pr:
     uses: newrelic/coreint-automation/.github/workflows/reusable_push_pr.yaml@v3

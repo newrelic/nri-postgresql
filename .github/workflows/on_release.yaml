@@ -7,6 +7,10 @@ on:
     tags:
       - 'v*'
 
+
+permissions:
+  contents: read
+
 jobs:
   release:
     uses: newrelic/coreint-automation/.github/workflows/reusable_on_release.yaml@v3
