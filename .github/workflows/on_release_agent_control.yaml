@@ -23,8 +23,6 @@ jobs:
       display_name: "PostgreSQL"
       monitoring_type: "INFRA"
       oci_registry: "docker.io/newrelic/nri-postgresql-artifacts"
-      source_repo: "newrelic/nri-postgresql"
-      metadata_git_ref: "master"
       artifacts: |
         [
           {"name":"linux-amd64","os":"linux","arch":"amd64","format":"tar+gzip","source_asset":"nri-postgresql_linux_{version}_amd64.tar.gz","source_format":"tar.gz","keep_files":["var/db/newrelic-infra/newrelic-integrations/bin/nri-postgresql"]},
