@@ -1,6 +1,6 @@
 module github.com/newrelic/nri-postgresql
 
-go 1.26.5
+go 1.26.6
 
 require (
 	github.com/blang/semver/v4 v4.0.0
