@@ -9,7 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### Security
+## v2.31.0 - 2026-09-03
+
+### 🛡️ Security notices
 - Added explicit least-privilege `permissions` blocks to GitHub Actions workflows
 - Added `security-events: write` permission to the security scan workflow so scan results can be uploaded
 
