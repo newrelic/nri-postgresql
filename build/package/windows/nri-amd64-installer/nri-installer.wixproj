@@ -42,6 +42,8 @@
         <CreateProperty Condition="$(Year) != ''" Value="Year=$(Year);$(DefineConstants)">
             <Output TaskParameter="Value" PropertyName="DefineConstants" />
         </CreateProperty>
+        <!-- Sign the raw exe; SignInstaller below only signs the .msi wrapper. -->
+        <Exec Condition="'$(noSign)' != 'true'" Command="&quot;$(SignToolPath)signtool.exe&quot; sign /s &quot;My&quot; /d &quot;$(pfx_certificate_description)&quot; /n &quot;$(pfx_certificate_description)&quot; &quot;..\..\..\..\dist\nri-$(IntegrationName)_windows_amd64\New Relic\newrelic-infra\newrelic-integrations\bin\nri-$(IntegrationName).exe&quot;"/>
     </Target>
     <Target Name="SignInstaller">
         <Exec Condition="'$(noSign)' != 'true'" Command="&quot;$(SignToolPath)signtool.exe&quot; sign /s &quot;My&quot; /d &quot;$(pfx_certificate_description)&quot; /n &quot;$(pfx_certificate_description)&quot; &quot;$(OutputPath)$(OutputName).msi&quot;"/>
