@@ -27,7 +27,7 @@ func PopulateMetrics(
 	databaseList collection.DatabaseList,
 	instance *integration.Entity,
 	i *integration.Integration,
-	collectPgBouncer, collectDbLocks, collectBloat bool,
+	collectPgBouncer, collectDbLocks, collectDbLoad, collectBloat bool,
 	customMetricsQuery string) {
 
 	con, err := ci.NewConnection(ci.DatabaseName())
@@ -45,6 +45,9 @@ func PopulateMetrics(
 
 	PopulateInstanceMetrics(instance, version, con)
 	PopulateDatabaseMetrics(databaseList, version, i, con, ci)
+	if collectDbLoad {
+		PopulateDBLoadMetrics(databaseList, version, i, con, ci)
+	}
 	if collectDbLocks {
 		PopulateDatabaseLockMetrics(databaseList, version, i, con, ci)
 	}
@@ -292,6 +295,13 @@ func PopulateInstanceMetrics(instanceEntity *integration.Entity, version *semver
 func PopulateDatabaseMetrics(databases collection.DatabaseList, version *semver.Version, pgIntegration *integration.Integration, connection *connection.PGSQLConnection, ci connection.Info) {
 	databaseDefinitions := generateDatabaseDefinitions(databases, version)
 	processDatabaseDefinitions(databaseDefinitions, pgIntegration, connection, ci)
+}
+
+// PopulateDBLoadMetrics populates the DBLoad metrics for each database
+// DBLoad represents Average Active Sessions (AAS) = CPU Load + Wait Load
+func PopulateDBLoadMetrics(databases collection.DatabaseList, version *semver.Version, pgIntegration *integration.Integration, connection *connection.PGSQLConnection, ci connection.Info) {
+	dbLoadDefinitions := generateDBLoadDefinitions(databases, version)
+	processDatabaseDefinitions(dbLoadDefinitions, pgIntegration, connection, ci)
 }
 
 // PopulateDatabaseLockMetrics populates the lock metrics for a database
