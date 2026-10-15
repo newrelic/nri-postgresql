@@ -9,6 +9,9 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+### Security
+- Updated golang patch version to v1.26.9
+
 ## v2.32.0 - 2026-09-14
 
 ### 🛡️ Security notices
@@ -19,9 +22,6 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 ### 🛡️ Security notices
 - Added explicit least-privilege `permissions` blocks to GitHub Actions workflows
 - Added `security-events: write` permission to the security scan workflow so scan results can be uploaded
-
-### ⛓️ Dependencies
-- Updated golang patch version to v1.26.9
 
 ## v2.29.0 - 2026-07-13
 
