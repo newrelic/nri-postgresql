@@ -15,9 +15,11 @@ RUN echo "pg_stat_statements.track = all" >> /usr/share/postgresql/postgresql.co
 RUN echo "pg_stat_statements.save = on" >> /usr/share/postgresql/postgresql.conf.sample
 RUN echo "pg_stat_monitor.pgsm_enable_query_plan = on" >> /usr/share/postgresql/postgresql.conf.sample
 
-# Install pg_wait_sampling
+# Install pg_wait_sampling (pinned to v1.1.11, the last release supporting PostgreSQL 13;
+# master dropped PG13 support and requires PostgreSQL 14+)
 RUN git clone https://github.com/postgrespro/pg_wait_sampling.git \
     && cd pg_wait_sampling \
+    && git checkout v1.1.11 \
     && make USE_PGXS=1 \
     && make USE_PGXS=1 install \
     && cd .. \

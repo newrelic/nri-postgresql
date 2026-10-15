@@ -9,8 +9,16 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
-### Security
+## v2.32.0 - 2026-09-14
+
+### 🛡️ Security notices
+- Signed the Windows `nri-postgresql.exe` binary during the installer build, not just the `.msi` wrapper, fixing Defender/VirusTotal false-positive detections.
+
+## v2.31.0 - 2026-09-03
+
+### 🛡️ Security notices
 - Added explicit least-privilege `permissions` blocks to GitHub Actions workflows
+- Added `security-events: write` permission to the security scan workflow so scan results can be uploaded
 
 ### ⛓️ Dependencies
 - Updated golang patch version to v1.26.9

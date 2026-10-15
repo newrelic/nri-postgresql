@@ -1,0 +1,23 @@
+configurationDefinitions:
+  - platform: HOST
+    type: AgentConfig
+    version: 1.0.0
+    format: yml
+    operatingSystem: LINUX
+    bindings:
+      - type: CONFIGURES
+        targetType: AGENT
+        target: NRIPostgresql
+        versions:
+          - ">2.31.0"
+  - platform: HOST
+    type: AgentConfig
+    version: 1.0.0
+    format: yml
+    operatingSystem: WINDOWS
+    bindings:
+      - type: CONFIGURES
+        targetType: AGENT
+        target: NRIPostgresql
+        versions:
+          - ">2.31.0"
