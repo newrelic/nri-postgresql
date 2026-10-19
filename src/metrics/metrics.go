@@ -352,7 +352,7 @@ func processDatabaseDefinitions(definitions []*QueryDefinition, pgIntegration *i
 func PopulateTableMetrics(databases collection.DatabaseList, version *semver.Version, pgIntegration *integration.Integration, ci connection.Info, collectBloat bool) {
 	for database, schemaList := range databases {
 		if len(schemaList) == 0 {
-			return
+			continue
 		}
 
 		// Create a new connection to the database
