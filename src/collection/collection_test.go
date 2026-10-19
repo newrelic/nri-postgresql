@@ -1,6 +1,7 @@
 package collection
 
 import (
+	"regexp"
 	"testing"
 
 	"github.com/newrelic/nri-postgresql/src/args"
@@ -21,7 +22,7 @@ func Test_buildSchemaListForDatabase(t *testing.T) {
 	mock.ExpectClose()
 
 	ignoreTableList := ignoreList{}
-	schemaList, err := buildSchemaListForDatabase(testConnection, ignoreTableList)
+	schemaList, err := buildSchemaListForDatabase(testConnection, dbSchemaQuery, ignoreList{}, ignoreTableList)
 	assert.Nil(t, err)
 	testConnection.Close()
 
@@ -47,7 +48,7 @@ func Test_buildSchemaListForDatabase_TableOnly(t *testing.T) {
 	mock.ExpectClose()
 
 	ignoreTableList := ignoreList{}
-	schemaList, err := buildSchemaListForDatabase(testConnection, ignoreTableList)
+	schemaList, err := buildSchemaListForDatabase(testConnection, dbSchemaQuery, ignoreList{}, ignoreTableList)
 	assert.Nil(t, err)
 
 	testConnection.Close()
@@ -206,6 +207,155 @@ func TestBuildCollectionList_IgnoreTables(t *testing.T) {
 				"table1": []string{"index1"},
 			},
 		},
+	}
+
+	dl, err := BuildCollectionList(al, &ci)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, dl)
+	assert.NoError(t, mock1.ExpectationsWereMet())
+	ci.AssertExpectations(t)
+}
+
+func TestBuildCollectionList_IgnoreSchemas(t *testing.T) {
+	al := args.ArgumentList{
+		CollectionList:             `["database1"]`,
+		CollectionIgnoreSchemaList: `["ignored_schema"]`,
+	}
+
+	ci := connection.MockInfo{}
+	testConnection1, mock1 := connection.CreateMockSQL(t)
+
+	ci.On("NewConnection", "database1").Return(testConnection1, nil)
+
+	instanceRows := sqlmock.NewRows([]string{
+		"schema_name",
+		"table_name",
+		"index_name",
+	}).AddRow("schema1", "table1", "index1").AddRow("ignored_schema", "table2", "index2")
+
+	mock1.ExpectQuery(dbSchemaQuery).WillReturnRows(instanceRows)
+	mock1.ExpectClose()
+
+	expected := DatabaseList{
+		"database1": SchemaList{
+			"schema1": TableList{
+				"table1": []string{"index1"},
+			},
+		},
+	}
+
+	dl, err := BuildCollectionList(al, &ci)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, dl)
+	assert.NoError(t, mock1.ExpectationsWereMet())
+	ci.AssertExpectations(t)
+}
+
+func TestBuildCollectionList_CatalogDiscoveryMode(t *testing.T) {
+	al := args.ArgumentList{
+		CollectionList:             `all`,
+		CollectionDiscoveryMode:    args.DiscoveryModeCatalog,
+		CollectionIgnoreSchemaList: `["ignored_schema"]`,
+		CollectionIgnoreTableList:  `["ignored_table"]`,
+	}
+
+	ci := connection.MockInfo{}
+
+	testConnection1, mock1 := connection.CreateMockSQL(t)
+	ci.On("NewConnection", "postgres").Return(testConnection1, nil)
+	dbRows := sqlmock.NewRows([]string{"datname"}).AddRow("database1")
+	mock1.ExpectQuery(allDBQuery).WillReturnRows(dbRows)
+	mock1.ExpectClose()
+
+	testConnection2, mock2 := connection.CreateMockSQL(t)
+	ci.On("NewConnection", "database1").Return(testConnection2, nil)
+	instanceRows := sqlmock.NewRows([]string{
+		"schema_name",
+		"table_name",
+		"index_name",
+	}).
+		AddRow("schema1", "table1", "index1").
+		AddRow("schema1", "table1", "index2").
+		AddRow("schema1", "no_index_table", nil).
+		AddRow("schema1", "ignored_table", "index3").
+		AddRow("ignored_schema", "table2", "index4")
+	mock2.ExpectQuery(regexp.QuoteMeta(dbCatalogSchemaQuery)).WillReturnRows(instanceRows)
+	mock2.ExpectClose()
+
+	expected := DatabaseList{
+		"database1": SchemaList{
+			"schema1": TableList{
+				"table1":         []string{"index1", "index2"},
+				"no_index_table": []string{},
+			},
+		},
+	}
+
+	dl, err := BuildCollectionList(al, &ci)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, dl)
+	assert.NoError(t, mock1.ExpectationsWereMet())
+	assert.NoError(t, mock2.ExpectationsWereMet())
+	ci.AssertExpectations(t)
+}
+
+func TestBuildCollectionList_DetailedListIgnoresDiscoveryMode(t *testing.T) {
+	al := args.ArgumentList{
+		CollectionList:             `{"database1": {"pg_catalog": { "pg_class": ["pg_class_oid_index"] }}}`,
+		CollectionDiscoveryMode:    args.DiscoveryModeCatalog,
+		CollectionIgnoreSchemaList: `["pg_catalog"]`,
+	}
+
+	expected := DatabaseList{
+		"database1": SchemaList{
+			"pg_catalog": TableList{
+				"pg_class": []string{"pg_class_oid_index"},
+			},
+		},
+	}
+
+	dl, err := BuildCollectionList(al, nil)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, dl)
+}
+
+func Test_schemaQueryForDiscoveryMode(t *testing.T) {
+	assert.Equal(t, dbSchemaQuery, schemaQueryForDiscoveryMode(""))
+	assert.Equal(t, dbSchemaQuery, schemaQueryForDiscoveryMode(args.DiscoveryModeInformationSchema))
+	assert.Equal(t, dbCatalogSchemaQuery, schemaQueryForDiscoveryMode(args.DiscoveryModeCatalog))
+}
+
+func TestBuildCollectionList_InvalidIgnoreSchemaList(t *testing.T) {
+	al := args.ArgumentList{
+		CollectionList:             `["database1"]`,
+		CollectionIgnoreSchemaList: `"public"`,
+	}
+
+	dl, err := BuildCollectionList(al, nil)
+	assert.Error(t, err)
+	assert.Nil(t, dl)
+}
+
+func TestBuildCollectionList_CatalogDiscoveryModeNoTables(t *testing.T) {
+	al := args.ArgumentList{
+		CollectionList:          `["database1"]`,
+		CollectionDiscoveryMode: args.DiscoveryModeCatalog,
+	}
+
+	ci := connection.MockInfo{}
+	testConnection1, mock1 := connection.CreateMockSQL(t)
+	ci.On("NewConnection", "database1").Return(testConnection1, nil)
+
+	instanceRows := sqlmock.NewRows([]string{
+		"schema_name",
+		"table_name",
+		"index_name",
+	})
+	mock1.ExpectQuery(regexp.QuoteMeta(dbCatalogSchemaQuery)).WillReturnRows(instanceRows)
+	mock1.ExpectClose()
+
+	expected := DatabaseList{
+		"database1": SchemaList{},
 	}
 
 	dl, err := BuildCollectionList(al, &ci)

@@ -51,6 +51,18 @@
             # Defaults to empty '[]'.
             # Example:
             # COLLECTION_IGNORE_TABLE_LIST: '["table1","table2"]'
+
+            # JSON array of schema names that will be ignored for metrics collection.
+            # Applies when COLLECTION_LIST is 'ALL' or a JSON array.
+            # Defaults to empty '[]'.
+            # Example:
+            # COLLECTION_IGNORE_SCHEMA_LIST: '["audit","staging"]'
+
+            # How tables and indexes are discovered when COLLECTION_LIST is 'ALL' or a JSON array.
+            # 'information_schema' (default) only finds tables the user owns or has some table or column privilege on.
+            # 'catalog' finds regular and partitioned tables without table privileges and skips system schemas.
+            # Bloat metrics still require SELECT on the tables in both modes.
+            # COLLECTION_DISCOVERY_MODE: information_schema
             
             # True if database lock metrics should be collected
             # Note: requires that the `tablefunc` extension be installed on the public schema
