@@ -813,3 +813,17 @@ queries:
 	assert.Equal(t, float64(0.064), metricSet["float_metric"])
 	assert.Equal(t, "test-string", metricSet["string_metric"])
 }
+
+func TestInsertSchemaTablesQuotesNames(t *testing.T) {
+	schemaList := collection.SchemaList{
+		"schema1": collection.TableList{
+			"owner's_table": []string{`back\slash_idx`},
+		},
+	}
+
+	tableDef := QueryDefinition{query: "IN (%SCHEMA_TABLES%)"}
+	assert.Equal(t, `IN ('schema1.owner''s_table')`, tableDef.insertSchemaTables(schemaList).GetQuery())
+
+	indexDef := QueryDefinition{query: "IN (%SCHEMA_TABLE_INDEXES%)"}
+	assert.Equal(t, `IN ( E'schema1.owner''s_table.back\\slash_idx')`, indexDef.insertSchemaTableIndexes(schemaList).GetQuery())
+}
