@@ -11,6 +11,7 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ### security
 - Updated golang patch version to v1.26.9
+- Updated golang patch version to v1.26.10
 
 ## v2.32.0 - 2026-09-14
 

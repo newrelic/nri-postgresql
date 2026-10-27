@@ -1,4 +1,4 @@
-FROM golang:1.26.9-bookworm as builder
+FROM golang:1.26.10-bookworm as builder
 ARG CGO_ENABLED=0
 WORKDIR /go/src/github.com/newrelic/nri-postgresql
 COPY . .
