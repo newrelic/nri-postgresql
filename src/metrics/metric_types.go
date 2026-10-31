@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/lib/pq"
 	"github.com/newrelic/nri-postgresql/src/collection"
 )
 
@@ -49,7 +50,7 @@ func (qd QueryDefinition) insertSchemaTables(schemaList collection.SchemaList) *
 	schemaTables := make([]string, 0)
 	for schema, tableList := range schemaList {
 		for table := range tableList {
-			schemaTables = append(schemaTables, fmt.Sprintf("'%s.%s'", schema, table))
+			schemaTables = append(schemaTables, pq.QuoteLiteral(schema+"."+table))
 		}
 	}
 
@@ -72,7 +73,7 @@ func (qd QueryDefinition) insertSchemaTableIndexes(schemaList collection.SchemaL
 	for schema, tableList := range schemaList {
 		for table, indexList := range tableList {
 			for _, index := range indexList {
-				schemaTableIndexes = append(schemaTableIndexes, fmt.Sprintf("'%s.%s.%s'", schema, table, index))
+				schemaTableIndexes = append(schemaTableIndexes, pq.QuoteLiteral(schema+"."+table+"."+index))
 			}
 		}
 	}

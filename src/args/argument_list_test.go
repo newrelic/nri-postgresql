@@ -86,6 +86,42 @@ func TestValidate(t *testing.T) {
 			},
 			false,
 		},
+		{
+			"Catalog discovery mode",
+			&ArgumentList{
+				Username:                "user",
+				Password:                "password",
+				Hostname:                "localhost",
+				Port:                    "90",
+				CollectionList:          "ALL",
+				CollectionDiscoveryMode: "catalog",
+			},
+			false,
+		},
+		{
+			"Information schema discovery mode",
+			&ArgumentList{
+				Username:                "user",
+				Password:                "password",
+				Hostname:                "localhost",
+				Port:                    "90",
+				CollectionList:          "ALL",
+				CollectionDiscoveryMode: "information_schema",
+			},
+			false,
+		},
+		{
+			"Invalid discovery mode",
+			&ArgumentList{
+				Username:                "user",
+				Password:                "password",
+				Hostname:                "localhost",
+				Port:                    "90",
+				CollectionList:          "ALL",
+				CollectionDiscoveryMode: "pg_class",
+			},
+			true,
+		},
 	}
 
 	for _, tc := range testCases {

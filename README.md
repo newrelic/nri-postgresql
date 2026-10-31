@@ -10,6 +10,41 @@ Inventory data for the configuration of the instance is collected from the `pg_s
 
 A user with the necessary permissions must be present on the database for all metrics to be collected.
 
+### Table and index discovery without table privileges
+
+When `COLLECTION_LIST` is `ALL` or a JSON array of databases, the integration discovers tables and indexes.
+By default (`COLLECTION_DISCOVERY_MODE: information_schema`) discovery uses `information_schema.tables`, which only
+lists tables the user owns or has some table or column privilege on; the commonly documented setup grants `SELECT`.
+A user without such privileges, for example one with only `pg_monitor`, misses application tables, while system
+catalog tables are still discovered and reported.
+
+With `COLLECTION_DISCOVERY_MODE: catalog` discovery reads `pg_class`, `pg_namespace` and `pg_index` instead, which
+needs no privileges on the tables or their schemas. What the built-in table and index metrics need in this mode:
+
+- Discovery: no table or schema privileges.
+- Table and index metrics (statistics views, `pg_total_relation_size`, `pg_indexes_size`, `pg_relation_size`):
+  no table or schema privileges.
+- Bloat metrics: `SELECT` on the tables (see below).
+
+So for the built-in table and index metrics other than bloat, a user without access to table data is enough
+(PostgreSQL 10+). Other options, such as lock metrics or custom queries, have their own requirements.
+
+```sql
+CREATE USER new_relic WITH PASSWORD 'PASSWORD';
+GRANT pg_monitor TO new_relic;            -- or pg_read_all_stats
+-- Only if CONNECT was revoked from PUBLIC on a database:
+-- GRANT CONNECT ON DATABASE <database> TO new_relic;
+```
+
+In `catalog` mode system schemas (`pg_catalog`, `information_schema`, `pg_toast`, temporary schemas) are always
+skipped, and more schemas can be excluded with `COLLECTION_IGNORE_SCHEMA_LIST`. Regular and partitioned tables are
+discovered; views, foreign tables and materialized views are not. As in the default mode, metrics are reported for
+each partition, not for the partitioned parent table or its partitioned indexes.
+
+Bloat metrics (`table.bloatSizeInBytes`, `table.dataSizeInBytes`, `table.bloatRatio`) are calculated from
+`pg_stats`, which only shows columns the user can `SELECT`. Without that privilege they are not reported in
+either mode; set `COLLECT_BLOAT_METRICS: "false"` to skip the query.
+
 ## Installation and usage
 
 For installation and usage instructions, see our [documentation web site](https://docs.newrelic.com/docs/integrations/host-integrations/host-integrations-list/postgresql-monitoring-integration).

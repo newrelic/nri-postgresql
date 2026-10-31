@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -301,6 +302,48 @@ func Test_populateTableMetricsForDatabase(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, expectedBloat, tableEntity.Metrics[0].Metrics)
 	assert.Equal(t, expectedBase, tableEntity.Metrics[1].Metrics)
+}
+
+func TestPopulateTableMetricsSkipsDatabaseWithoutTables(t *testing.T) {
+	dbList := collection.DatabaseList{
+		"db1": collection.SchemaList{
+			"schema1": collection.TableList{
+				"table1": []string{},
+			},
+		},
+	}
+	for i := 0; i < 7; i++ {
+		dbList[fmt.Sprintf("empty_db%d", i)] = collection.SchemaList{}
+	}
+	version := semver.MustParse("12.0.0")
+
+	// Iteration order over the map is unspecified; repeat to increase the chance of visiting
+	// an empty database before the one with tables.
+	for i := 0; i < 20; i++ {
+		testIntegration, _ := integration.New("test", "test")
+		testConnection, mock := connection.CreateMockSQL(t)
+		tableRows := sqlmock.NewRows([]string{
+			"database",
+			"schema_name",
+			"table_name",
+			"n_live_tup",
+		}).AddRow("db1", "schema1", "table1", 18)
+		mock.ExpectQuery(".*TABLEQUERY.*").WillReturnRows(tableRows)
+		mock.ExpectClose()
+
+		ci := &connection.MockInfo{}
+		ci.On("NewConnection", "db1").Return(testConnection, nil)
+
+		PopulateTableMetrics(dbList, &version, testIntegration, ci, false)
+
+		ci.AssertExpectations(t)
+		assert.NoError(t, mock.ExpectationsWereMet())
+		for name := range dbList {
+			if name != "db1" {
+				ci.AssertNotCalled(t, "NewConnection", name)
+			}
+		}
+	}
 }
 
 func TestPopulateTableMetricsForDatabaseNoTables(t *testing.T) {
@@ -769,4 +812,18 @@ queries:
 	assert.Equal(t, float64(25), metricSet["int_metric"])
 	assert.Equal(t, float64(0.064), metricSet["float_metric"])
 	assert.Equal(t, "test-string", metricSet["string_metric"])
+}
+
+func TestInsertSchemaTablesQuotesNames(t *testing.T) {
+	schemaList := collection.SchemaList{
+		"schema1": collection.TableList{
+			"owner's_table": []string{`back\slash_idx`},
+		},
+	}
+
+	tableDef := QueryDefinition{query: "IN (%SCHEMA_TABLES%)"}
+	assert.Equal(t, `IN ('schema1.owner''s_table')`, tableDef.insertSchemaTables(schemaList).GetQuery())
+
+	indexDef := QueryDefinition{query: "IN (%SCHEMA_TABLE_INDEXES%)"}
+	assert.Equal(t, `IN ( E'schema1.owner''s_table.back\\slash_idx')`, indexDef.insertSchemaTableIndexes(schemaList).GetQuery())
 }

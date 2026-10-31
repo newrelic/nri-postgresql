@@ -3,8 +3,16 @@ package args
 
 import (
 	"errors"
+	"fmt"
+
 	sdkArgs "github.com/newrelic/infra-integrations-sdk/v3/args"
 	"github.com/newrelic/infra-integrations-sdk/v3/log"
+)
+
+// Discovery modes for tables and indexes
+const (
+	DiscoveryModeInformationSchema = "information_schema"
+	DiscoveryModeCatalog           = "catalog"
 )
 
 // ArgumentList struct that holds all PostgreSQL arguments
@@ -18,6 +26,8 @@ type ArgumentList struct {
 	CollectionList                       string `default:"{}" help:"A JSON object which defines the databases, schemas, tables, and indexes to collect. Can also be a JSON array that list databases to be collected. Can also be the string literal 'ALL' to collect everything. Collects nothing by default."`
 	CollectionIgnoreDatabaseList         string `default:"[]" help:"A JSON array that list databases that will be excluded from collection. Nothing is excluded by default."`
 	CollectionIgnoreTableList            string `default:"[]" help:"A JSON array that list tables that will be excluded from collection. Nothing is excluded by default."`
+	CollectionIgnoreSchemaList           string `default:"[]" help:"A JSON array that list schemas that will be excluded from collection when collection_list is 'ALL' or a JSON array. Names are matched exactly in every database. Nothing is excluded by default."`
+	CollectionDiscoveryMode              string `default:"information_schema" help:"How tables and indexes are discovered when collection_list is 'ALL' or a JSON array. 'information_schema' (default) only finds tables the user owns or has some table or column privilege on. 'catalog' reads pg_catalog, finds regular and partitioned tables without table privileges and always skips system schemas."`
 	SSLRootCertLocation                  string `default:"" help:"Absolute path to PEM encoded root certificate file"`
 	SSLCertLocation                      string `default:"" help:"Absolute path to PEM encoded client cert file"`
 	SSLKeyLocation                       string `default:"" help:"Absolute path to PEM encoded client key file"`
@@ -44,7 +54,19 @@ func (al ArgumentList) Validate() error {
 	if err := al.validateSSL(); err != nil {
 		return err
 	}
+	if err := al.validateDiscoveryMode(); err != nil {
+		return err
+	}
 	return nil
+}
+
+func (al ArgumentList) validateDiscoveryMode() error {
+	switch al.CollectionDiscoveryMode {
+	case "", DiscoveryModeInformationSchema, DiscoveryModeCatalog:
+		return nil
+	default:
+		return fmt.Errorf("invalid configuration: collection_discovery_mode must be '%s' or '%s', got '%s'", DiscoveryModeInformationSchema, DiscoveryModeCatalog, al.CollectionDiscoveryMode)
+	}
 }
 
 func (al ArgumentList) validateSSL() error {

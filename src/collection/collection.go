@@ -20,6 +20,17 @@ const (
                      FULL OUTER JOIN pg_indexes t2
                      ON t2.tablename = t1.table_name
                      AND t2.schemaname = t1.table_schema;`
+	// dbCatalogSchemaQuery lists regular and partitioned tables with their indexes straight from the
+	// system catalog, so no privileges on the tables are needed. System schemas are always skipped.
+	dbCatalogSchemaQuery = `SELECT n.nspname AS schema_name, c.relname AS table_name, i.relname AS index_name
+                     FROM pg_catalog.pg_class c
+                     JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+                     LEFT JOIN pg_catalog.pg_index x ON x.indrelid = c.oid
+                     LEFT JOIN pg_catalog.pg_class i ON i.oid = x.indexrelid
+                     WHERE c.relkind IN ('r', 'p')
+                     AND n.nspname NOT IN ('pg_catalog', 'information_schema')
+                     AND n.nspname !~ '^pg_toast'
+                     AND n.nspname !~ '^pg_temp_';`
 )
 
 // DatabaseList is a map from database name to SchemaLists to collect
@@ -48,6 +59,11 @@ func BuildCollectionList(al args.ArgumentList, ci connection.Info) (DatabaseList
 		return nil, fmt.Errorf("failed to parse ignore db list: %w", err)
 	}
 
+	ignoreSchemaList, err := parseIgnoreList(al.CollectionIgnoreSchemaList)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse ignore schema list: %w", err)
+	}
+
 	ignoreTableList, err := parseIgnoreList(al.CollectionIgnoreTableList)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse ignore table list: %w", err)
@@ -70,12 +86,20 @@ func BuildCollectionList(al args.ArgumentList, ci connection.Info) (DatabaseList
 	}
 
 	if len(dbNames) != 0 {
-		if dbList, err = buildCollectionListFromDatabaseNames(dbNames, ignoreDBList, ignoreTableList, ci); err != nil {
+		schemaQuery := schemaQueryForDiscoveryMode(al.CollectionDiscoveryMode)
+		if dbList, err = buildCollectionListFromDatabaseNames(dbNames, schemaQuery, ignoreDBList, ignoreSchemaList, ignoreTableList, ci); err != nil {
 			return nil, err
 		}
 	}
 
 	return dbList, nil
+}
+
+func schemaQueryForDiscoveryMode(mode string) string {
+	if mode == args.DiscoveryModeCatalog {
+		return dbCatalogSchemaQuery
+	}
+	return dbSchemaQuery
 }
 
 func parseIgnoreList(list string) (ignoreList, error) {
@@ -122,7 +146,7 @@ func getAllDatabaseNames(ci connection.Info) ([]string, error) {
 	return databaseNames, nil
 }
 
-func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList, ignoreTableList ignoreList, ci connection.Info) (DatabaseList, error) {
+func buildCollectionListFromDatabaseNames(dbnames []string, schemaQuery string, ignoreDBList, ignoreSchemaList, ignoreTableList ignoreList, ci connection.Info) (DatabaseList, error) {
 	databaseList := DatabaseList{}
 	for _, db := range dbnames {
 		if _, ok := ignoreDBList[db]; ok {
@@ -136,7 +160,7 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList, ignore
 		}
 		defer con.Close()
 
-		schemaList, err := buildSchemaListForDatabase(con, ignoreTableList)
+		schemaList, err := buildSchemaListForDatabase(con, schemaQuery, ignoreSchemaList, ignoreTableList)
 		if err != nil {
 			log.Error("Failed to build schema list for database '%s': %s", db, err)
 			continue
@@ -151,7 +175,7 @@ func buildCollectionListFromDatabaseNames(dbnames []string, ignoreDBList, ignore
 	return databaseList, nil
 }
 
-func buildSchemaListForDatabase(con *connection.PGSQLConnection, ignoreTableList ignoreList) (SchemaList, error) {
+func buildSchemaListForDatabase(con *connection.PGSQLConnection, schemaQuery string, ignoreSchemaList, ignoreTableList ignoreList) (SchemaList, error) {
 	schemaList := make(SchemaList)
 
 	var dataModel []struct {
@@ -159,7 +183,7 @@ func buildSchemaListForDatabase(con *connection.PGSQLConnection, ignoreTableList
 		TableName  sql.NullString `db:"table_name"`
 		IndexName  sql.NullString `db:"index_name"`
 	}
-	err := con.Query(&dataModel, dbSchemaQuery)
+	err := con.Query(&dataModel, schemaQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -171,6 +195,10 @@ func buildSchemaListForDatabase(con *connection.PGSQLConnection, ignoreTableList
 			} else {
 				log.Debug("Query responded with a null schema name or table name. Skipping row %d. [Schema valid: %t / Table valid: %t]", index, row.SchemaName.Valid, row.TableName.Valid)
 			}
+			continue
+		}
+
+		if _, ok := ignoreSchemaList[row.SchemaName.String]; ok {
 			continue
 		}
 

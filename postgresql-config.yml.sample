@@ -39,6 +39,21 @@ integrations:
     # Example:
     # COLLECTION_IGNORE_TABLE_LIST: '["table1","table2"]'
 
+    # JSON array of schema names that will be ignored for metrics collection.
+    # Applies when COLLECTION_LIST is 'ALL' or a JSON array.
+    # Defaults to empty '[]'.
+    # Example:
+    # COLLECTION_IGNORE_SCHEMA_LIST: '["audit","staging"]'
+
+    # How tables and indexes are discovered when COLLECTION_LIST is 'ALL' or a JSON array.
+    # 'information_schema' (default) only finds tables the user owns or has some table or column
+    # privilege on (usually SELECT). Without them, application tables are missed and only system
+    # catalog tables are found.
+    # 'catalog' reads pg_class/pg_index, finds regular and partitioned tables without any table
+    # privileges and always skips system schemas (pg_catalog, information_schema, pg_toast, temporary schemas).
+    # Bloat metrics still require SELECT on the tables in both modes.
+    # COLLECTION_DISCOVERY_MODE: information_schema
+
     # True if database lock metrics should be collected
     # Note: requires that the `tablefunc` extension be installed on the public schema
     # of the database where lock metrics will be collected.

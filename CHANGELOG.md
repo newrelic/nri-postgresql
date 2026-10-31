@@ -9,6 +9,14 @@ Unreleased section should follow [Release Toolkit](https://github.com/newrelic/r
 
 ## Unreleased
 
+### enhancements
+- Added `COLLECTION_DISCOVERY_MODE` option. `catalog` discovers tables and indexes from `pg_catalog`, so table and index metrics other than bloat no longer depend on table privileges, and system schemas are skipped
+- Added `COLLECTION_IGNORE_SCHEMA_LIST` option to exclude schemas from table and index collection
+
+### bugfix
+- Table metrics were not collected for any database once a database without tables was processed
+- Table and index metric queries failed for the whole database when a schema, table or index name contained a quote
+
 ### security
 - Updated golang patch version to v1.26.9
 - Updated golang patch version to v1.26.10
