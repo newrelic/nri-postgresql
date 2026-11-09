@@ -11,4 +11,4 @@ permissions:
 
 jobs:
   repolinter:
-    uses: newrelic/coreint-automation/.github/workflows/reusable_repolinter.yaml@v3
+    uses: newrelic/coreint-automation/.github/workflows/reusable_repolinter.yaml@v4

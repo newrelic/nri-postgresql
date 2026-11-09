@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   pre-release:
-    uses: newrelic/coreint-automation/.github/workflows/reusable_pre_release.yaml@v3
+    uses: newrelic/coreint-automation/.github/workflows/reusable_pre_release.yaml@v4
     with:
       tag: ${{ github.event.release.tag_name }}
       integration: "postgresql"
