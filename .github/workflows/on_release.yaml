@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   release:
+    if: ${{ !contains(github.event.release.body, 'release-flow=batch') }}
     uses: newrelic/coreint-automation/.github/workflows/reusable_on_release.yaml@v3
     with:
       integration: postgresql
