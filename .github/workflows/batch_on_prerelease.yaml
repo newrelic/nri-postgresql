@@ -1,0 +1,21 @@
+name: Batch prerelease pipeline
+
+on:
+  release:
+    types:
+      - prereleased
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  pre-release:
+    if: ${{ contains(github.event.release.body, 'release-flow=batch') }}
+    uses: newrelic/coreint-automation/.github/workflows/reusable_pre_release_build.yaml@v4
+    with:
+      tag: ${{ github.event.release.tag_name }}
+      integration: "postgresql"
+      upload_fips_packages: true
+    secrets: inherit
